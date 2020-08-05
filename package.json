@@ -1,0 +1,21 @@
+{
+  "name": "@saltcorn/any-bootstrap-theme",
+  "version": "0.1.0",
+  "description": "Configurable bootstrap layout plugin",
+  "main": "index.js",
+  "scripts": {
+    "test": "jest"
+  },
+  "dependencies": {
+    "@saltcorn/markup": "^0.1.2",
+    "@saltcorn/data": "^0.1.2"
+  },
+  "author": "Tom Nielsen",
+  "license": "MIT",
+  "devDependencies": {
+    "jest": "^25.1.0"
+  },
+  "jest": {
+    "testEnvironment": "node"
+  }
+}
