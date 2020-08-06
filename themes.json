@@ -104,52 +104,52 @@
     "css_url": "https://stackpath.bootstrapcdn.com/bootswatch/4.5.0/yeti/bootstrap.min.css",
     "css_integrity": "sha384-chJtTd1EMa6hQI40eyJWF6829eEk4oIe7b3nNtUni7VxA3uHc/uIM/8ppyjrggfV"
   },
-  "wizardry":{
+  "wizardry": {
     "source": "HackerThemes",
     "css_url": "https://cdn.jsdelivr.net/npm/theme-machine@1.0.1/dist/wizardry/css/bootstrap4-wizardry.min.css",
     "css_integrity": "sha256-qzbIfL45JO+RLfTh3pTXGYVaeHLYNiPwPmrik16f6w4="
   },
-  "vibrant-sea":{
+  "vibrant-sea": {
     "source": "HackerThemes",
     "css_url": "https://cdn.jsdelivr.net/npm/theme-machine@1.0.1/dist/vibrant-sea/css/bootstrap4-vibrant-sea.min.css",
     "css_integrity": "sha256-JwWHOtKYsT7H38+ud0LdVnruD3Q5ZSthwFcsC3+8EYU="
   },
-  "retro":{
+  "retro": {
     "source": "HackerThemes",
     "css_url": "https://cdn.jsdelivr.net/npm/theme-machine@1.0.1/dist/retro/css/bootstrap4-retro.min.css",
     "css_integrity": "sha256-JIygeLSf9weplj4GwLyfTKysZmJVL4Aeljs6gnXOjkI="
   },
-  "pleasant":{
+  "pleasant": {
     "source": "HackerThemes",
     "css_url": "https://cdn.jsdelivr.net/npm/theme-machine@1.0.1/dist/pleasant/css/bootstrap4-pleasant.min.css",
     "css_integrity": "sha256-Ge1pC+rdGqSQeqjYvG56h64NHY4kU7ecBdhTikF8U7k="
   },
-  "neon-glow":{
+  "neon-glow": {
     "source": "HackerThemes",
     "css_url": "https://cdn.jsdelivr.net/npm/theme-machine@1.0.1/dist/neon-glow/css/bootstrap4-neon-glow.min.css",
     "css_integrity": "sha256-efQSfCrlBRBXT4oo4S4ENO49jEjOumekblSZV3EtGdY="
   },
-  "hello-world":{
+  "hello-world": {
     "source": "HackerThemes",
     "css_url": "https://cdn.jsdelivr.net/npm/theme-machine@1.0.1/dist/hello-world/css/bootstrap4-hello-world.min.css",
     "css_integrity": "sha256-T/SdIMO9vhVrkjVftsw/Ug1MXlKG8KmNz0YUIZR93E4="
   },
-  "harbor":{
+  "harbor": {
     "source": "HackerThemes",
     "css_url": "https://cdn.jsdelivr.net/npm/theme-machine@1.0.1/dist/harbor/css/bootstrap4-harbor.min.css",
     "css_integrity": "sha256-H1TZuo7QqPq3eizTWwf6S9ZW6hIz2YEE1LrIPO/mO14="
   },
-  "growth":{
+  "growth": {
     "source": "HackerThemes",
     "css_url": "https://cdn.jsdelivr.net/npm/theme-machine@1.0.1/dist/growth/css/bootstrap4-growth.min.css",
     "css_integrity": "sha256-+CiofRWvEbcx3A5I7umqFQjRteAJU63j2IQwvFhBBFg="
   },
-  "good-news":{
+  "good-news": {
     "source": "HackerThemes",
     "css_url": "https://cdn.jsdelivr.net/npm/theme-machine@1.0.1/dist/good-news/css/bootstrap4-good-news.min.css",
     "css_integrity": "sha256-EU7BH1xQ6ZMHOpUKr4GZv1BuuHraaUxndRptLrxzpgY="
   },
-  "executive-suite":{
+  "executive-suite": {
     "source": "HackerThemes",
     "css_url": "https://cdn.jsdelivr.net/npm/theme-machine@1.0.1/dist/executive-suite/css/bootstrap4-executive-suite.min.css",
     "css_integrity": "sha256-fatBtcL6U/lzN+d8WQ/kp2svKuP1vTlIte4lVdxTDmQ="
