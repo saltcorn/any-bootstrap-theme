@@ -154,137 +154,10 @@ const get_css_integrity = config => {
   else return def;
 };
 
-const themes = {
-  cerulean: {
-    css_url:
-      "https://stackpath.bootstrapcdn.com/bootswatch/4.5.0/cerulean/bootstrap.min.css",
-    css_integrity:
-      "sha384-b+jboW/YIpW2ZZYyYdXczKK6igHlnkPNfN9kYAbqYV7rNQ9PKTXlS2D6j1QZIATW"
-  },
-  cosmo: {
-    css_url:
-      "https://stackpath.bootstrapcdn.com/bootswatch/4.5.0/cosmo/bootstrap.min.css",
-    css_integrity:
-      "sha384-9/chHLTCcBULgxOFoUyZXSgEF0uFXs+NrQqzcy/DXqcR+Sk8C1l4EgmUXAEzTb92"
-  },
-  cyborg: {
-    css_url:
-      "https://stackpath.bootstrapcdn.com/bootswatch/4.5.0/cyborg/bootstrap.min.css",
-    css_integrity:
-      "sha384-GKugkVcT8wqoh3M8z1lqHbU+g6j498/ZT/zuXbepz7Dc09/otQZxTimkEMTkRWHP"
-  },
-  darkly: {
-    css_url:
-      "https://stackpath.bootstrapcdn.com/bootswatch/4.5.0/darkly/bootstrap.min.css",
-    css_integrity:
-      "sha384-Bo21yfmmZuXwcN/9vKrA5jPUMhr7znVBBeLxT9MA4r2BchhusfJ6+n8TLGUcRAtL"
-  },
-  flatly: {
-    css_url:
-      "https://stackpath.bootstrapcdn.com/bootswatch/4.5.0/flatly/bootstrap.min.css",
-    css_integrity:
-      "sha384-mhpbKVUOPCSocLzx2ElRISIORFRwr1ZbO9bAlowgM5kO7hnpRBe+brVj8NNPUiFs"
-  },
-  journal: {
-    css_url:
-      "https://stackpath.bootstrapcdn.com/bootswatch/4.5.0/journal/bootstrap.min.css",
-    css_integrity:
-      "sha384-vjBZc/DqIqR687k5rf6bUQ6IVSOxQUi9TcwtvULstA7+YGi//g3oT2qkh8W1Drx9"
-  },
-  litera: {
-    css_url:
-      "https://stackpath.bootstrapcdn.com/bootswatch/4.5.0/litera/bootstrap.min.css",
-    css_integrity:
-      "sha384-Gr51humlTz50RfCwdBYgT+XvbSZqkm8Loa5nWlNrvUqCinoe6C6WUZKHS2WIRx5o"
-  },
-  lumen: {
-    css_url:
-      "https://stackpath.bootstrapcdn.com/bootswatch/4.5.0/lumen/bootstrap.min.css",
-    css_integrity:
-      "sha384-VMuWne6iwiifi8iEWNZMw8sDatgb6ntBpBIr67q0rZAyOQwfu/VKpnFntQrjxB5W"
-  },
-  bootstrap: {
-    css_url:
-      "https://stackpath.bootstrapcdn.com/bootswatch/4.5.0/lux/bootstrap.min.css",
-    css_integrity:
-      "sha384-smnSwzHqW1zKbeuSMsAM/fMQpkk7HY11LuHiwT8snL/W2QBoZtVCT4H5x1CEcJCs"
-  },
-  materia: {
-    css_url:
-      "https://stackpath.bootstrapcdn.com/bootswatch/4.5.0/materia/bootstrap.min.css",
-    css_integrity:
-      "sha384-uKLgCN8wZ+yo4RygxUNFhjywpL/l065dVTzvLuxys7LAIMmhZoLWb/1yP6+mF925"
-  },
-  minty: {
-    css_url:
-      "https://stackpath.bootstrapcdn.com/bootswatch/4.5.0/minty/bootstrap.min.css",
-    css_integrity:
-      "sha384-HqaYdAE26lgFCJsUF9TBdbZf7ygr9yPHtxtg37JshqVQi6CCAo6Qvwmgc5xclIiV"
-  },
-  pulse: {
-    css_url:
-      "https://stackpath.bootstrapcdn.com/bootswatch/4.5.0/pulse/bootstrap.min.css",
-    css_integrity:
-      "sha384-t87SWLASAVDfD3SOypT7WDQZv9X6r0mq1lMEc6m1/+tAVfCXosegm1BvaIiQm3zB"
-  },
-  sandstone: {
-    css_url:
-      "https://stackpath.bootstrapcdn.com/bootswatch/4.5.0/sandstone/bootstrap.min.css",
-    css_integrity:
-      "sha384-ztQCCdmKhYHBDMV3AyR4QGZ2/z6veowJBbsmvDJW/sTuMpB9lpoubJuD0ODGSbjh"
-  },
-  simplex: {
-    css_url:
-      "https://stackpath.bootstrapcdn.com/bootswatch/4.5.0/simplex/bootstrap.min.css",
-    css_integrity:
-      "sha384-6ge4b1Lr1zrvyGvm5pdAkc3NMa97XYhFPBWsZsT6O3eOU+hqURR1bQEMm11Grf3a"
-  },
-  sketchy: {
-    css_url:
-      "https://stackpath.bootstrapcdn.com/bootswatch/4.5.0/sketchy/bootstrap.min.css",
-    css_integrity:
-      "sha384-NkI/Nlr1DZ5rUXWWdnuZb97FQRgCCcwC66DC+HUCY0oVx6BgBHUfPcwL1vwp93JZ"
-  },
-  slate: {
-    css_url:
-      "https://stackpath.bootstrapcdn.com/bootswatch/4.5.0/slate/bootstrap.min.css",
-    css_integrity:
-      "sha384-idNH3UIOiZbCf8jxqu4iExnH34y5UovfW/Mg8T5WfNvoJolDvknoNqR69V2OexgF"
-  },
-  solar: {
-    css_url:
-      "https://stackpath.bootstrapcdn.com/bootswatch/4.5.0/solar/bootstrap.min.css",
-    css_integrity:
-      "sha384-iDw+DjLp94cdk+ODAgTY4IZ6d9aaRpG9KHr168TPxrfQ9wv/DTVC+cWyojoxjHBT"
-  },
-  spacelab: {
-    css_url:
-      "https://stackpath.bootstrapcdn.com/bootswatch/4.5.0/spacelab/bootstrap.min.css",
-    css_integrity:
-      "sha384-sIQOcNYer0kt7oTyFe/YrGzKMFP/qxsJbXTxq0/uiZQgpwXwEu41sVz2M61lWbai"
-  },
-  superhero: {
-    css_url:
-      "https://stackpath.bootstrapcdn.com/bootswatch/4.5.0/superhero/bootstrap.min.css",
-    css_integrity:
-      "sha384-rvwYMW9Z/bbxZfgxHQEKx6D91KwffWAG+XnsoYNCGWi/qL1P9dIVYm1HBiHFqQEt"
-  },
-  united: {
-    css_url:
-      "https://stackpath.bootstrapcdn.com/bootswatch/4.5.0/united/bootstrap.min.css",
-    css_integrity:
-      "sha384-Uga2yStKRHUWCS7ORqIZhJ9LIAv4i7gZuEdoR1QAmw6H+ffhcf7yCOd0CvSoNwoz"
-  },
-  yeti: {
-    css_url:
-      "https://stackpath.bootstrapcdn.com/bootswatch/4.5.0/yeti/bootstrap.min.css",
-    css_integrity:
-      "sha384-chJtTd1EMa6hQI40eyJWF6829eEk4oIe7b3nNtUni7VxA3uHc/uIM/8ppyjrggfV"
-  }
-};
+const themes = require("./themes.json");
 
-const themeSelectOptions = Object.keys(themes).map(k => ({
-  label: k[0].toUpperCase() + k.slice(1),
+const themeSelectOptions = Object.entries(themes).map(([k, v]) => ({
+  label: `${k[0].toUpperCase()}${k.slice(1)} from ${v.source}`,
   name: k
 }));
 
@@ -305,7 +178,7 @@ const configuration_workflow = () =>
                 attributes: {
                   options: [
                     ...themeSelectOptions,
-                    { name: "Other", label: "Other - from URL" }
+                    { name: "Other", label: "Other - specify URL" }
                   ]
                 }
               },
