@@ -58,7 +58,8 @@ const blockDispatch = config => ({
           {
             class: [
               "page-section",
-              ix === 0 && (config.fixedTop ? "mt-5 pt-2" : "mt-1"),
+              `pt-${config.toppad || 0}`,
+              ix === 0 && config.fixedTop && "mt-5",
               segment.class,
               segment.invertColor && "bg-primary"
             ]
@@ -349,6 +350,17 @@ const configuration_workflow = () =>
                 label: "Navbar Fixed Top",
                 type: "Bool",
                 required: true
+              },
+              {
+                name: "toppad",
+                label: "Top padding",
+                sublabel: "0-5 depending on Navbar height and configuration",
+                type: "Integer",
+                required: true,
+                attributes: {
+                  max: 5,
+                  min: 0
+                }
               }
             ]
           });
