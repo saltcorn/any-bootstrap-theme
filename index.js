@@ -18,7 +18,7 @@ const Form = require("@saltcorn/data/models/form");
 const View = require("@saltcorn/data/models/view");
 const Workflow = require("@saltcorn/data/models/workflow");
 
-const blockDispatch = {
+const blockDispatch = config => ({
   pageHeader: ({ title, blurb }) =>
     div(
       h1({ class: "h3 mb-0 mt-2 text-gray-800" }, title),
@@ -58,7 +58,7 @@ const blockDispatch = {
           {
             class: [
               "page-section",
-              ix === 0 && "mt-5",
+              ix === 0 && (config.fixedTop ? "mt-5 pt-2" : "mt-1"),
               segment.class,
               segment.invertColor && "bg-primary"
             ]
@@ -68,18 +68,17 @@ const blockDispatch = {
             div({ class: "row" }, div({ class: "col-sm-12" }, s))
           )
         )
-};
+});
 
-const renderBody = (title, body, alerts, in_card) =>
+const renderBody = (title, body, alerts, config) =>
   renderLayout({
-    blockDispatch,
+    blockDispatch: blockDispatch(config),
     layout:
-      typeof body === "string" && in_card
+      typeof body === "string" && config.in_card
         ? { type: "card", title, contents: body }
         : body,
     alerts
   });
-
 
 const layout = config => ({
   wrap: ({
@@ -116,8 +115,8 @@ const layout = config => ({
   </head>
   <body id="page-top">
     <div id="wrapper">
-      ${navbar(brand, menu, currentUrl)}
-      ${renderBody(title, body, alerts, config.in_card)}
+      ${navbar(brand, menu, currentUrl, config)}
+      ${renderBody(title, body, alerts, config)}
     </div>
     <!-- Optional JavaScript -->
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->
@@ -131,32 +130,28 @@ const layout = config => ({
       .filter(h => h.script)
       .map(h => `<script src="${h.script}"></script>`)
       .join("")}
-    ${navbarSolidOnScroll}
+    ${config.colorscheme === "navbar-light" ? navbarSolidOnScroll : ""}
   </body>
 </html>`
 });
-
+// before body
 const get_css_url = config => {
-  const def = "https://stackpath.bootstrapcdn.com/bootswatch/4.5.0/united/bootstrap.min.css";
-  if (!config || !config.theme)
-    return def
-  if(config.theme==="Other")
-    return config.css_url || def
-  if(themes[config.theme])
-    return themes[config.theme].css_url
-  else return def
-}
+  const def =
+    "https://stackpath.bootstrapcdn.com/bootswatch/4.5.0/united/bootstrap.min.css";
+  if (!config || !config.theme) return def;
+  if (config.theme === "Other") return config.css_url || def;
+  if (themes[config.theme]) return themes[config.theme].css_url;
+  else return def;
+};
 
 const get_css_integrity = config => {
-  const def = "sha384-Uga2yStKRHUWCS7ORqIZhJ9LIAv4i7gZuEdoR1QAmw6H+ffhcf7yCOd0CvSoNwoz";
-  if (!config || !config.theme)
-    return def
-  if(config.theme==="Other")
-    return config.css_integrity || def
-  if(themes[config.theme])
-    return themes[config.theme].css_integrity
-  else return def
-}
+  const def =
+    "sha384-Uga2yStKRHUWCS7ORqIZhJ9LIAv4i7gZuEdoR1QAmw6H+ffhcf7yCOd0CvSoNwoz";
+  if (!config || !config.theme) return def;
+  if (config.theme === "Other") return config.css_integrity || def;
+  if (themes[config.theme]) return themes[config.theme].css_integrity;
+  else return def;
+};
 
 const themes = {
   cerulean: {
@@ -287,8 +282,10 @@ const themes = {
   }
 };
 
-const themeSelectOptions = Object.keys(themes).map(k=> ({label:k[0].toUpperCase() +  
-  k.slice(1), name:k}))
+const themeSelectOptions = Object.keys(themes).map(k => ({
+  label: k[0].toUpperCase() + k.slice(1),
+  name: k
+}));
 
 const configuration_workflow = () =>
   new Workflow({
@@ -326,6 +323,30 @@ const configuration_workflow = () =>
               {
                 name: "in_card",
                 label: "Default content in card?",
+                type: "Bool",
+                required: true
+              },
+              {
+                name: "colorscheme",
+                label: "Navbar color scheme",
+                type: "String",
+                required: true,
+                attributes: {
+                  options: [
+                    { name: "navbar-dark bg-dark", label: "Dark" },
+                    { name: "navbar-dark bg-primary", label: "Dark Primary" },
+                    {
+                      name: "navbar-dark bg-secondary",
+                      label: "Dark Secondary"
+                    },
+                    { name: "navbar-light bg-light", label: "Light" },
+                    { name: "navbar-light", label: "Transparent Light" }
+                  ]
+                }
+              },
+              {
+                name: "fixedTop",
+                label: "Navbar Fixed Top",
                 type: "Bool",
                 required: true
               }
