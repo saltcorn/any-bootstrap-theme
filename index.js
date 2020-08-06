@@ -74,13 +74,14 @@ const renderBody = (title, body, alerts, in_card) =>
   renderLayout({
     blockDispatch,
     layout:
-      typeof body === "string" && in_card ? { type: "card", title, contents: body } : body,
+      typeof body === "string" && in_card
+        ? { type: "card", title, contents: body }
+        : body,
     alerts
   });
 
-const get_css_url = config=>config.css_url || "https://stackpath.bootstrapcdn.com/bootswatch/4.5.0/united/bootstrap.min.css"
-const get_css_integrity = config=>config.css_integrity || "sha384-Uga2yStKRHUWCS7ORqIZhJ9LIAv4i7gZuEdoR1QAmw6H+ffhcf7yCOd0CvSoNwoz"
-const layout = (config) => ({
+
+const layout = config => ({
   wrap: ({
     title,
     menu,
@@ -97,7 +98,11 @@ const layout = (config) => ({
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <!-- Font Awesome icons (free version)-->
     <script defer src="https://use.fontawesome.com/releases/v5.13.0/js/all.js" crossorigin="anonymous"></script>
-    <link href="${get_css_url(config)}" rel="stylesheet" integrity="${get_css_integrity(config)}" crossorigin="anonymous">
+    <link href="${get_css_url(
+      config
+    )}" rel="stylesheet" integrity="${get_css_integrity(
+    config
+  )}" crossorigin="anonymous">
     <link href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
     ${headers
       .filter(h => h.css)
@@ -130,38 +135,167 @@ const layout = (config) => ({
   </body>
 </html>`
 });
-/*
 
-https://www.bootstrapcdn.com/bootswatch/ :
+const get_css_url = config => {
+  const def = "https://stackpath.bootstrapcdn.com/bootswatch/4.5.0/united/bootstrap.min.css";
+  if (!config || !config.theme)
+    return def
+  if(config.theme==="Other")
+    return config.css_url || def
+  if(themes[config.theme])
+    return themes[config.theme].css_url
+  else return def
+}
 
-<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootswatch/4.5.0/cerulean/bootstrap.min.css" integrity="sha384-b+jboW/YIpW2ZZYyYdXczKK6igHlnkPNfN9kYAbqYV7rNQ9PKTXlS2D6j1QZIATW" crossorigin="anonymous">
-<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootswatch/4.5.0/cosmo/bootstrap.min.css" integrity="sha384-9/chHLTCcBULgxOFoUyZXSgEF0uFXs+NrQqzcy/DXqcR+Sk8C1l4EgmUXAEzTb92" crossorigin="anonymous">
-<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootswatch/4.5.0/cyborg/bootstrap.min.css" integrity="sha384-GKugkVcT8wqoh3M8z1lqHbU+g6j498/ZT/zuXbepz7Dc09/otQZxTimkEMTkRWHP" crossorigin="anonymous">
-<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootswatch/4.5.0/darkly/bootstrap.min.css" integrity="sha384-Bo21yfmmZuXwcN/9vKrA5jPUMhr7znVBBeLxT9MA4r2BchhusfJ6+n8TLGUcRAtL" crossorigin="anonymous">
-<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootswatch/4.5.0/flatly/bootstrap.min.css" integrity="sha384-mhpbKVUOPCSocLzx2ElRISIORFRwr1ZbO9bAlowgM5kO7hnpRBe+brVj8NNPUiFs" crossorigin="anonymous">
-<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootswatch/4.5.0/journal/bootstrap.min.css" integrity="sha384-vjBZc/DqIqR687k5rf6bUQ6IVSOxQUi9TcwtvULstA7+YGi//g3oT2qkh8W1Drx9" crossorigin="anonymous">
-<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootswatch/4.5.0/litera/bootstrap.min.css" integrity="sha384-Gr51humlTz50RfCwdBYgT+XvbSZqkm8Loa5nWlNrvUqCinoe6C6WUZKHS2WIRx5o" crossorigin="anonymous">
-<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootswatch/4.5.0/lumen/bootstrap.min.css" integrity="sha384-VMuWne6iwiifi8iEWNZMw8sDatgb6ntBpBIr67q0rZAyOQwfu/VKpnFntQrjxB5W" crossorigin="anonymous">
-<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootswatch/4.5.0/lux/bootstrap.min.css" integrity="sha384-smnSwzHqW1zKbeuSMsAM/fMQpkk7HY11LuHiwT8snL/W2QBoZtVCT4H5x1CEcJCs" crossorigin="anonymous">
-<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootswatch/4.5.0/materia/bootstrap.min.css" integrity="sha384-uKLgCN8wZ+yo4RygxUNFhjywpL/l065dVTzvLuxys7LAIMmhZoLWb/1yP6+mF925" crossorigin="anonymous">
-<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootswatch/4.5.0/minty/bootstrap.min.css" integrity="sha384-HqaYdAE26lgFCJsUF9TBdbZf7ygr9yPHtxtg37JshqVQi6CCAo6Qvwmgc5xclIiV" crossorigin="anonymous">
-<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootswatch/4.5.0/pulse/bootstrap.min.css" integrity="sha384-t87SWLASAVDfD3SOypT7WDQZv9X6r0mq1lMEc6m1/+tAVfCXosegm1BvaIiQm3zB" crossorigin="anonymous">
-<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootswatch/4.5.0/sandstone/bootstrap.min.css" integrity="sha384-ztQCCdmKhYHBDMV3AyR4QGZ2/z6veowJBbsmvDJW/sTuMpB9lpoubJuD0ODGSbjh" crossorigin="anonymous">
-<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootswatch/4.5.0/simplex/bootstrap.min.css" integrity="sha384-6ge4b1Lr1zrvyGvm5pdAkc3NMa97XYhFPBWsZsT6O3eOU+hqURR1bQEMm11Grf3a" crossorigin="anonymous">
-<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootswatch/4.5.0/sketchy/bootstrap.min.css" integrity="sha384-NkI/Nlr1DZ5rUXWWdnuZb97FQRgCCcwC66DC+HUCY0oVx6BgBHUfPcwL1vwp93JZ" crossorigin="anonymous">
-<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootswatch/4.5.0/slate/bootstrap.min.css" integrity="sha384-idNH3UIOiZbCf8jxqu4iExnH34y5UovfW/Mg8T5WfNvoJolDvknoNqR69V2OexgF" crossorigin="anonymous">
-<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootswatch/4.5.0/solar/bootstrap.min.css" integrity="sha384-iDw+DjLp94cdk+ODAgTY4IZ6d9aaRpG9KHr168TPxrfQ9wv/DTVC+cWyojoxjHBT" crossorigin="anonymous">
-<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootswatch/4.5.0/spacelab/bootstrap.min.css" integrity="sha384-sIQOcNYer0kt7oTyFe/YrGzKMFP/qxsJbXTxq0/uiZQgpwXwEu41sVz2M61lWbai" crossorigin="anonymous">
-<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootswatch/4.5.0/superhero/bootstrap.min.css" integrity="sha384-rvwYMW9Z/bbxZfgxHQEKx6D91KwffWAG+XnsoYNCGWi/qL1P9dIVYm1HBiHFqQEt" crossorigin="anonymous">
-<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootswatch/4.5.0/united/bootstrap.min.css" integrity="sha384-Uga2yStKRHUWCS7ORqIZhJ9LIAv4i7gZuEdoR1QAmw6H+ffhcf7yCOd0CvSoNwoz" crossorigin="anonymous">
-<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootswatch/4.5.0/yeti/bootstrap.min.css" integrity="sha384-chJtTd1EMa6hQI40eyJWF6829eEk4oIe7b3nNtUni7VxA3uHc/uIM/8ppyjrggfV" crossorigin="anonymous">
-*/
+const get_css_integrity = config => {
+  const def = "sha384-Uga2yStKRHUWCS7ORqIZhJ9LIAv4i7gZuEdoR1QAmw6H+ffhcf7yCOd0CvSoNwoz";
+  if (!config || !config.theme)
+    return def
+  if(config.theme==="Other")
+    return config.css_integrity || def
+  if(themes[config.theme])
+    return themes[config.theme].css_integrity
+  else return def
+}
+
+const themes = {
+  cerulean: {
+    css_url:
+      "https://stackpath.bootstrapcdn.com/bootswatch/4.5.0/cerulean/bootstrap.min.css",
+    css_integrity:
+      "sha384-b+jboW/YIpW2ZZYyYdXczKK6igHlnkPNfN9kYAbqYV7rNQ9PKTXlS2D6j1QZIATW"
+  },
+  cosmo: {
+    css_url:
+      "https://stackpath.bootstrapcdn.com/bootswatch/4.5.0/cosmo/bootstrap.min.css",
+    css_integrity:
+      "sha384-9/chHLTCcBULgxOFoUyZXSgEF0uFXs+NrQqzcy/DXqcR+Sk8C1l4EgmUXAEzTb92"
+  },
+  cyborg: {
+    css_url:
+      "https://stackpath.bootstrapcdn.com/bootswatch/4.5.0/cyborg/bootstrap.min.css",
+    css_integrity:
+      "sha384-GKugkVcT8wqoh3M8z1lqHbU+g6j498/ZT/zuXbepz7Dc09/otQZxTimkEMTkRWHP"
+  },
+  darkly: {
+    css_url:
+      "https://stackpath.bootstrapcdn.com/bootswatch/4.5.0/darkly/bootstrap.min.css",
+    css_integrity:
+      "sha384-Bo21yfmmZuXwcN/9vKrA5jPUMhr7znVBBeLxT9MA4r2BchhusfJ6+n8TLGUcRAtL"
+  },
+  flatly: {
+    css_url:
+      "https://stackpath.bootstrapcdn.com/bootswatch/4.5.0/flatly/bootstrap.min.css",
+    css_integrity:
+      "sha384-mhpbKVUOPCSocLzx2ElRISIORFRwr1ZbO9bAlowgM5kO7hnpRBe+brVj8NNPUiFs"
+  },
+  journal: {
+    css_url:
+      "https://stackpath.bootstrapcdn.com/bootswatch/4.5.0/journal/bootstrap.min.css",
+    css_integrity:
+      "sha384-vjBZc/DqIqR687k5rf6bUQ6IVSOxQUi9TcwtvULstA7+YGi//g3oT2qkh8W1Drx9"
+  },
+  litera: {
+    css_url:
+      "https://stackpath.bootstrapcdn.com/bootswatch/4.5.0/litera/bootstrap.min.css",
+    css_integrity:
+      "sha384-Gr51humlTz50RfCwdBYgT+XvbSZqkm8Loa5nWlNrvUqCinoe6C6WUZKHS2WIRx5o"
+  },
+  lumen: {
+    css_url:
+      "https://stackpath.bootstrapcdn.com/bootswatch/4.5.0/lumen/bootstrap.min.css",
+    css_integrity:
+      "sha384-VMuWne6iwiifi8iEWNZMw8sDatgb6ntBpBIr67q0rZAyOQwfu/VKpnFntQrjxB5W"
+  },
+  bootstrap: {
+    css_url:
+      "https://stackpath.bootstrapcdn.com/bootswatch/4.5.0/lux/bootstrap.min.css",
+    css_integrity:
+      "sha384-smnSwzHqW1zKbeuSMsAM/fMQpkk7HY11LuHiwT8snL/W2QBoZtVCT4H5x1CEcJCs"
+  },
+  materia: {
+    css_url:
+      "https://stackpath.bootstrapcdn.com/bootswatch/4.5.0/materia/bootstrap.min.css",
+    css_integrity:
+      "sha384-uKLgCN8wZ+yo4RygxUNFhjywpL/l065dVTzvLuxys7LAIMmhZoLWb/1yP6+mF925"
+  },
+  minty: {
+    css_url:
+      "https://stackpath.bootstrapcdn.com/bootswatch/4.5.0/minty/bootstrap.min.css",
+    css_integrity:
+      "sha384-HqaYdAE26lgFCJsUF9TBdbZf7ygr9yPHtxtg37JshqVQi6CCAo6Qvwmgc5xclIiV"
+  },
+  pulse: {
+    css_url:
+      "https://stackpath.bootstrapcdn.com/bootswatch/4.5.0/pulse/bootstrap.min.css",
+    css_integrity:
+      "sha384-t87SWLASAVDfD3SOypT7WDQZv9X6r0mq1lMEc6m1/+tAVfCXosegm1BvaIiQm3zB"
+  },
+  sandstone: {
+    css_url:
+      "https://stackpath.bootstrapcdn.com/bootswatch/4.5.0/sandstone/bootstrap.min.css",
+    css_integrity:
+      "sha384-ztQCCdmKhYHBDMV3AyR4QGZ2/z6veowJBbsmvDJW/sTuMpB9lpoubJuD0ODGSbjh"
+  },
+  simplex: {
+    css_url:
+      "https://stackpath.bootstrapcdn.com/bootswatch/4.5.0/simplex/bootstrap.min.css",
+    css_integrity:
+      "sha384-6ge4b1Lr1zrvyGvm5pdAkc3NMa97XYhFPBWsZsT6O3eOU+hqURR1bQEMm11Grf3a"
+  },
+  sketchy: {
+    css_url:
+      "https://stackpath.bootstrapcdn.com/bootswatch/4.5.0/sketchy/bootstrap.min.css",
+    css_integrity:
+      "sha384-NkI/Nlr1DZ5rUXWWdnuZb97FQRgCCcwC66DC+HUCY0oVx6BgBHUfPcwL1vwp93JZ"
+  },
+  slate: {
+    css_url:
+      "https://stackpath.bootstrapcdn.com/bootswatch/4.5.0/slate/bootstrap.min.css",
+    css_integrity:
+      "sha384-idNH3UIOiZbCf8jxqu4iExnH34y5UovfW/Mg8T5WfNvoJolDvknoNqR69V2OexgF"
+  },
+  solar: {
+    css_url:
+      "https://stackpath.bootstrapcdn.com/bootswatch/4.5.0/solar/bootstrap.min.css",
+    css_integrity:
+      "sha384-iDw+DjLp94cdk+ODAgTY4IZ6d9aaRpG9KHr168TPxrfQ9wv/DTVC+cWyojoxjHBT"
+  },
+  spacelab: {
+    css_url:
+      "https://stackpath.bootstrapcdn.com/bootswatch/4.5.0/spacelab/bootstrap.min.css",
+    css_integrity:
+      "sha384-sIQOcNYer0kt7oTyFe/YrGzKMFP/qxsJbXTxq0/uiZQgpwXwEu41sVz2M61lWbai"
+  },
+  superhero: {
+    css_url:
+      "https://stackpath.bootstrapcdn.com/bootswatch/4.5.0/superhero/bootstrap.min.css",
+    css_integrity:
+      "sha384-rvwYMW9Z/bbxZfgxHQEKx6D91KwffWAG+XnsoYNCGWi/qL1P9dIVYm1HBiHFqQEt"
+  },
+  united: {
+    css_url:
+      "https://stackpath.bootstrapcdn.com/bootswatch/4.5.0/united/bootstrap.min.css",
+    css_integrity:
+      "sha384-Uga2yStKRHUWCS7ORqIZhJ9LIAv4i7gZuEdoR1QAmw6H+ffhcf7yCOd0CvSoNwoz"
+  },
+  yeti: {
+    css_url:
+      "https://stackpath.bootstrapcdn.com/bootswatch/4.5.0/yeti/bootstrap.min.css",
+    css_integrity:
+      "sha384-chJtTd1EMa6hQI40eyJWF6829eEk4oIe7b3nNtUni7VxA3uHc/uIM/8ppyjrggfV"
+  }
+};
+
+const themeSelectOptions = Object.keys(themes).map(k=> ({label:k[0].toUpperCase() +  
+  k.slice(1), name:k}))
+
 const configuration_workflow = () =>
   new Workflow({
     steps: [
       {
         name: "stylesheet",
-        form: async context => {
+        form: async () => {
           return new Form({
             fields: [
               {
@@ -171,8 +305,9 @@ const configuration_workflow = () =>
                 class: "theme",
                 required: true,
                 attributes: {
-                  options: [                   
-                    { name: "Other", label: "Other - from URL" },
+                  options: [
+                    ...themeSelectOptions,
+                    { name: "Other", label: "Other - from URL" }
                   ]
                 }
               },
@@ -180,13 +315,13 @@ const configuration_workflow = () =>
                 name: "css_url",
                 label: "CSS stylesheet URL",
                 type: "String",
-                showIf: { ".theme": "Other" },
+                showIf: { ".theme": "Other" }
               },
               {
                 name: "css_integrity",
                 label: "CSS stylesheet integrity",
                 type: "String",
-                showIf: { ".theme": "Other" },
+                showIf: { ".theme": "Other" }
               },
               {
                 name: "in_card",
