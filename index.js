@@ -341,6 +341,7 @@ const configuration_workflow = () =>
                       label: "Dark Secondary"
                     },
                     { name: "navbar-light bg-light", label: "Light" },
+                    { name: "navbar-light bg-white", label: "White" },
                     { name: "navbar-light", label: "Transparent Light" }
                   ]
                 }
