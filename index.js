@@ -17,6 +17,8 @@ const Table = require("@saltcorn/data/models/table");
 const Form = require("@saltcorn/data/models/form");
 const View = require("@saltcorn/data/models/view");
 const Workflow = require("@saltcorn/data/models/workflow");
+const { renderForm, link } = require("@saltcorn/markup");
+const { alert } = require("@saltcorn/markup/layout_utils")
 
 const blockDispatch = config => ({
   pageHeader: ({ title, blurb }) =>
@@ -81,16 +83,7 @@ const renderBody = (title, body, alerts, config) =>
     alerts
   });
 
-const layout = config => ({
-  wrap: ({
-    title,
-    menu,
-    brand,
-    alerts,
-    currentUrl,
-    body,
-    headers
-  }) => `<!doctype html>
+const wrapIt = (config, bodyAttr, headers, title, body) => `<!doctype html>
 <html lang="en">
   <head>
     <meta charset="utf-8" />
@@ -114,13 +107,8 @@ const layout = config => ({
       .join("")}
     <title>${text(title)}</title>
   </head>
-  <body id="page-top">
-    <div id="wrapper">
-      ${navbar(brand, menu, currentUrl, config)}
-      ${renderBody(title, body, alerts, config)}
-    </div>
-    <!-- Optional JavaScript -->
-    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+  <body ${bodyAttr}>
+    ${body}
     <script src="https://code.jquery.com/jquery-3.4.1.min.js" 
             integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" 
             crossorigin="anonymous"></script>
@@ -134,8 +122,105 @@ const layout = config => ({
     ${config.colorscheme === "navbar-light" ? navbarSolidOnScroll : ""}
   </body>
 </html>`
+
+const layout = config => ({
+  wrap: ({
+    title,
+    menu,
+    brand,
+    alerts,
+    currentUrl,
+    body,
+    headers
+  }) => wrapIt(config, 'id="page-top"', headers, title, `
+    <div id="wrapper">
+      ${navbar(brand, menu, currentUrl, config)}
+      ${renderBody(title, body, alerts, config)}
+    </div>
+    `),
+  authWrap: ({ title,
+    alerts, //TODO
+    form,
+    afterForm,
+    headers,
+    csrfToken,
+    authLinks}) => wrapIt(config, 'class="text-center"', headers, title, `
+  <div class="form-signin">
+    ${alerts.map(a => alert(a.type, a.msg)).join("")}
+    ${renderForm(formModify(form), csrfToken)}
+    ${renderAuthLinks(authLinks)}
+    ${afterForm}
+    <style>
+    html,
+body {
+  height: 100%;
+}
+
+body {
+  display: -ms-flexbox;
+  display: -webkit-box;
+  display: flex;
+  -ms-flex-align: center;
+  -ms-flex-pack: center;
+  -webkit-box-align: center;
+  align-items: center;
+  -webkit-box-pack: center;
+  justify-content: center;
+  padding-top: 40px;
+  padding-bottom: 40px;
+  background-color: #f5f5f5;
+}
+
+.form-signin {
+  width: 100%;
+  max-width: 330px;
+  padding: 15px;
+  margin: 0 auto;
+}
+.form-signin .checkbox {
+  font-weight: 400;
+}
+.form-signin .form-control {
+  position: relative;
+  box-sizing: border-box;
+  height: auto;
+  padding: 10px;
+  font-size: 16px;
+}
+.form-signin .form-control:focus {
+  z-index: 2;
+}
+.form-signin input[type="email"] {
+  margin-bottom: -1px;
+  border-bottom-right-radius: 0;
+  border-bottom-left-radius: 0;
+}
+.form-signin input[type="password"] {
+  margin-bottom: 10px;
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+}
+    </style>
+  </div>
+  `)
 });
-// before body
+const renderAuthLinks = authLinks => {
+  var links = [];
+  if (authLinks.login)
+    links.push(link(authLinks.login, "Already have an account? Login!"));
+  if (authLinks.forgot) links.push(link(authLinks.forgot, "Forgot password?"));
+  if (authLinks.signup)
+    links.push(link(authLinks.signup, "Create an account!"));
+  if (links.length === 0) return "";
+  else return links.map(l => div({ class: "text-center" }, l)).join("");
+};
+
+const formModify = form => {
+  form.formStyle = "vert";
+  form.submitButtonClass = "btn-primary btn-user btn-block";
+  return form;
+};
+
 const get_css_url = config => {
   const def =
     "https://stackpath.bootstrapcdn.com/bootswatch/4.5.0/united/bootstrap.min.css";
