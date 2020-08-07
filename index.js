@@ -18,7 +18,7 @@ const Form = require("@saltcorn/data/models/form");
 const View = require("@saltcorn/data/models/view");
 const Workflow = require("@saltcorn/data/models/workflow");
 const { renderForm, link } = require("@saltcorn/markup");
-const { alert } = require("@saltcorn/markup/layout_utils")
+const { alert } = require("@saltcorn/markup/layout_utils");
 
 const blockDispatch = config => ({
   pageHeader: ({ title, blurb }) =>
@@ -94,8 +94,8 @@ const wrapIt = (config, bodyAttr, headers, title, body) => `<!doctype html>
     <link href="${get_css_url(
       config
     )}" rel="stylesheet" integrity="${get_css_integrity(
-    config
-  )}" crossorigin="anonymous">
+  config
+)}" crossorigin="anonymous">
     <link href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
     ${headers
       .filter(h => h.css)
@@ -121,32 +121,49 @@ const wrapIt = (config, bodyAttr, headers, title, body) => `<!doctype html>
       .join("")}
     ${config.colorscheme === "navbar-light" ? navbarSolidOnScroll : ""}
   </body>
-</html>`
+</html>`;
+
+const authBrand = (config, { name, logo }) =>
+  logo
+    ? `<img class="mb-4" src="${logo}" alt="Logo" width="72" height="72">`
+    : "";
 
 const layout = config => ({
-  wrap: ({
-    title,
-    menu,
-    brand,
-    alerts,
-    currentUrl,
-    body,
-    headers
-  }) => wrapIt(config, 'id="page-top"', headers, title, `
+  wrap: ({ title, menu, brand, alerts, currentUrl, body, headers }) =>
+    wrapIt(
+      config,
+      'id="page-top"',
+      headers,
+      title,
+      `
     <div id="wrapper">
       ${navbar(brand, menu, currentUrl, config)}
       ${renderBody(title, body, alerts, config)}
     </div>
-    `),
-  authWrap: ({ title,
+    `
+    ),
+  authWrap: ({
+    title,
     alerts, //TODO
     form,
     afterForm,
     headers,
+    brand,
     csrfToken,
-    authLinks}) => wrapIt(config, 'class="text-center"', headers, title, `
+    authLinks
+  }) =>
+    wrapIt(
+      config,
+      'class="text-center"',
+      headers,
+      title,
+      `
   <div class="form-signin">
     ${alerts.map(a => alert(a.type, a.msg)).join("")}
+    ${authBrand(config, brand)}
+    <h3>
+      ${title}
+    </h3>
     ${renderForm(formModify(form), csrfToken)}
     ${renderAuthLinks(authLinks)}
     ${afterForm}
@@ -202,7 +219,8 @@ body {
 }
     </style>
   </div>
-  `)
+  `
+    )
 });
 const renderAuthLinks = authLinks => {
   var links = [];
