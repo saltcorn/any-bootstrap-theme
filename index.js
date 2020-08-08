@@ -239,9 +239,11 @@ const formModify = form => {
   return form;
 };
 
+const themes = require("./themes.json");
+
 const get_css_url = config => {
   const def =
-    "https://stackpath.bootstrapcdn.com/bootswatch/4.5.0/united/bootstrap.min.css";
+    themes.flatly.css_url;
   if (!config || !config.theme) return def;
   if (config.theme === "Other") return config.css_url || def;
   if (themes[config.theme]) return themes[config.theme].css_url;
@@ -250,14 +252,14 @@ const get_css_url = config => {
 
 const get_css_integrity = config => {
   const def =
-    "sha384-Uga2yStKRHUWCS7ORqIZhJ9LIAv4i7gZuEdoR1QAmw6H+ffhcf7yCOd0CvSoNwoz";
+    themes.flatly.get_css_integrity;
   if (!config || !config.theme) return def;
   if (config.theme === "Other") return config.css_integrity || def;
   if (themes[config.theme]) return themes[config.theme].css_integrity;
   else return def;
 };
 
-const themes = require("./themes.json");
+
 
 const themeSelectOptions = Object.entries(themes).map(([k, v]) => ({
   label: `${k[0].toUpperCase()}${k.slice(1)} from ${v.source}`,
@@ -278,6 +280,7 @@ const configuration_workflow = () =>
                 type: "String",
                 class: "theme",
                 required: true,
+                default: 'flatly',
                 attributes: {
                   options: [
                     ...themeSelectOptions,
@@ -308,6 +311,7 @@ const configuration_workflow = () =>
                 label: "Navbar color scheme",
                 type: "String",
                 required: true,
+                default:'navbar-light',
                 attributes: {
                   options: [
                     { name: "navbar-dark bg-dark", label: "Dark" },
@@ -334,6 +338,7 @@ const configuration_workflow = () =>
                 sublabel: "0-5 depending on Navbar height and configuration",
                 type: "Integer",
                 required: true,
+                default: 2,
                 attributes: {
                   max: 5,
                   min: 0
