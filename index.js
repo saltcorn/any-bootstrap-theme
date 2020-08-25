@@ -53,6 +53,7 @@ const blockDispatch = config => ({
       min-height: 75vh !important;
     }`)
     ),
+  noBackgroundAtTop: () => true,
   wrapTop: (segment, ix, s) =>
     ["hero", "footer"].includes(segment.type)
       ? s
@@ -64,7 +65,21 @@ const blockDispatch = config => ({
               ix === 0 && config.fixedTop && "mt-5",
               segment.class,
               segment.invertColor && "bg-primary"
-            ]
+            ],
+            style: `${
+              segment.bgType === "Color"
+                ? `background-color: ${segment.bgColor};`
+                : ""
+            }
+            ${
+              segment.bgType === "Image" &&
+              segment.bgFileId &&
+              +segment.bgFileId
+                ? `background-image: url('/files/serve/${segment.bgFileId}');
+        background-size: ${segment.imageSize || "contain"};
+        background-repeat: no-repeat;`
+                : ""
+            }`
           },
           div(
             { class: ["container"] },
@@ -242,8 +257,7 @@ const formModify = form => {
 const themes = require("./themes.json");
 
 const get_css_url = config => {
-  const def =
-    themes.flatly.css_url;
+  const def = themes.flatly.css_url;
   if (!config || !config.theme) return def;
   if (config.theme === "Other") return config.css_url || def;
   if (themes[config.theme]) return themes[config.theme].css_url;
@@ -251,15 +265,12 @@ const get_css_url = config => {
 };
 
 const get_css_integrity = config => {
-  const def =
-    themes.flatly.get_css_integrity;
+  const def = themes.flatly.get_css_integrity;
   if (!config || !config.theme) return def;
   if (config.theme === "Other") return config.css_integrity || def;
   if (themes[config.theme]) return themes[config.theme].css_integrity;
   else return def;
 };
-
-
 
 const themeSelectOptions = Object.entries(themes).map(([k, v]) => ({
   label: `${k[0].toUpperCase()}${k.slice(1)} from ${v.source}`,
@@ -280,7 +291,7 @@ const configuration_workflow = () =>
                 type: "String",
                 class: "theme",
                 required: true,
-                default: 'flatly',
+                default: "flatly",
                 attributes: {
                   options: [
                     ...themeSelectOptions,
@@ -311,7 +322,7 @@ const configuration_workflow = () =>
                 label: "Navbar color scheme",
                 type: "String",
                 required: true,
-                default:'navbar-light',
+                default: "navbar-light",
                 attributes: {
                   options: [
                     { name: "navbar-dark bg-dark", label: "Dark" },
