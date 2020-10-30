@@ -1,15 +1,15 @@
 const {
   div,
   text,
-  h1,
   p,
   footer,
   section,
-  style
+  style,
+  h1,
 } = require("@saltcorn/markup/tags");
 const {
   navbar,
-  navbarSolidOnScroll
+  navbarSolidOnScroll,
 } = require("@saltcorn/markup/layout_utils");
 const renderLayout = require("@saltcorn/markup/layout");
 const Field = require("@saltcorn/data/models/field");
@@ -20,7 +20,7 @@ const Workflow = require("@saltcorn/data/models/workflow");
 const { renderForm, link } = require("@saltcorn/markup");
 const { alert } = require("@saltcorn/markup/layout_utils");
 
-const blockDispatch = config => ({
+const blockDispatch = (config) => ({
   pageHeader: ({ title, blurb }) =>
     div(
       h1({ class: "h3 mb-0 mt-2 text-gray-800" }, title),
@@ -38,7 +38,7 @@ const blockDispatch = config => ({
     section(
       {
         class:
-          "jumbotron text-center m-0 bg-info d-flex flex-column justify-content-center"
+          "jumbotron text-center m-0 bg-info d-flex flex-column justify-content-center",
       },
       div(
         { class: "container" },
@@ -64,7 +64,7 @@ const blockDispatch = config => ({
               `pt-${config.toppad || 0}`,
               ix === 0 && config.fixedTop && "mt-5",
               segment.class,
-              segment.invertColor && "bg-primary"
+              segment.invertColor && "bg-primary",
             ],
             style: `${
               segment.bgType === "Color"
@@ -79,13 +79,25 @@ const blockDispatch = config => ({
         background-size: ${segment.imageSize || "contain"};
         background-repeat: no-repeat;`
                 : ""
-            }`
+            }`,
           },
           div(
             { class: ["container"] },
-            div({ class: "row" }, div({ class: "col-sm-12" }, s))
+            div(
+              { class: "row" },
+              div(
+                {
+                  class: `col-sm-12 ${
+                    segment.textStyle && segment.textStyle !== "h1"
+                      ? segment.textStyle
+                      : ""
+                  }`,
+                },
+                segment.textStyle && segment.textStyle === "h1" ? h1(s) : s
+              )
+            )
           )
-        )
+        ),
 });
 
 const renderBody = (title, body, alerts, config) =>
@@ -95,7 +107,7 @@ const renderBody = (title, body, alerts, config) =>
       typeof body === "string" && config.in_card
         ? { type: "card", title, contents: body }
         : body,
-    alerts
+    alerts,
   });
 
 const wrapIt = (config, bodyAttr, headers, title, body) => `<!doctype html>
@@ -113,12 +125,12 @@ const wrapIt = (config, bodyAttr, headers, title, body) => `<!doctype html>
 )}" crossorigin="anonymous">
     <link href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
     ${headers
-      .filter(h => h.css)
-      .map(h => `<link href="${h.css}" rel="stylesheet">`)
+      .filter((h) => h.css)
+      .map((h) => `<link href="${h.css}" rel="stylesheet">`)
       .join("")}
     ${headers
-      .filter(h => h.headerTag)
-      .map(h => h.headerTag)
+      .filter((h) => h.headerTag)
+      .map((h) => h.headerTag)
       .join("")}
     <title>${text(title)}</title>
   </head>
@@ -131,8 +143,8 @@ const wrapIt = (config, bodyAttr, headers, title, body) => `<!doctype html>
 
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.bundle.min.js"></script>
     ${headers
-      .filter(h => h.script)
-      .map(h => `<script src="${h.script}"></script>`)
+      .filter((h) => h.script)
+      .map((h) => `<script src="${h.script}"></script>`)
       .join("")}
     ${config.colorscheme === "navbar-light" ? navbarSolidOnScroll : ""}
   </body>
@@ -143,7 +155,7 @@ const authBrand = (config, { name, logo }) =>
     ? `<img class="mb-4" src="${logo}" alt="Logo" width="72" height="72">`
     : "";
 
-const layout = config => ({
+const layout = (config) => ({
   wrap: ({ title, menu, brand, alerts, currentUrl, body, headers }) =>
     wrapIt(
       config,
@@ -165,7 +177,7 @@ const layout = config => ({
     headers,
     brand,
     csrfToken,
-    authLinks
+    authLinks,
   }) =>
     wrapIt(
       config,
@@ -174,7 +186,7 @@ const layout = config => ({
       title,
       `
   <div class="form-signin">
-    ${alerts.map(a => alert(a.type, a.msg)).join("")}
+    ${alerts.map((a) => alert(a.type, a.msg)).join("")}
     ${authBrand(config, brand)}
     <h3>
       ${title}
@@ -235,9 +247,9 @@ body {
     </style>
   </div>
   `
-    )
+    ),
 });
-const renderAuthLinks = authLinks => {
+const renderAuthLinks = (authLinks) => {
   var links = [];
   if (authLinks.login)
     links.push(link(authLinks.login, "Already have an account? Login!"));
@@ -245,10 +257,10 @@ const renderAuthLinks = authLinks => {
   if (authLinks.signup)
     links.push(link(authLinks.signup, "Create an account!"));
   if (links.length === 0) return "";
-  else return links.map(l => div({ class: "text-center" }, l)).join("");
+  else return links.map((l) => div({ class: "text-center" }, l)).join("");
 };
 
-const formModify = form => {
+const formModify = (form) => {
   form.formStyle = "vert";
   form.submitButtonClass = "btn-primary btn-user btn-block";
   return form;
@@ -256,7 +268,7 @@ const formModify = form => {
 
 const themes = require("./themes.json");
 
-const get_css_url = config => {
+const get_css_url = (config) => {
   const def = themes.flatly.css_url;
   if (!config || !config.theme) return def;
   if (config.theme === "Other") return config.css_url || def;
@@ -264,7 +276,7 @@ const get_css_url = config => {
   else return def;
 };
 
-const get_css_integrity = config => {
+const get_css_integrity = (config) => {
   const def = themes.flatly.get_css_integrity;
   if (!config || !config.theme) return def;
   if (config.theme === "Other") return config.css_integrity || def;
@@ -274,7 +286,7 @@ const get_css_integrity = config => {
 
 const themeSelectOptions = Object.entries(themes).map(([k, v]) => ({
   label: `${k[0].toUpperCase()}${k.slice(1)} from ${v.source}`,
-  name: k
+  name: k,
 }));
 
 const configuration_workflow = () =>
@@ -295,27 +307,27 @@ const configuration_workflow = () =>
                 attributes: {
                   options: [
                     ...themeSelectOptions,
-                    { name: "Other", label: "Other - specify URL" }
-                  ]
-                }
+                    { name: "Other", label: "Other - specify URL" },
+                  ],
+                },
               },
               {
                 name: "css_url",
                 label: "CSS stylesheet URL",
                 type: "String",
-                showIf: { ".theme": "Other" }
+                showIf: { ".theme": "Other" },
               },
               {
                 name: "css_integrity",
                 label: "CSS stylesheet integrity",
                 type: "String",
-                showIf: { ".theme": "Other" }
+                showIf: { ".theme": "Other" },
               },
               {
                 name: "in_card",
                 label: "Default content in card?",
                 type: "Bool",
-                required: true
+                required: true,
               },
               {
                 name: "colorscheme",
@@ -329,19 +341,19 @@ const configuration_workflow = () =>
                     { name: "navbar-dark bg-primary", label: "Dark Primary" },
                     {
                       name: "navbar-dark bg-secondary",
-                      label: "Dark Secondary"
+                      label: "Dark Secondary",
                     },
                     { name: "navbar-light bg-light", label: "Light" },
                     { name: "navbar-light bg-white", label: "White" },
-                    { name: "navbar-light", label: "Transparent Light" }
-                  ]
-                }
+                    { name: "navbar-light", label: "Transparent Light" },
+                  ],
+                },
               },
               {
                 name: "fixedTop",
                 label: "Navbar Fixed Top",
                 type: "Bool",
-                required: true
+                required: true,
               },
               {
                 name: "toppad",
@@ -352,18 +364,18 @@ const configuration_workflow = () =>
                 default: 2,
                 attributes: {
                   max: 5,
-                  min: 0
-                }
-              }
-            ]
+                  min: 0,
+                },
+              },
+            ],
           });
-        }
-      }
-    ]
+        },
+      },
+    ],
   });
 
 module.exports = {
   sc_plugin_api_version: 1,
   layout,
-  configuration_workflow
+  configuration_workflow,
 };
