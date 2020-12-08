@@ -18,7 +18,11 @@ const Form = require("@saltcorn/data/models/form");
 const View = require("@saltcorn/data/models/view");
 const Workflow = require("@saltcorn/data/models/workflow");
 const { renderForm, link } = require("@saltcorn/markup");
-const { alert } = require("@saltcorn/markup/layout_utils");
+const {
+  alert,
+  headersInHead,
+  headersInBody,
+} = require("@saltcorn/markup/layout_utils");
 
 const blockDispatch = (config) => ({
   pageHeader: ({ title, blurb }) =>
@@ -100,9 +104,10 @@ const blockDispatch = (config) => ({
         ),
 });
 
-const renderBody = (title, body, alerts, config) =>
+const renderBody = (title, body, alerts, config, role) =>
   renderLayout({
     blockDispatch: blockDispatch(config),
+    role,
     layout:
       typeof body === "string" && config.in_card
         ? { type: "card", title, contents: body }
@@ -117,21 +122,14 @@ const wrapIt = (config, bodyAttr, headers, title, body) => `<!doctype html>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <!-- Font Awesome icons (free version)-->
-    <script defer src="https://use.fontawesome.com/releases/v5.13.0/js/all.js" crossorigin="anonymous"></script>
+    <script defer src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/js/all.min.js" integrity="sha512-F5QTlBqZlvuBEs9LQPqc1iZv2UMxcVXezbHzomzS6Df4MZMClge/8+gXrKw2fl5ysdk4rWjR0vKS7NNkfymaBQ==" crossorigin="anonymous"></script>
     <link href="${get_css_url(
       config
     )}" rel="stylesheet" integrity="${get_css_integrity(
   config
 )}" crossorigin="anonymous">
-    <link href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
-    ${headers
-      .filter((h) => h.css)
-      .map((h) => `<link href="${h.css}" rel="stylesheet">`)
-      .join("")}
-    ${headers
-      .filter((h) => h.headerTag)
-      .map((h) => h.headerTag)
-      .join("")}
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/fontawesome.min.css" integrity="sha512-kJ30H6g4NGhWopgdseRb8wTsyllFUYIx3hiUwmGAkgA9B/JbzUBDQVr2VVlWGde6sdBVOG7oU8AL35ORDuMm8g==" crossorigin="anonymous" />
+    ${headersInHead(headers)}
     <title>${text(title)}</title>
   </head>
   <body ${bodyAttr}>
@@ -141,11 +139,8 @@ const wrapIt = (config, bodyAttr, headers, title, body) => `<!doctype html>
             crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
 
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.bundle.min.js"></script>
-    ${headers
-      .filter((h) => h.script)
-      .map((h) => `<script src="${h.script}"></script>`)
-      .join("")}
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js" integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV" crossorigin="anonymous"></script>
+    ${headersInBody(headers)}
     ${config.colorscheme === "navbar-light" ? navbarSolidOnScroll : ""}
   </body>
 </html>`;
@@ -156,7 +151,7 @@ const authBrand = (config, { name, logo }) =>
     : "";
 
 const layout = (config) => ({
-  wrap: ({ title, menu, brand, alerts, currentUrl, body, headers }) =>
+  wrap: ({ title, menu, brand, alerts, currentUrl, body, headers, role }) =>
     wrapIt(
       config,
       'id="page-top"',
@@ -165,7 +160,7 @@ const layout = (config) => ({
       `
     <div id="wrapper">
       ${navbar(brand, menu, currentUrl, config)}
-      ${renderBody(title, body, alerts, config)}
+      ${renderBody(title, body, alerts, config, role)}
     </div>
     `
     ),
