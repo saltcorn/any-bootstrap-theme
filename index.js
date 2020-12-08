@@ -123,11 +123,7 @@ const wrapIt = (config, bodyAttr, headers, title, body) => `<!doctype html>
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <!-- Font Awesome icons (free version)-->
     <script defer src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/js/all.min.js" integrity="sha512-F5QTlBqZlvuBEs9LQPqc1iZv2UMxcVXezbHzomzS6Df4MZMClge/8+gXrKw2fl5ysdk4rWjR0vKS7NNkfymaBQ==" crossorigin="anonymous"></script>
-    <link href="${get_css_url(
-      config
-    )}" rel="stylesheet" integrity="${get_css_integrity(
-  config
-)}" crossorigin="anonymous">
+    ${get_style_header(config)}
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/fontawesome.min.css" integrity="sha512-kJ30H6g4NGhWopgdseRb8wTsyllFUYIx3hiUwmGAkgA9B/JbzUBDQVr2VVlWGde6sdBVOG7oU8AL35ORDuMm8g==" crossorigin="anonymous" />
     ${headersInHead(headers)}
     <title>${text(title)}</title>
@@ -263,6 +259,23 @@ const formModify = (form) => {
 
 const themes = require("./themes.json");
 
+const get_style_header = (config) =>
+  `${get_bs_css(config)}<link href="${get_css_url(
+    config
+  )}" rel="stylesheet" integrity="${get_css_integrity(
+    config
+  )}" crossorigin="anonymous">`;
+
+const get_bs_css = (config) => {
+  if (!config || !config.theme) return "";
+  if (themes[config.theme] && themes[config.theme].bs_css_url)
+    return `<link href="${
+      themes[config.theme].bs_css_url
+    }" rel="stylesheet" integrity="${
+      themes[config.theme].bs_css_integrity
+    }" crossorigin="anonymous">`;
+  return "";
+};
 const get_css_url = (config) => {
   const def = themes.flatly.css_url;
   if (!config || !config.theme) return def;

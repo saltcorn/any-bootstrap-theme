@@ -153,5 +153,12 @@
     "source": "HackerThemes",
     "css_url": "https://cdn.jsdelivr.net/npm/theme-machine@1.0.1/dist/executive-suite/css/bootstrap4-executive-suite.min.css",
     "css_integrity": "sha256-fatBtcL6U/lzN+d8WQ/kp2svKuP1vTlIte4lVdxTDmQ="
+  },
+  "now-ui-kit:": {
+    "source": "Creative Tim",
+    "css_url": "https://cdn.jsdelivr.net/npm/now-ui-kit@1.3.0/assets/css/now-ui-kit.min.css",
+    "css_integrity": "sha256-ENjcGclyG0YQ8ijs1S9LvCGrKTJ5udeyba7bs1BznTE=",
+    "bs_css_url": "https://cdn.jsdelivr.net/npm/now-ui-kit@1.3.0/assets/css/bootstrap.min.css",
+    "bs_css_integrity": "sha256-wvNRYx8ZqUpRxZwdVqv1+MKeQlS7FcLLMdnEBs3kixE="
   }
 }
