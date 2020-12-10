@@ -4,6 +4,7 @@ const {
   p,
   footer,
   section,
+  a,
   style,
   h1,
 } = require("@saltcorn/markup/tags");
@@ -251,8 +252,19 @@ const renderAuthLinks = (authLinks) => {
   if (authLinks.forgot) links.push(link(authLinks.forgot, "Forgot password?"));
   if (authLinks.signup)
     links.push(link(authLinks.signup, "Create an account!"));
-  if (links.length === 0) return "";
-  else return links.map((l) => div({ class: "text-center" }, l)).join("");
+  const meth_links = (authLinks.methods || [])
+    .map(({ url, icon, label }) =>
+      a(
+        { href: url, class: "btn btn-secondary btn-user btn-block" },
+        icon || "",
+        `&nbsp;Login with ${label}`
+      )
+    )
+    .join("");
+
+  return (
+    meth_links + links.map((l) => div({ class: "text-center" }, l)).join("")
+  );
 };
 
 const formModify = (form) => {
