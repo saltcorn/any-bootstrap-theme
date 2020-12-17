@@ -15,6 +15,7 @@ const {
 const renderLayout = require("@saltcorn/markup/layout");
 const Field = require("@saltcorn/data/models/field");
 const Table = require("@saltcorn/data/models/table");
+const Page = require("@saltcorn/data/models/page");
 const Form = require("@saltcorn/data/models/form");
 const View = require("@saltcorn/data/models/view");
 const Workflow = require("@saltcorn/data/models/workflow");
@@ -302,6 +303,7 @@ const configuration_workflow = () =>
       {
         name: "stylesheet",
         form: async () => {
+          const pages = await Page.find({});
           return new Form({
             fields: [
               {
@@ -372,6 +374,17 @@ const configuration_workflow = () =>
                 attributes: {
                   max: 5,
                   min: 0,
+                },
+              },
+              {
+                name: "header_page",
+                label: "Header content",
+                type: "String",
+                attributes: {
+                  options: [
+                    { name: "", label: "None" },
+                    ...pages.map((p) => ({ name: p.name, label: p.name })),
+                  ],
                 },
               },
             ],
