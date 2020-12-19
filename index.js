@@ -115,7 +115,11 @@ const renderBody = (title, body, alerts, config, role) =>
         : body,
     alerts,
   });
-
+const includeBS4css = (config) => {
+  if (!config || !config.theme) return false;
+  if (config.theme === "Other") return false;
+  if (themes[config.theme]) return !!themes[config.theme].includeBS4css;
+};
 const wrapIt = (config, bodyAttr, headers, title, body) => `<!doctype html>
 <html lang="en">
   <head>
@@ -124,6 +128,11 @@ const wrapIt = (config, bodyAttr, headers, title, body) => `<!doctype html>
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <!-- Font Awesome icons (free version)-->
     <script defer src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/js/all.min.js" integrity="sha512-F5QTlBqZlvuBEs9LQPqc1iZv2UMxcVXezbHzomzS6Df4MZMClge/8+gXrKw2fl5ysdk4rWjR0vKS7NNkfymaBQ==" crossorigin="anonymous"></script>
+    ${
+      includeBS4css(config)
+        ? `<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css" integrity="sha384-TX8t27EcRE3e/ihU7zmQxVncDAy5uIKz4rEkgIXeMed4M0jlfIDPvg6uqKI2xXr2" crossorigin="anonymous">`
+        : ""
+    }
     <link href="${get_css_url(
       config
     )}" rel="stylesheet" integrity="${get_css_integrity(

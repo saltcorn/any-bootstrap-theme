@@ -153,5 +153,77 @@
     "source": "HackerThemes",
     "css_url": "https://cdn.jsdelivr.net/npm/theme-machine@1.0.1/dist/executive-suite/css/bootstrap4-executive-suite.min.css",
     "css_integrity": "sha256-fatBtcL6U/lzN+d8WQ/kp2svKuP1vTlIte4lVdxTDmQ="
+  },
+  "deeply": {
+    "source": "TopHat",
+    "css_url": "https://unpkg.com/top-hat-themes@0.1.0/dist/deeply/theme.min.css",
+    "css_integrity": "sha384-d2wvOrnpQB4zifB3/x5sf7HYrUfQo6Lp1AedKCmahd2L0VMG5Co6Dftzc/qfmzWN",
+    "includeBS4css": true
+  },
+  "electro": {
+    "source": "TopHat",
+    "css_url": "https://unpkg.com/top-hat-themes@0.1.0/dist/electro/theme.min.css",
+    "css_integrity": "sha384-vjKKCvNBDytbeiKQrgVZJQ6yuXEwRFsiNXfngwLbESX2uIUJAJ0UOHW+1XCbYfCE",
+    "includeBS4css": true
+  },
+  "graymor": {
+    "source": "TopHat",
+    "css_url": "https://unpkg.com/top-hat-themes@0.1.0/dist/graymor/theme.min.css",
+    "css_integrity": "sha384-BpfdSzW0kF9h6mYDnNHgtpEh0FHi1fxRnDhCZbuf/HrqLxZ5K3FwJwnrfRu2+0ED",
+    "includeBS4css": true
+  },
+  "hollar": {
+    "source": "TopHat",
+    "css_url": "https://unpkg.com/top-hat-themes@0.1.0/dist/hollar/theme.min.css",
+    "css_integrity": "sha384-XTX6UARS60yRXsvHf049FGbU8gQ7FDQ60J8t33ozlLIm2W6Q9c4IY0feFEqCgaM2",
+    "includeBS4css": true
+  },
+  "lymcha": {
+    "source": "TopHat",
+    "css_url": "https://unpkg.com/top-hat-themes@0.1.0/dist/lymcha/theme.min.css",
+    "css_integrity": "sha384-DeSqkOX0VYx4Q1qcGz3oLDM3EAq2I63z/r/a9MEQZ9LzH3dLjW5raHyorKsLw7TK",
+    "includeBS4css": true
+  },
+  "mickie": {
+    "source": "TopHat",
+    "css_url": "https://unpkg.com/top-hat-themes@0.1.0/dist/mickie/theme.min.css",
+    "css_integrity": "sha384-+EmsurWpPwJut/2oX59Xb6qVWGHF1rTTwjH2vGPER1nIBnNykUeV375gcMaya5zZ",
+    "includeBS4css": true
+  },
+  "minco": {
+    "source": "TopHat",
+    "css_url": "https://unpkg.com/top-hat-themes@0.1.0/dist/minco/theme.min.css",
+    "css_integrity": "sha384-fAD0S+5D+lyDo7OahYHpMV93k0loAE9bDpL8yuYQ6YA3+VVV7dtNfnj+1q30dgT4",
+    "includeBS4css": true
+  },
+  "monotone": {
+    "source": "TopHat",
+    "css_url": "https://unpkg.com/top-hat-themes@0.1.0/dist/monotone/theme.min.css",
+    "css_integrity": "sha384-Sh/5tbsiTfVkxykG1i2fj0io0WqNNa8529bSWgMVD9SlXdpbpUEmfpaYHq1qW4qK",
+    "includeBS4css": true
+  },
+  "preptor": {
+    "source": "TopHat",
+    "css_url": "https://unpkg.com/top-hat-themes@0.1.0/dist/preptor/theme.min.css",
+    "css_integrity": "sha384-iteL5PaUsmJhIynOKbgZd8B0fPokn6J/cgOaAlZV/uHQ5qYs/3Tuj99wEfWUah0U",
+    "includeBS4css": true
+  },
+  "skeeblu": {
+    "source": "TopHat",
+    "css_url": "https://unpkg.com/top-hat-themes@0.1.0/dist/skeeblu/theme.min.css",
+    "css_integrity": "sha384-89guOBvYarSfEUZx0cbk/G3c1DeHu67XbSjdaflMlEJHA0qrHAvkyspHl3Q4q1OR",
+    "includeBS4css": true
+  },
+  "sunset": {
+    "source": "TopHat",
+    "css_url": "https://unpkg.com/top-hat-themes@0.1.0/dist/sunset/theme.min.css",
+    "css_integrity": "sha384-jWRGSXf+cIpXGEfML+65G56j7/qjltXjcc7PwNkiR5+16uHytfZEZ4bZUxp4QUIF",
+    "includeBS4css": true
+  },
+  "wandoo": {
+    "source": "TopHat",
+    "css_url": "https://unpkg.com/top-hat-themes@0.1.0/dist/wandoo/theme.min.css",
+    "css_integrity": "sha384-knFmJrpbzGYqIKI3TcX3kcoMB466WTj4vqMSUhfEKnkKx6d8QzPr+x+K9FKBmJS2",
+    "includeBS4css": true
   }
 }
