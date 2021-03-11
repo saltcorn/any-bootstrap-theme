@@ -392,6 +392,7 @@ const configuration_workflow = () =>
 
 module.exports = {
   sc_plugin_api_version: 1,
+  plugin_name: "any-bootstrap-theme",
   layout,
   configuration_workflow,
 };
