@@ -17,6 +17,7 @@ const Field = require("@saltcorn/data/models/field");
 const Table = require("@saltcorn/data/models/table");
 const Form = require("@saltcorn/data/models/form");
 const View = require("@saltcorn/data/models/view");
+const File = require("@saltcorn/data/models/file");
 const Workflow = require("@saltcorn/data/models/workflow");
 const { renderForm, link } = require("@saltcorn/markup");
 const {
@@ -120,7 +121,11 @@ const includeBS4css = (config) => {
   if (config.theme === "Other") return false;
   if (themes[config.theme]) return !!themes[config.theme].includeBS4css;
 };
-const wrapIt = (config, bodyAttr, headers, title, body) => `<!doctype html>
+const wrapIt = (config, bodyAttr, headers, title, body) => {
+  const integrity=get_css_integrity(
+    config
+  )
+  return `<!doctype html>
 <html lang="en">
   <head>
     <meta charset="utf-8" />
@@ -135,18 +140,16 @@ const wrapIt = (config, bodyAttr, headers, title, body) => `<!doctype html>
     }
     <link href="${get_css_url(
       config
-    )}" rel="stylesheet" integrity="${get_css_integrity(
-  config
-)}" crossorigin="anonymous">
+    )}" rel="stylesheet"${integrity ? ` integrity="${integrity}" crossorigin="anonymous"`:''}>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/fontawesome.min.css" integrity="sha512-kJ30H6g4NGhWopgdseRb8wTsyllFUYIx3hiUwmGAkgA9B/JbzUBDQVr2VVlWGde6sdBVOG7oU8AL35ORDuMm8g==" crossorigin="anonymous" />
     ${headersInHead(headers)}
     <title>${text(title)}</title>
   </head>
   <body ${bodyAttr}${
-  config.backgroundColor
-    ? ` style="background-color: ${config.backgroundColor}"`
-    : ""
-}>
+    config.backgroundColor
+      ? ` style="background-color: ${config.backgroundColor}"`
+      : ""
+  }>
     ${body}
     <script src="https://code.jquery.com/jquery-3.4.1.min.js" 
             integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" 
@@ -158,6 +161,7 @@ const wrapIt = (config, bodyAttr, headers, title, body) => `<!doctype html>
     ${config.colorscheme === "navbar-light" ? navbarSolidOnScroll : ""}
   </body>
 </html>`;
+};
 
 const authBrand = (config, { name, logo }) =>
   logo
@@ -291,6 +295,7 @@ const themes = require("./themes.json");
 const get_css_url = (config) => {
   const def = themes.flatly.css_url;
   if (!config || !config.theme) return def;
+  if (config.theme === "File") return `/files/serve/${config.css_file}`;
   if (config.theme === "Other") return config.css_url || def;
   if (themes[config.theme]) return themes[config.theme].css_url;
   else return def;
@@ -299,6 +304,7 @@ const get_css_url = (config) => {
 const get_css_integrity = (config) => {
   const def = themes.flatly.get_css_integrity;
   if (!config || !config.theme) return def;
+  if (config.theme === "File") return null;
   if (config.theme === "Other") return config.css_integrity || def;
   if (themes[config.theme]) return themes[config.theme].css_integrity;
   else return def;
@@ -315,7 +321,12 @@ const configuration_workflow = () =>
       {
         name: "stylesheet",
         form: async () => {
+          const cssfiles = await File.find({
+            mime_super: "text",
+            mime_sub: "css",
+          });
           return new Form({
+            saveAndContinueOption: true,
             fields: [
               {
                 name: "theme",
@@ -327,6 +338,7 @@ const configuration_workflow = () =>
                 attributes: {
                   options: [
                     ...themeSelectOptions,
+                    { name: "File", label: "Uploaded file" },
                     { name: "Other", label: "Other - specify URL" },
                   ],
                 },
@@ -342,6 +354,18 @@ const configuration_workflow = () =>
                 label: "CSS stylesheet integrity",
                 type: "String",
                 showIf: { ".theme": "Other" },
+              },
+              {
+                name: "css_file",
+                label: "CSS stylesheet file",
+                type: "String",
+                showIf: { ".theme": "File" },
+                attributes: {
+                  options: cssfiles.map((fl) => ({
+                    label: fl.filename,
+                    name: fl.id,
+                  })),
+                },
               },
               {
                 name: "in_card",
