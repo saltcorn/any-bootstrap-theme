@@ -119,6 +119,7 @@ const renderBody = (title, body, alerts, config, role) =>
 const includeBS4css = (config) => {
   if (!config || !config.theme) return false;
   if (config.theme === "Other") return false;
+  if (config.theme === "File") return false;
   if (themes[config.theme]) return !!themes[config.theme].includeBS4css;
 };
 const wrapIt = (config, bodyAttr, headers, title, body) => {
