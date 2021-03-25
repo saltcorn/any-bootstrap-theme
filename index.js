@@ -142,7 +142,11 @@ const wrapIt = (config, bodyAttr, headers, title, body) => `<!doctype html>
     ${headersInHead(headers)}
     <title>${text(title)}</title>
   </head>
-  <body ${bodyAttr}>
+  <body ${bodyAttr}${
+  config.backgroundColor
+    ? ` style="background-color: ${config.backgroundColor}"`
+    : ""
+}>
     ${body}
     <script src="https://code.jquery.com/jquery-3.4.1.min.js" 
             integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" 
@@ -382,6 +386,13 @@ const configuration_workflow = () =>
                   max: 5,
                   min: 0,
                 },
+              },
+              {
+                name: "backgroundColor",
+                label: "Background Color",
+                type: "Color",
+                default: "#ffffff",
+                required: true,
               },
             ],
           });
