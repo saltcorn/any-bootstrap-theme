@@ -87,7 +87,7 @@ const blockDispatch = (config) => ({
             }`,
           },
           div(
-            { class: ["container"] },
+            { class: [config.fluid ? "container-fluid" : "container"] },
             div(
               { class: "row" },
               div(
@@ -392,7 +392,11 @@ const configuration_workflow = () =>
                 label: "Background Color",
                 type: "Color",
                 default: "#ffffff",
-                required: true,
+              },
+              {
+                name: "fluid",
+                label: "Fluid full-width container",
+                type: "Bool",
               },
             ],
           });
