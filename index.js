@@ -7,12 +7,16 @@ const {
   a,
   style,
   h1,
+  ul,
+  img,
+  li,
 } = require("@saltcorn/markup/tags");
 const {
   navbar,
   navbarSolidOnScroll,
 } = require("@saltcorn/markup/layout_utils");
 const renderLayout = require("@saltcorn/markup/layout");
+const db = require("@saltcorn/data/db");
 const Field = require("@saltcorn/data/models/field");
 const Table = require("@saltcorn/data/models/table");
 const Form = require("@saltcorn/data/models/form");
@@ -123,9 +127,7 @@ const includeBS4css = (config) => {
   if (themes[config.theme]) return !!themes[config.theme].includeBS4css;
 };
 const wrapIt = (config, bodyAttr, headers, title, body) => {
-  const integrity=get_css_integrity(
-    config
-  )
+  const integrity = get_css_integrity(config);
   return `<!doctype html>
 <html lang="en">
   <head>
@@ -139,9 +141,9 @@ const wrapIt = (config, bodyAttr, headers, title, body) => {
         ? `<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css" integrity="sha384-TX8t27EcRE3e/ihU7zmQxVncDAy5uIKz4rEkgIXeMed4M0jlfIDPvg6uqKI2xXr2" crossorigin="anonymous">`
         : ""
     }
-    <link href="${get_css_url(
-      config
-    )}" rel="stylesheet"${integrity ? ` integrity="${integrity}" crossorigin="anonymous"`:''}>
+    <link href="${get_css_url(config)}" rel="stylesheet"${
+    integrity ? ` integrity="${integrity}" crossorigin="anonymous"` : ""
+  }>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/fontawesome.min.css" integrity="sha512-kJ30H6g4NGhWopgdseRb8wTsyllFUYIx3hiUwmGAkgA9B/JbzUBDQVr2VVlWGde6sdBVOG7oU8AL35ORDuMm8g==" crossorigin="anonymous" />
     ${headersInHead(headers)}
     <title>${text(title)}</title>
@@ -165,24 +167,112 @@ const wrapIt = (config, bodyAttr, headers, title, body) => {
 </html>`;
 };
 
+const active = (currentUrl, item) =>
+  (item.link && currentUrl.startsWith(item.link)) ||
+  (item.subitems &&
+    item.subitems.some((si) => si.link && currentUrl.startsWith(si.link)));
+
+const verticalMenu = ({ menu, currentUrl, brand }) => {
+  const brandLogo = a(
+    { class: "navbar-brand", href: "/" },
+    brand.logo &&
+      img({
+        src: brand.logo,
+        width: "30",
+        height: "30",
+        class: "mx-1 d-inline-block align-top",
+        alt: "Logo",
+        loading: "lazy",
+      }),
+    brand.name
+  );
+  let items = [];
+  menu.forEach((m, ix) => {
+    if (m.items && m.items.length > 0) {
+      if (ix > 0 && !m.isUser)
+        items.push(li({ class: "nav-item border-top" }, m.section));
+      for (const item of m.items) {
+        if (item.link)
+          items.push(
+            li(
+              { class: ["nav-item", active(currentUrl, item) && "active"] },
+              a({ class: "nav-link pl-0", href: item.link }, item.label)
+            )
+          );
+        if (item.subitems) {
+          items.push(li({ class: "nav-item" }, item.label));
+          for (const subitem of item.subitems)
+            items.push(
+              li(
+                {
+                  class: ["nav-item", active(currentUrl, subitem) && "active"],
+                },
+                a({ class: "nav-link pl-1", href: subitem.link }, subitem.label)
+              )
+            );
+        }
+      }
+    }
+  });
+  return brandLogo + ul({ class: "nav flex-column" }, items);
+};
+
 const authBrand = (config, { name, logo }) =>
   logo
     ? `<img class="mb-4" src="${logo}" alt="Logo" width="72" height="72">`
     : "";
-
+const menuWrap = ({ brand, menu, config, currentUrl, body, req }) => {
+  const role = !req ? 1 : req.isAuthenticated() ? req.user.role_id : 10;
+  if (config.menu_style === "No Menu" && role > 1)
+    return div({ id: "wrapper" }, body);
+  else if (config.menu_style === "Side Navbar")
+    return div(
+      { id: "wrapper" },
+      navbar(brand, menu, currentUrl, { class: "d-md-none", ...config }),
+      div(
+        { class: [config.fluid ? "container-fluid" : "container"] },
+        div(
+          { class: "row" },
+          div(
+            { class: "col-2 d-none d-md-block" },
+            verticalMenu({ brand, menu, currentUrl })
+          ),
+          div({ class: "col" }, body)
+        )
+      )
+    );
+  else
+    return div(
+      { id: "wrapper" },
+      navbar(brand, menu, currentUrl, config),
+      body
+    );
+};
 const layout = (config) => ({
-  wrap: ({ title, menu, brand, alerts, currentUrl, body, headers, role }) =>
+  wrap: ({
+    title,
+    menu,
+    brand,
+    alerts,
+    currentUrl,
+    body,
+    headers,
+    role,
+    req,
+  }) =>
     wrapIt(
       config,
       'id="page-top"',
       headers,
       title,
-      `
-    <div id="wrapper">
-      ${navbar(brand, menu, currentUrl, config)}
-      ${renderBody(title, body, alerts, config, role)}
-    </div>
-    `
+      menuWrap({
+        brand,
+        menu,
+        config,
+        currentUrl,
+        body: renderBody(title, body, alerts, config, role),
+        req,
+      })
     ),
   authWrap: ({
     title,
@@ -374,6 +464,15 @@ const configuration_workflow = () =>
                 label: "Default content in card?",
                 type: "Bool",
                 required: true,
+              },
+              {
+                name: "menu_style",
+                label: "Menu style",
+                type: "String",
+                required: true,
+                attributes: {
+                  options: ["Top Navbar", "Side Navbar", "No Menu"],
+                },
               },
               {
                 name: "colorscheme",
