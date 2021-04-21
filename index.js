@@ -174,7 +174,7 @@ const active = (currentUrl, item) =>
 
 const verticalMenu = ({ menu, currentUrl, brand }) => {
   const brandLogo = a(
-    { class: "navbar-brand", href: "/" },
+    { class: "navbar-brand mt-1 mb-2", href: "/" },
     brand.logo &&
       img({
         src: brand.logo,
@@ -225,7 +225,10 @@ const menuWrap = ({ brand, menu, config, currentUrl, body, req }) => {
   const role = !req ? 1 : req.isAuthenticated() ? req.user.role_id : 10;
   if (config.menu_style === "No Menu" && role > 1)
     return div({ id: "wrapper" }, body);
-  else if (config.menu_style === "Side Navbar")
+  else if (config.menu_style === "Side Navbar") {
+    const colschm = (config.colorscheme || "").split(" ")
+    const bg = colschm[1];
+    const txt = (colschm[0]||"").includes("dark") ? 'text-light': ''
     return div(
       { id: "wrapper" },
       navbar(brand, menu, currentUrl, { class: "d-md-none", ...config }),
@@ -234,14 +237,14 @@ const menuWrap = ({ brand, menu, config, currentUrl, body, req }) => {
         div(
           { class: "row" },
           div(
-            { class: "col-2 d-none d-md-block" },
+            { class: ["col-2 d-none d-md-block", bg, txt] },
             verticalMenu({ brand, menu, currentUrl })
           ),
           div({ class: "col" }, body)
         )
       )
     );
-  else
+  } else
     return div(
       { id: "wrapper" },
       navbar(brand, menu, currentUrl, config),
