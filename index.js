@@ -237,7 +237,7 @@ const menuWrap = ({ brand, menu, config, currentUrl, body, req }) => {
         div(
           { class: "row" },
           div(
-            { class: ["col-2 d-none d-md-block", bg, txt] },
+            { class: ["col-2 d-none d-md-block", bg, txt], style: "min-height: 100vh" },
             verticalMenu({ brand, menu, currentUrl })
           ),
           div({ class: "col" }, body)
