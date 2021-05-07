@@ -224,11 +224,11 @@ const authBrand = (config, { name, logo }) =>
 const menuWrap = ({ brand, menu, config, currentUrl, body, req }) => {
   const role = !req ? 1 : req.isAuthenticated() ? req.user.role_id : 10;
   if (config.menu_style === "No Menu" && role > 1)
-    return div({ id: "wrapper" }, body);
+    return div({ id: "wrapper" }, div({ id: "page-inner-content" }, body));
   else if (config.menu_style === "Side Navbar") {
-    const colschm = (config.colorscheme || "").split(" ")
+    const colschm = (config.colorscheme || "").split(" ");
     const bg = colschm[1];
-    const txt = (colschm[0]||"").includes("dark") ? 'text-light': ''
+    const txt = (colschm[0] || "").includes("dark") ? "text-light" : "";
     return div(
       { id: "wrapper" },
       navbar(brand, menu, currentUrl, { class: "d-md-none", ...config }),
@@ -237,10 +237,13 @@ const menuWrap = ({ brand, menu, config, currentUrl, body, req }) => {
         div(
           { class: "row" },
           div(
-            { class: ["col-2 d-none d-md-block", bg, txt], style: "min-height: 100vh" },
+            {
+              class: ["col-2 d-none d-md-block", bg, txt],
+              style: "min-height: 100vh",
+            },
             verticalMenu({ brand, menu, currentUrl })
           ),
-          div({ class: "col" }, body)
+          div({ id: "page-inner-content", class: "col" }, body)
         )
       )
     );
@@ -248,10 +251,12 @@ const menuWrap = ({ brand, menu, config, currentUrl, body, req }) => {
     return div(
       { id: "wrapper" },
       navbar(brand, menu, currentUrl, config),
-      body
+      div({ id: "page-inner-content" }, body)
     );
 };
 const layout = (config) => ({
+  renderBody: ({ title, body, alerts, role }) =>
+    renderBody(title, body, alerts, config, role),
   wrap: ({
     title,
     menu,
