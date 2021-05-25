@@ -144,7 +144,6 @@ const wrapIt = (config, bodyAttr, headers, title, body) => {
     <link href="${get_css_url(config)}" rel="stylesheet"${
     integrity ? ` integrity="${integrity}" crossorigin="anonymous"` : ""
   }>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/fontawesome.min.css" integrity="sha512-kJ30H6g4NGhWopgdseRb8wTsyllFUYIx3hiUwmGAkgA9B/JbzUBDQVr2VVlWGde6sdBVOG7oU8AL35ORDuMm8g==" crossorigin="anonymous" />
     ${headersInHead(headers)}
     <title>${text(title)}</title>
   </head>
@@ -154,6 +153,7 @@ const wrapIt = (config, bodyAttr, headers, title, body) => {
       : ""
   }>
     ${body}
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/fontawesome.min.css" integrity="sha512-kJ30H6g4NGhWopgdseRb8wTsyllFUYIx3hiUwmGAkgA9B/JbzUBDQVr2VVlWGde6sdBVOG7oU8AL35ORDuMm8g==" crossorigin="anonymous" />
     <script
 			  src="https://code.jquery.com/jquery-3.6.0.min.js"
 			  integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4="
