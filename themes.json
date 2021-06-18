@@ -1,13 +1,13 @@
 {
   "cerulean": {
     "source": "Bootswatch",
-    "css_url": "https://stackpath.bootstrapcdn.com/bootswatch/4.5.0/cerulean/bootstrap.min.css",
-    "css_integrity": "sha384-b+jboW/YIpW2ZZYyYdXczKK6igHlnkPNfN9kYAbqYV7rNQ9PKTXlS2D6j1QZIATW"
+    "css_url": "https://cdn.jsdelivr.net/npm/bootswatch@4.5.2/dist/cerulean/bootstrap.min.css",
+    "css_integrity": "sha384-3fdgwJw17Bi87e1QQ4fsLn4rUFqWw//KU0g8TvV6quvahISRewev6/EocKNuJmEw"
   },
   "cosmo": {
     "source": "Bootswatch",
-    "css_url": "https://stackpath.bootstrapcdn.com/bootswatch/4.5.0/cosmo/bootstrap.min.css",
-    "css_integrity": "sha384-9/chHLTCcBULgxOFoUyZXSgEF0uFXs+NrQqzcy/DXqcR+Sk8C1l4EgmUXAEzTb92"
+    "css_url": "https://cdn.jsdelivr.net/npm/bootswatch@4.5.2/dist/cosmo/bootstrap.min.css",
+    "css_integrity": "sha384-5QFXyVb+lrCzdN228VS3HmzpiE7ZVwLQtkt+0d9W43LQMzz4HBnnqvVxKg6O+04d"
   },
   "cyborg": {
     "source": "Bootswatch",
