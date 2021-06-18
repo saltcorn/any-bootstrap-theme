@@ -33,7 +33,7 @@ Give an example
 
 ## Style guide
 
-We use (prettier)[https://github.com/saltcorn/saltcorn/#prettier].
+We use [prettier](https://github.com/saltcorn/saltcorn/#prettier).
 
 ## Licensing 
 
