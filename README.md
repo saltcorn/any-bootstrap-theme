@@ -1,7 +1,7 @@
 ![Saltcorn logo](https://saltcorn.com/files/serve/16)
 # any-bootstrap-theme
 
-Configurable Bootstrap themes based on [Bootswatch](https://github.com/thomaspark/bootswatch/) for [Saltcorn platform](https://saltcorn.com/)
+Configurable Bootstrap themes for [Saltcorn platform](https://saltcorn.com/)
 
 ## Installing / Getting started
 
@@ -12,7 +12,7 @@ Configurable Bootstrap themes based on [Bootswatch](https://github.com/thomaspar
 ```shell
 git clone https://github.com/saltcorn/any-bootstrap-theme
 ```
-TODO
+Correct themes.json to add new themes.
 
 ## Versioning
 
@@ -20,16 +20,8 @@ We use [SemVer](http://semver.org/) for versioning. For the versions available, 
 
 ## Configuration
 
-Click to Configure plugin in Plugin card in Plugins and pack store.
-
-## Tests
-
-Describe and show how to run the tests with code examples.
-Explain what these tests test and why.
-
-```shell
-Give an example
-```
+The plugin has configuration.
+TODO more docs
 
 ## Style guide
 
