@@ -14,6 +14,7 @@ const {
 const {
   navbar,
   navbarSolidOnScroll,
+  mobileBottomNavBar,
 } = require("@saltcorn/markup/layout_utils");
 const renderLayout = require("@saltcorn/markup/layout");
 const db = require("@saltcorn/data/db");
@@ -222,36 +223,44 @@ const authBrand = (config, { name, logo }) =>
     ? `<img class="mb-4" src="${logo}" alt="Logo" width="72" height="72">`
     : "";
 const menuWrap = ({ brand, menu, config, currentUrl, body, req }) => {
+  const colschm = (config.colorscheme || "").split(" ");
+  const bg = colschm[1];
+  const txt = (colschm[0] || "").includes("dark") ? "text-light" : "";
+
+  const mobileNav = mobileBottomNavBar
+    ? mobileBottomNavBar(currentUrl, menu, bg, txt)
+    : "";
   const role = !req ? 1 : req.isAuthenticated() ? req.user.role_id : 10;
   if (config.menu_style === "No Menu" && role > 1)
     return div({ id: "wrapper" }, div({ id: "page-inner-content" }, body));
   else if (config.menu_style === "Side Navbar") {
-    const colschm = (config.colorscheme || "").split(" ");
-    const bg = colschm[1];
-    const txt = (colschm[0] || "").includes("dark") ? "text-light" : "";
-    return div(
-      { id: "wrapper" },
-      navbar(brand, menu, currentUrl, { class: "d-md-none", ...config }),
+    return (
       div(
-        { class: [config.fluid ? "container-fluid" : "container"] },
+        { id: "wrapper" },
+        navbar(brand, menu, currentUrl, { class: "d-md-none", ...config }),
         div(
-          { class: "row" },
+          { class: [config.fluid ? "container-fluid" : "container"] },
           div(
-            {
-              class: ["col-2 d-none d-md-block", bg, txt],
-              style: "min-height: 100vh",
-            },
-            verticalMenu({ brand, menu, currentUrl })
-          ),
-          div({ id: "page-inner-content", class: "col" }, body)
+            { class: "row" },
+            div(
+              {
+                class: ["col-2 d-none d-md-block", bg, txt],
+                style: "min-height: 100vh",
+              },
+              verticalMenu({ brand, menu, currentUrl })
+            ),
+            div({ id: "page-inner-content", class: "col" }, body)
+          )
         )
-      )
+      ) + mobileNav
     );
   } else
-    return div(
-      { id: "wrapper" },
-      navbar(brand, menu, currentUrl, config),
-      div({ id: "page-inner-content" }, body)
+    return (
+      div(
+        { id: "wrapper" },
+        navbar(brand, menu, currentUrl, config),
+        div({ id: "page-inner-content" }, body)
+      ) + mobileNav
     );
 };
 const layout = (config) => ({
