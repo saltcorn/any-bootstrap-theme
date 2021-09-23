@@ -488,7 +488,7 @@ const configuration_workflow = () =>
                 label: "Menu style",
                 type: "String",
                 required: true,
-                fieldview: "radio_group",
+                //fieldview: "radio_group",
                 attributes: {
                   inline: true,
                   options: ["Top Navbar", "Side Navbar", "No Menu"],
