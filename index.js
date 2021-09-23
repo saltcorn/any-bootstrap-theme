@@ -193,6 +193,7 @@ const verticalMenu = ({ menu, currentUrl, brand }) => {
       if (ix > 0 && !m.isUser)
         items.push(li({ class: "nav-item border-top" }, m.section));
       for (const item of m.items) {
+        if (item.location === "Mobile Bottom") continue;
         if (item.link)
           items.push(
             li(
@@ -487,7 +488,9 @@ const configuration_workflow = () =>
                 label: "Menu style",
                 type: "String",
                 required: true,
+                fieldview: "radio_group",
                 attributes: {
+                  inline: true,
                   options: ["Top Navbar", "Side Navbar", "No Menu"],
                 },
               },
