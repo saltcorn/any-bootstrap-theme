@@ -30,6 +30,7 @@ const {
   headersInHead,
   headersInBody,
 } = require("@saltcorn/markup/layout_utils");
+const { features } = require("@saltcorn/data/db/state");
 
 const blockDispatch = (config) => ({
   pageHeader: ({ title, blurb }) =>
@@ -152,7 +153,11 @@ const wrapIt = (config, bodyAttr, headers, title, body) => {
       : ""
   }>
     ${body}
-    <link rel="stylesheet" href="/plugins/public/any-bootstrap-theme/fontawesome/fontawesome.min.css" />
+    ${
+      features && features.deep_public_plugin_serve
+        ? '<link rel="stylesheet" href="/plugins/public/any-bootstrap-theme/fontawesome/fontawesome.min.css" />'
+        : '<script defer src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/js/all.min.js" integrity="sha512-F5QTlBqZlvuBEs9LQPqc1iZv2UMxcVXezbHzomzS6Df4MZMClge/8+gXrKw2fl5ysdk4rWjR0vKS7NNkfymaBQ==" crossorigin="anonymous"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/fontawesome.min.css" integrity="sha512-kJ30H6g4NGhWopgdseRb8wTsyllFUYIx3hiUwmGAkgA9B/JbzUBDQVr2VVlWGde6sdBVOG7oU8AL35ORDuMm8g==" crossorigin="anonymous" />'
+    }
     <script
 			  src="https://code.jquery.com/jquery-3.6.0.min.js"
 			  integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4="
