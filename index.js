@@ -14,6 +14,7 @@ const {
 const {
   navbar,
   navbarSolidOnScroll,
+  mobileBottomNavBar,
 } = require("@saltcorn/markup/layout_utils");
 const renderLayout = require("@saltcorn/markup/layout");
 const db = require("@saltcorn/data/db");
@@ -29,6 +30,7 @@ const {
   headersInHead,
   headersInBody,
 } = require("@saltcorn/markup/layout_utils");
+const { features } = require("@saltcorn/data/db/state");
 
 const blockDispatch = (config) => ({
   pageHeader: ({ title, blurb }) =>
@@ -134,8 +136,6 @@ const wrapIt = (config, bodyAttr, headers, title, body) => {
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <!-- Font Awesome icons (free version)-->
-    <script defer src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/js/all.min.js" integrity="sha512-F5QTlBqZlvuBEs9LQPqc1iZv2UMxcVXezbHzomzS6Df4MZMClge/8+gXrKw2fl5ysdk4rWjR0vKS7NNkfymaBQ==" crossorigin="anonymous"></script>
     ${
       includeBS4css(config)
         ? `<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css" integrity="sha384-TX8t27EcRE3e/ihU7zmQxVncDAy5uIKz4rEkgIXeMed4M0jlfIDPvg6uqKI2xXr2" crossorigin="anonymous">`
@@ -153,7 +153,11 @@ const wrapIt = (config, bodyAttr, headers, title, body) => {
       : ""
   }>
     ${body}
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/fontawesome.min.css" integrity="sha512-kJ30H6g4NGhWopgdseRb8wTsyllFUYIx3hiUwmGAkgA9B/JbzUBDQVr2VVlWGde6sdBVOG7oU8AL35ORDuMm8g==" crossorigin="anonymous" />
+    ${
+      features && features.deep_public_plugin_serve
+        ? '<link rel="stylesheet" href="/plugins/public/any-bootstrap-theme/fontawesome/fontawesome.min.css" />'
+        : '<script defer src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/js/all.min.js" integrity="sha512-F5QTlBqZlvuBEs9LQPqc1iZv2UMxcVXezbHzomzS6Df4MZMClge/8+gXrKw2fl5ysdk4rWjR0vKS7NNkfymaBQ==" crossorigin="anonymous"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/fontawesome.min.css" integrity="sha512-kJ30H6g4NGhWopgdseRb8wTsyllFUYIx3hiUwmGAkgA9B/JbzUBDQVr2VVlWGde6sdBVOG7oU8AL35ORDuMm8g==" crossorigin="anonymous" />'
+    }
     <script
 			  src="https://code.jquery.com/jquery-3.6.0.min.js"
 			  integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4="
@@ -192,6 +196,7 @@ const verticalMenu = ({ menu, currentUrl, brand }) => {
       if (ix > 0 && !m.isUser)
         items.push(li({ class: "nav-item border-top" }, m.section));
       for (const item of m.items) {
+        if (item.location === "Mobile Bottom") continue;
         if (item.link)
           items.push(
             li(
@@ -222,36 +227,44 @@ const authBrand = (config, { name, logo }) =>
     ? `<img class="mb-4" src="${logo}" alt="Logo" width="72" height="72">`
     : "";
 const menuWrap = ({ brand, menu, config, currentUrl, body, req }) => {
+  const colschm = (config.colorscheme || "").split(" ");
+  const bg = colschm[1];
+  const txt = (colschm[0] || "").includes("dark") ? "text-light" : "";
+
+  const mobileNav = mobileBottomNavBar
+    ? mobileBottomNavBar(currentUrl, menu, bg, txt)
+    : "";
   const role = !req ? 1 : req.isAuthenticated() ? req.user.role_id : 10;
   if (config.menu_style === "No Menu" && role > 1)
     return div({ id: "wrapper" }, div({ id: "page-inner-content" }, body));
   else if (config.menu_style === "Side Navbar") {
-    const colschm = (config.colorscheme || "").split(" ");
-    const bg = colschm[1];
-    const txt = (colschm[0] || "").includes("dark") ? "text-light" : "";
-    return div(
-      { id: "wrapper" },
-      navbar(brand, menu, currentUrl, { class: "d-md-none", ...config }),
+    return (
       div(
-        { class: [config.fluid ? "container-fluid" : "container"] },
+        { id: "wrapper" },
+        navbar(brand, menu, currentUrl, { class: "d-md-none", ...config }),
         div(
-          { class: "row" },
+          { class: [config.fluid ? "container-fluid" : "container"] },
           div(
-            {
-              class: ["col-2 d-none d-md-block", bg, txt],
-              style: "min-height: 100vh",
-            },
-            verticalMenu({ brand, menu, currentUrl })
-          ),
-          div({ id: "page-inner-content", class: "col" }, body)
+            { class: "row" },
+            div(
+              {
+                class: ["col-2 d-none d-md-block", bg, txt],
+                style: "min-height: 100vh",
+              },
+              verticalMenu({ brand, menu, currentUrl })
+            ),
+            div({ id: "page-inner-content", class: "col" }, body)
+          )
         )
-      )
+      ) + mobileNav
     );
   } else
-    return div(
-      { id: "wrapper" },
-      navbar(brand, menu, currentUrl, config),
-      div({ id: "page-inner-content" }, body)
+    return (
+      div(
+        { id: "wrapper" },
+        navbar(brand, menu, currentUrl, config),
+        div({ id: "page-inner-content" }, body)
+      ) + mobileNav
     );
 };
 const layout = (config) => ({
@@ -478,7 +491,9 @@ const configuration_workflow = () =>
                 label: "Menu style",
                 type: "String",
                 required: true,
+                //fieldview: "radio_group",
                 attributes: {
+                  inline: true,
                   options: ["Top Navbar", "Side Navbar", "No Menu"],
                 },
               },
