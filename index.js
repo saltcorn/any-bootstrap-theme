@@ -280,10 +280,11 @@ const layout = (config) => ({
     headers,
     role,
     req,
+    bodyClass,
   }) =>
     wrapIt(
       config,
-      'id="page-top"',
+      `id="page-top" class="${bodyClass || ""}"`,
       headers,
       title,
       menuWrap({
@@ -304,10 +305,11 @@ const layout = (config) => ({
     brand,
     csrfToken,
     authLinks,
+    bodyClass,
   }) =>
     wrapIt(
       config,
-      'class="text-center"',
+      `class="text-center ${bodyClass || ""}"`,
       headers,
       title,
       `
