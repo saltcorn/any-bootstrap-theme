@@ -228,7 +228,7 @@ const verticalMenu = ({ menu, currentUrl, brand }) => {
                       ],
                     },
                     a(
-                      { class: "nav-link pl-1", href: subitem.link },
+                      { class: "nav-link pl-3", href: subitem.link },
                       subitem.label
                     )
                   )
@@ -275,15 +275,11 @@ const menuWrap = ({ brand, menu, config, currentUrl, body, req }) => {
 }
 
 #sidebar {
-  min-width: 345px;
-  max-width: 345px;
-  margin-left: -345px;
+  min-width: 280px;
+  max-width: 280px;
+  margin-left: 0px;
   background: #121933;
   transition: all 0.3s;
-}
-
-#sidebar.open {
-  margin-left: 0px;
 }
 
 #sidebar ul.components {
@@ -327,7 +323,7 @@ a[data-toggle="collapse"] {
         `),
         nav(
           {
-            class: "open d-none d-md-flex flex-column align-center",
+            class: "d-none d-md-flex flex-column align-center",
             id: "sidebar",
           },
 
