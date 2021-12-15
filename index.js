@@ -194,8 +194,6 @@ const verticalMenu = ({ menu, currentUrl, brand }) => {
   let items = [];
   menu.forEach((m, ix) => {
     if (m.items && m.items.length > 0) {
-      if (ix > 0 && !m.isUser)
-        items.push(li({ class: "nav-item border-top" }, m.section));
       m.items.forEach((item, ix1) => {
         if (item.location === "Mobile Bottom") return;
         if (item.subitems) {
@@ -242,7 +240,7 @@ const verticalMenu = ({ menu, currentUrl, brand }) => {
           items.push(
             li(
               { class: ["nav-item", active(currentUrl, item) && "active"] },
-              a({ class: "nav-link pl-0", href: item.link }, item.label)
+              a({ class: "nav-link", href: item.link }, item.label)
             )
           );
       });
