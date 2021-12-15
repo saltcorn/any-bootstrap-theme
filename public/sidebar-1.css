@@ -6,7 +6,6 @@
   min-width: 280px;
   max-width: 280px;
   margin-left: 0px;
-  background: #121933;
   transition: all 0.3s;
 }
 
@@ -32,7 +31,6 @@
 #sidebar ul li.active > a,
 a[aria-expanded="true"] {
   color: #fff;
-  background: #121933;
 }
 
 a[data-toggle="collapse"] {

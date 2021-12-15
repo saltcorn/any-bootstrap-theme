@@ -212,14 +212,17 @@ const verticalMenu = ({ menu, currentUrl, originalUrl, brand }) => {
           items.push(
             li(
               {
-                class: [active(currentUrl, item, originalUrl) && "active"],
+                class: [
+                  "nav-item",
+                  active(currentUrl, item, originalUrl) && "active",
+                ],
               },
               a(
                 {
                   href: `#menuCollapse${ix}_${ix1}`,
                   "data-toggle": "collapse",
                   "aria-expanded": false,
-                  class: "dropdown-toggle",
+                  class: "dropdown-toggle nav-link",
                 },
                 item.label
               ),
@@ -300,7 +303,9 @@ const verticalMenu = ({ menu, currentUrl, originalUrl, brand }) => {
       });
     }
   });
-  return brandLogo + ul({ class: "list-unstyled components" }, items);
+  return (
+    brandLogo + ul({ class: "navbar-nav list-unstyled components" }, items)
+  );
 };
 
 const authBrand = (config, { name, logo }) =>
@@ -317,6 +322,7 @@ const menuWrap = ({
   req,
 }) => {
   const colschm = (config.colorscheme || "").split(" ");
+  const navbarCol = colschm[0];
   const bg = colschm[1];
   const txt = (colschm[0] || "").includes("dark") ? "text-light" : "";
 
@@ -334,7 +340,12 @@ const menuWrap = ({
 
         nav(
           {
-            class: "d-none d-md-flex flex-column align-center",
+            class: [
+              "d-none d-md-flex flex-column align-center",
+              navbarCol,
+              bg,
+              txt,
+            ],
             id: "sidebar",
           },
 
