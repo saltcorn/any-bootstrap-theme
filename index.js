@@ -195,31 +195,59 @@ const verticalMenu = ({ menu, currentUrl, brand }) => {
     if (m.items && m.items.length > 0) {
       if (ix > 0 && !m.isUser)
         items.push(li({ class: "nav-item border-top" }, m.section));
-      for (const item of m.items) {
-        if (item.location === "Mobile Bottom") continue;
-        if (item.link)
+      m.items.forEach((item, ix1) => {
+        if (item.location === "Mobile Bottom") return;
+        if (item.subitems) {
+          items.push(
+            li(
+              {
+                class: [active(currentUrl, item) && "active"],
+              },
+              a(
+                {
+                  href: `#menuCollapse${ix}_${ix1}`,
+                  "data-toggle": "collapse",
+                  "aria-expanded": false,
+                  class: "dropdown-toggle",
+                },
+                item.label
+              ),
+              ul(
+                {
+                  class: [
+                    active(currentUrl, item) ? "collapse.show" : "collapse",
+                    "list-unstyled",
+                  ],
+                  id: `menuCollapse${ix}_${ix1}`,
+                },
+                item.subitems.map((subitem) =>
+                  li(
+                    {
+                      class: [
+                        "nav-item",
+                        active(currentUrl, subitem) && "active",
+                      ],
+                    },
+                    a(
+                      { class: "nav-link pl-1", href: subitem.link },
+                      subitem.label
+                    )
+                  )
+                )
+              )
+            )
+          );
+        } else if (item.link)
           items.push(
             li(
               { class: ["nav-item", active(currentUrl, item) && "active"] },
               a({ class: "nav-link pl-0", href: item.link }, item.label)
             )
           );
-        if (item.subitems) {
-          items.push(li({ class: "nav-item" }, item.label));
-          for (const subitem of item.subitems)
-            items.push(
-              li(
-                {
-                  class: ["nav-item", active(currentUrl, subitem) && "active"],
-                },
-                a({ class: "nav-link pl-1", href: subitem.link }, subitem.label)
-              )
-            );
-        }
-      }
+      });
     }
   });
-  return brandLogo + ul({ class: "nav flex-column" }, items);
+  return brandLogo + ul({ class: "list-unstyled components" }, items);
 };
 
 const authBrand = (config, { name, logo }) =>
