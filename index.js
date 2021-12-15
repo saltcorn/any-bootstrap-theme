@@ -10,7 +10,11 @@ const {
   ul,
   img,
   li,
+  form,
+  input,
   nav,
+  button,
+  i,
 } = require("@saltcorn/markup/tags");
 const {
   navbar,
@@ -238,7 +242,7 @@ const verticalMenu = ({ menu, currentUrl, originalUrl, brand }) => {
                       ],
                     },
                     a(
-                      { class: "nav-link pl-3", href: subitem.link },
+                      { class: "nav-link sublink", href: subitem.link },
                       subitem.label
                     )
                   )
@@ -256,6 +260,41 @@ const verticalMenu = ({ menu, currentUrl, originalUrl, brand }) => {
                 ],
               },
               a({ class: "nav-link", href: item.link }, item.label)
+            )
+          );
+        else if (item.type === "Search")
+          items.push(
+            li(
+              form(
+                {
+                  action: "/search",
+                  class: "menusearch",
+                  method: "get",
+                },
+                div(
+                  { class: "input-group search-bar" },
+
+                  input({
+                    type: "search",
+                    class: "form-control search-bar pl-2 hasbl",
+                    placeholder: item.label,
+                    id: "inputq",
+                    name: "q",
+                    "aria-label": "Search",
+                    "aria-describedby": "button-search-submit",
+                  }),
+                  div(
+                    { class: "input-group-append" },
+                    button(
+                      {
+                        class: "btn btn-outline-secondary search-bar",
+                        type: "submit",
+                      },
+                      i({ class: "fas fa-search" })
+                    )
+                  )
+                )
+              )
             )
           );
       });

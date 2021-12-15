@@ -11,13 +11,17 @@
 }
 
 #sidebar ul.components {
-  padding: 20px 0;
+  padding: 10px 0;
   border-bottom: 1px solid white;
 }
 
 #sidebar ul li a {
-  padding: 10px;
-  font-size: 1.1em;
+  padding: 10px 20px;
+  display: block;
+}
+
+#sidebar ul li a.sublink {
+  padding: 10px 30px;
   display: block;
 }
 
@@ -46,4 +50,9 @@ a[data-toggle="collapse"] {
   width: 100%;
   min-height: 100vh;
   transition: all 0.3s;
+}
+
+#sidebar form.menusearch .input-group {
+  width: 92% !important;
+  margin-left: 12px;
 }
