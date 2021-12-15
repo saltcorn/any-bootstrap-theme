@@ -173,12 +173,19 @@ const wrapIt = (config, bodyAttr, headers, title, body) => {
 </html>`;
 };
 
-const active = (currentUrl, item) =>
-  (item.link && currentUrl.startsWith(item.link)) ||
+const active = (currentUrl, item, originalUrl) =>
+  (item.link &&
+    (currentUrl.startsWith(item.link) ||
+      (originalUrl && originalUrl.startsWith(item.link)))) ||
   (item.subitems &&
-    item.subitems.some((si) => si.link && currentUrl.startsWith(si.link)));
+    item.subitems.some(
+      (si) =>
+        si.link &&
+        (currentUrl.startsWith(si.link) ||
+          (originalUrl && originalUrl.startsWith(si.link)))
+    ));
 
-const verticalMenu = ({ menu, currentUrl, brand }) => {
+const verticalMenu = ({ menu, currentUrl, originalUrl, brand }) => {
   const brandLogo = a(
     { class: "navbar-brand mt-1 mb-2", href: "/" },
     brand.logo &&
@@ -201,7 +208,7 @@ const verticalMenu = ({ menu, currentUrl, brand }) => {
           items.push(
             li(
               {
-                class: [active(currentUrl, item) && "active"],
+                class: [active(currentUrl, item, originalUrl) && "active"],
               },
               a(
                 {
@@ -215,7 +222,9 @@ const verticalMenu = ({ menu, currentUrl, brand }) => {
               ul(
                 {
                   class: [
-                    active(currentUrl, item) ? "collapse.show" : "collapse",
+                    active(currentUrl, item, originalUrl)
+                      ? "collapse.show"
+                      : "collapse",
                     "list-unstyled",
                   ],
                   id: `menuCollapse${ix}_${ix1}`,
@@ -225,7 +234,7 @@ const verticalMenu = ({ menu, currentUrl, brand }) => {
                     {
                       class: [
                         "nav-item",
-                        active(currentUrl, subitem) && "active",
+                        active(currentUrl, subitem, originalUrl) && "active",
                       ],
                     },
                     a(
@@ -240,7 +249,12 @@ const verticalMenu = ({ menu, currentUrl, brand }) => {
         } else if (item.link)
           items.push(
             li(
-              { class: ["nav-item", active(currentUrl, item) && "active"] },
+              {
+                class: [
+                  "nav-item",
+                  active(currentUrl, item, originalUrl) && "active",
+                ],
+              },
               a({ class: "nav-link", href: item.link }, item.label)
             )
           );
@@ -254,7 +268,15 @@ const authBrand = (config, { name, logo }) =>
   logo
     ? `<img class="mb-4" src="${logo}" alt="Logo" width="72" height="72">`
     : "";
-const menuWrap = ({ brand, menu, config, currentUrl, body, req }) => {
+const menuWrap = ({
+  brand,
+  menu,
+  config,
+  currentUrl,
+  originalUrl,
+  body,
+  req,
+}) => {
   const colschm = (config.colorscheme || "").split(" ");
   const bg = colschm[1];
   const txt = (colschm[0] || "").includes("dark") ? "text-light" : "";
@@ -277,7 +299,7 @@ const menuWrap = ({ brand, menu, config, currentUrl, body, req }) => {
             id: "sidebar",
           },
 
-          verticalMenu({ brand, menu, currentUrl })
+          verticalMenu({ brand, menu, currentUrl, originalUrl })
         ),
         div({ id: "page-inner-content" }, body)
       ) +
@@ -287,7 +309,7 @@ const menuWrap = ({ brand, menu, config, currentUrl, body, req }) => {
     return (
       div(
         { id: "wrapper" },
-        navbar(brand, menu, currentUrl, config),
+        navbar(brand, menu, currentUrl, originalUrl, config),
         div({ id: "page-inner-content" }, body)
       ) + mobileNav
     );
@@ -301,6 +323,7 @@ const layout = (config) => ({
     brand,
     alerts,
     currentUrl,
+    originalUrl,
     body,
     headers,
     role,
@@ -317,6 +340,7 @@ const layout = (config) => ({
         menu,
         config,
         currentUrl,
+        originalUrl,
         body: renderBody(title, body, alerts, config, role),
         req,
       })
