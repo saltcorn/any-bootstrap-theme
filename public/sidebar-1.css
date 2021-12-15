@@ -1,4 +1,4 @@
-#wrapper {
+#wrapper.with-sidebar {
   width: 100%;
 }
 
@@ -33,18 +33,18 @@ a[aria-expanded="true"] {
   color: #fff;
 }
 
-a[data-toggle="collapse"] {
+#sidebar a[data-toggle="collapse"] {
   position: relative;
 }
 
-.dropdown-toggle::after {
+#sidebar .dropdown-toggle::after {
   display: block;
   position: absolute;
   top: 50%;
   right: 20px;
   transform: translateY(-50%);
 }
-#page-inner-content {
+.with-sidebar #page-inner-content {
   width: 100%;
   min-height: 100vh;
   transition: all 0.3s;

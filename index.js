@@ -336,7 +336,7 @@ const menuWrap = ({
     return (
       navbar(brand, menu, currentUrl, { class: "d-md-none", ...config }) +
       div(
-        { id: "wrapper", class: "d-flex" },
+        { id: "wrapper", class: "d-flex with-sidebar" },
 
         nav(
           {
