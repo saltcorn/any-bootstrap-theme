@@ -10,6 +10,7 @@ const {
   ul,
   img,
   li,
+  nav,
 } = require("@saltcorn/markup/tags");
 const {
   navbar,
@@ -267,24 +268,76 @@ const menuWrap = ({ brand, menu, config, currentUrl, body, req }) => {
     return div({ id: "wrapper" }, div({ id: "page-inner-content" }, body));
   else if (config.menu_style === "Side Navbar") {
     return (
+      navbar(brand, menu, currentUrl, { class: "d-md-none", ...config }) +
       div(
-        { id: "wrapper" },
-        navbar(brand, menu, currentUrl, { class: "d-md-none", ...config }),
-        div(
-          { class: [config.fluid ? "container-fluid" : "container"] },
-          div(
-            { class: "row" },
-            div(
-              {
-                class: ["col-2 d-none d-md-block", bg, txt],
-                style: "min-height: 100vh",
-              },
-              verticalMenu({ brand, menu, currentUrl })
-            ),
-            div({ id: "page-inner-content", class: "col" }, body)
-          )
-        )
-      ) + mobileNav
+        { id: "wrapper", class: "d-flex" },
+        style(`
+#wrapper {
+  width: 100%;
+}
+
+#sidebar {
+  min-width: 345px;
+  max-width: 345px;
+  margin-left: -345px;
+  background: #121933;
+  transition: all 0.3s;
+}
+
+#sidebar.open {
+  margin-left: 0px;
+}
+
+#sidebar ul.components {
+  padding: 20px 0;
+  border-bottom: 1px solid white;
+}
+
+#sidebar ul li a {
+  padding: 10px;
+  font-size: 1.1em;
+  display: block;
+}
+
+#sidebar ul li a:hover {
+  color: white;
+}
+
+#sidebar ul li.active > a,
+a[aria-expanded="true"] {
+  color: #fff;
+  background: #121933;
+}
+
+a[data-toggle="collapse"] {
+  position: relative;
+}
+
+.dropdown-toggle::after {
+  display: block;
+  position: absolute;
+  top: 50%;
+  right: 20px;
+  transform: translateY(-50%);
+}
+#page-inner-content {
+  width: 100%;
+  min-height: 100vh;
+  transition: all 0.3s;
+}
+
+        `),
+        nav(
+          {
+            class: "open d-none d-md-flex flex-column align-center",
+            id: "sidebar",
+          },
+
+          verticalMenu({ brand, menu, currentUrl })
+        ),
+        div({ id: "page-inner-content" }, body)
+      ) +
+      mobileNav
     );
   } else
     return (
