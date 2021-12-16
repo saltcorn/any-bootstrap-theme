@@ -191,13 +191,13 @@ const active = (currentUrl, item, originalUrl) =>
 
 const verticalMenu = ({ menu, currentUrl, originalUrl, brand }) => {
   const brandLogo = a(
-    { class: "navbar-brand mt-1 mb-2", href: "/" },
+    { class: "navbar-brand mt-1 ml-3 mb-2", href: "/" },
     brand.logo &&
       img({
         src: brand.logo,
         width: "30",
         height: "30",
-        class: "mx-1 d-inline-block align-top",
+        class: "mr-1 d-inline-block align-top",
         alt: "Logo",
         loading: "lazy",
       }),
