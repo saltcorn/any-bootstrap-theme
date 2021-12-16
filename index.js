@@ -197,7 +197,7 @@ const verticalMenu = ({ menu, currentUrl, originalUrl, brand }) => {
         src: brand.logo,
         width: "30",
         height: "30",
-        class: "mr-1 d-inline-block align-top",
+        class: "mr-2 d-inline-block align-top",
         alt: "Logo",
         loading: "lazy",
       }),
@@ -224,6 +224,7 @@ const verticalMenu = ({ menu, currentUrl, originalUrl, brand }) => {
                   "aria-expanded": false,
                   class: "dropdown-toggle nav-link",
                 },
+                item.icon ? i({ class: `fa-fw mr-1 ${item.icon}` }) : "",
                 item.label
               ),
               ul(
@@ -246,6 +247,9 @@ const verticalMenu = ({ menu, currentUrl, originalUrl, brand }) => {
                     },
                     a(
                       { class: "nav-link sublink", href: subitem.link },
+                      subitem.icon
+                        ? i({ class: `fa-fw mr-1 ${subitem.icon}` })
+                        : "",
                       subitem.label
                     )
                   )
@@ -262,7 +266,11 @@ const verticalMenu = ({ menu, currentUrl, originalUrl, brand }) => {
                   active(currentUrl, item, originalUrl) && "active",
                 ],
               },
-              a({ class: "nav-link", href: item.link }, item.label)
+              a(
+                { class: "nav-link", href: item.link },
+                item.icon ? i({ class: `fa-fw mr-1 ${item.icon}` }) : "",
+                item.label
+              )
             )
           );
         else if (item.type === "Search")
