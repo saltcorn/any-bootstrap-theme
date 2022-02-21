@@ -519,6 +519,13 @@ const get_css_url = (config) => {
   if (!config || !config.theme) return def;
   if (config.theme === "File") return `/files/serve/${config.css_file}`;
   if (config.theme === "Other") return config.css_url || def;
+  if (
+    features &&
+    features.bootstrap5 &&
+    themes[config.theme] &&
+    themes[config.theme].source === "Bootswatch"
+  )
+    return `/plugins/public/any-bootstrap-theme/bootswatch/${config.theme}/bootstrap.min.css`;
   if (themes[config.theme]) return themes[config.theme].css_url;
   else return def;
 };
@@ -528,6 +535,13 @@ const get_css_integrity = (config) => {
   if (!config || !config.theme) return def;
   if (config.theme === "File") return null;
   if (config.theme === "Other") return config.css_integrity || def;
+  if (
+    features &&
+    features.bootstrap5 &&
+    themes[config.theme] &&
+    themes[config.theme].source === "Bootswatch"
+  )
+    return null;
   if (themes[config.theme]) return themes[config.theme].css_integrity;
   else return def;
 };
