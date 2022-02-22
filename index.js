@@ -291,7 +291,7 @@ const verticalMenu = ({ menu, currentUrl, originalUrl, brand }) => {
 
                   input({
                     type: "search",
-                    class: "form-control search-bar pl-2 hasbl",
+                    class: "form-control search-bar ps-2 hasbl",
                     placeholder: item.label,
                     id: "inputq",
                     name: "q",
