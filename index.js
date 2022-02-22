@@ -167,9 +167,13 @@ const wrapIt = (config, bodyAttr, headers, title, body) => {
     <script src="/static_assets/${
       db.connectObj.version_tag
     }/jquery-3.6.0.min.js"></script>
-    ${features && features.bootstrap5 ? `<script src="/plugins/public/any-bootstrap-theme/bootstrap.bundle.min.js"></script>` :`
+    ${
+      features && features.bootstrap5
+        ? `<script src="/plugins/public/any-bootstrap-theme/bootstrap.bundle.min.js"></script>`
+        : `
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js" integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV" crossorigin="anonymous"></script>`}    ${headersInBody(headers)}
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js" integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV" crossorigin="anonymous"></script>`
+    }    ${headersInBody(headers)}
     ${config.colorscheme === "navbar-light" ? navbarSolidOnScroll : ""}
   </body>
 </html>`;
@@ -189,13 +193,13 @@ const active = (currentUrl, item, originalUrl) =>
 
 const verticalMenu = ({ menu, currentUrl, originalUrl, brand }) => {
   const brandLogo = a(
-    { class: "navbar-brand mt-1 ml-3 mb-2", href: "/" },
+    { class: "navbar-brand mt-1 ms-3 mb-2", href: "/" },
     brand.logo &&
       img({
         src: brand.logo,
         width: "30",
         height: "30",
-        class: "mr-2 d-inline-block align-top",
+        class: "me-2 d-inline-block align-top",
         alt: "Logo",
         loading: "lazy",
       }),
@@ -224,7 +228,7 @@ const verticalMenu = ({ menu, currentUrl, originalUrl, brand }) => {
                     ? { "data-bs-toggle": "collapse" }
                     : { "data-toggle": "collapse" }),
                 },
-                item.icon ? i({ class: `fa-fw mr-1 ${item.icon}` }) : "",
+                item.icon ? i({ class: `fa-fw me-1 ${item.icon}` }) : "",
                 item.label
               ),
               ul(
@@ -248,7 +252,7 @@ const verticalMenu = ({ menu, currentUrl, originalUrl, brand }) => {
                     a(
                       { class: "nav-link sublink", href: subitem.link },
                       subitem.icon
-                        ? i({ class: `fa-fw mr-1 ${subitem.icon}` })
+                        ? i({ class: `fa-fw me-1 ${subitem.icon}` })
                         : "",
                       subitem.label
                     )
@@ -268,7 +272,7 @@ const verticalMenu = ({ menu, currentUrl, originalUrl, brand }) => {
               },
               a(
                 { class: "nav-link", href: item.link },
-                item.icon ? i({ class: `fa-fw mr-1 ${item.icon}` }) : "",
+                item.icon ? i({ class: `fa-fw me-1 ${item.icon}` }) : "",
                 item.label
               )
             )
@@ -294,15 +298,13 @@ const verticalMenu = ({ menu, currentUrl, originalUrl, brand }) => {
                     "aria-label": "Search",
                     "aria-describedby": "button-search-submit",
                   }),
-                  div(
-                    { class: "input-group-append" },
-                    button(
-                      {
-                        class: "btn btn-outline-secondary search-bar",
-                        type: "submit",
-                      },
-                      i({ class: "fas fa-search" })
-                    )
+
+                  button(
+                    {
+                      class: "btn btn-outline-secondary search-bar",
+                      type: "submit",
+                    },
+                    i({ class: "fas fa-search" })
                   )
                 )
               )
