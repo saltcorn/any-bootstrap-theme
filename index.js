@@ -198,59 +198,6 @@ const active = (currentUrl, item, originalUrl) =>
     ));
 
 const verticalMenu = ({ menu, currentUrl, originalUrl, brand }) => {
-  console.log({ currentUrl, originalUrl });
-  console.log(JSON.stringify(menu, null, 2));
-  console.log(
-    "active",
-    active(
-      currentUrl,
-      {
-        label: "Settings",
-        icon: "fas fa-wrench",
-        subitems: [
-          {
-            link: "/admin",
-            icon: "fas fa-tools",
-            label: "About application",
-          },
-          {
-            link: "/plugins",
-            icon: "fas fa-plug",
-            label: "Plugins",
-          },
-          {
-            link: "/useradmin",
-            icon: "fas fa-users-cog",
-            altlinks: ["/roleadmin"],
-            label: "Users and security",
-          },
-          {
-            link: "/site-structure",
-            altlinks: [
-              "/menu",
-              "/search/config",
-              "/library/list",
-              "/tenant/list",
-            ],
-            icon: "fas fa-compass",
-            label: "Site structure",
-          },
-          {
-            link: "/files",
-            icon: "far fa-images",
-            label: "Files",
-          },
-          {
-            link: "/events",
-            altlinks: ["/actions", "/eventlog", "/crashlog"],
-            icon: "fas fa-calendar-check",
-            label: "Events",
-          },
-        ],
-      },
-      originalUrl
-    )
-  );
   const brandLogo = a(
     { class: "navbar-brand mt-1 ms-3 mb-2", href: "/" },
     brand.logo &&
