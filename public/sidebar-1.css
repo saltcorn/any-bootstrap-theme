@@ -33,13 +33,6 @@ a[aria-expanded="true"] {
   position: relative;
 }
 
-#sidebar .dropdown-toggle::after {
-  display: block;
-  position: absolute;
-  top: 50%;
-  right: 20px;
-  transform: translateY(-50%);
-}
 .with-sidebar #page-inner-content {
   width: 100%;
   min-height: 100vh;
