@@ -87,15 +87,6 @@ const blockDispatch = (config) => ({
               segment.bgType === "Color"
                 ? `background-color: ${segment.bgColor};`
                 : ""
-            }
-            ${
-              segment.bgType === "Image" &&
-              segment.bgFileId &&
-              +segment.bgFileId
-                ? `background-image: url('/files/serve/${segment.bgFileId}');
-        background-size: ${segment.imageSize || "contain"};
-        background-repeat: no-repeat;`
-                : ""
             }`,
           },
           div(
