@@ -1,8 +1,16 @@
 #sidebar {
-  min-width: 280px;
-  max-width: 280px;
+  width: 280px;
   margin-left: 0px;
   transition: all 0.3s;
+}
+#wrapper #content-wrapper {
+  background-color: #f8f9fc;
+  width: 100%;
+  overflow-x: clip;
+}
+
+#wrapper #content-wrapper #content {
+  flex: 1 0 auto;
 }
 
 #sidebar ul.components {

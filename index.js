@@ -358,7 +358,10 @@ const menuWrap = ({
 
           verticalMenu({ brand, menu, currentUrl, originalUrl })
         ),
-        div({ id: "page-inner-content" }, body)
+        div(
+          { id: "content-wrapper", class: "d-flex flex-column" },
+          div({ id: "content" }, div({ id: "page-inner-content" }, body))
+        )
       ) +
       mobileNav
     );
