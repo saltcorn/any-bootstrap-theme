@@ -23,10 +23,7 @@ const {
 } = require("@saltcorn/markup/layout_utils");
 const renderLayout = require("@saltcorn/markup/layout");
 const db = require("@saltcorn/data/db");
-const Field = require("@saltcorn/data/models/field");
-const Table = require("@saltcorn/data/models/table");
 const Form = require("@saltcorn/data/models/form");
-const View = require("@saltcorn/data/models/view");
 const File = require("@saltcorn/data/models/file");
 const Workflow = require("@saltcorn/data/models/workflow");
 const { renderForm, link } = require("@saltcorn/markup");
@@ -36,6 +33,7 @@ const {
   headersInBody,
 } = require("@saltcorn/markup/layout_utils");
 const { features } = require("@saltcorn/data/db/state");
+const { isWeb } = require("@saltcorn/data/utils");
 
 const blockDispatch = (config) => ({
   pageHeader: ({ title, blurb }) =>
@@ -337,7 +335,7 @@ const menuWrap = ({
     ? mobileBottomNavBar(currentUrl, menu, bg, txt)
     : "";
   const role = !req ? 1 : req.isAuthenticated() ? req.user.role_id : 10;
-  if (config.menu_style === "No Menu" && role > 1)
+  if ((config.menu_style === "No Menu" && role > 1) || !isWeb(req))
     return div({ id: "wrapper" }, div({ id: "page-inner-content" }, body));
   else if (config.menu_style === "Side Navbar") {
     return (
