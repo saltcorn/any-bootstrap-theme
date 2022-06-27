@@ -375,7 +375,7 @@ const menuWrap = ({
     return (
       div(
         { id: "wrapper" },
-        navbar(brand, menu, currentUrl, originalUrl, config),
+        navbar(brand, menu, currentUrl, config),
         div({ id: "page-inner-content" }, body)
       ) + mobileNav
     );
