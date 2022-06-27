@@ -15,6 +15,7 @@ const {
   nav,
   button,
   i,
+  hr,
 } = require("@saltcorn/markup/tags");
 const {
   navbar,
@@ -239,21 +240,24 @@ const verticalMenu = ({ menu, currentUrl, originalUrl, brand }) => {
                   id: `menuCollapse${ix}_${ix1}`,
                 },
                 item.subitems.map((subitem) =>
-                  li(
-                    {
-                      class: [
-                        "nav-item",
-                        active(currentUrl, subitem, originalUrl) && "active",
-                      ],
-                    },
-                    a(
-                      { class: "nav-link sublink", href: subitem.link },
-                      subitem.icon
-                        ? i({ class: `fa-fw me-1 ${subitem.icon}` })
-                        : "",
-                      subitem.label
-                    )
-                  )
+                  subitem.type === "Separator"
+                    ? hr({ class: "mx-4 my-0" })
+                    : li(
+                        {
+                          class: [
+                            "nav-item",
+                            active(currentUrl, subitem, originalUrl) &&
+                              "active",
+                          ],
+                        },
+                        a(
+                          { class: "nav-link sublink", href: subitem.link },
+                          subitem.icon
+                            ? i({ class: `fa-fw me-1 ${subitem.icon}` })
+                            : "",
+                          subitem.label
+                        )
+                      )
                 )
               )
             )
@@ -274,6 +278,8 @@ const verticalMenu = ({ menu, currentUrl, originalUrl, brand }) => {
               )
             )
           );
+        else if (item.type === "Separator")
+          items.push(hr({ class: "mx-4 my-0" }));
         else if (item.type === "Search")
           items.push(
             li(
