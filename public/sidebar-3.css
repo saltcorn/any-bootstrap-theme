@@ -5,8 +5,13 @@
 }
 
 #sidebar.narrowed {
-  width: 104px;
+  width: 75px;
   overflow-x: hidden;
+}
+#sidebar .navbar-nav {
+  width: 100%;
+  transition: all 0.3s;
+
 }
 #sidebar.narrowed .navbar-nav {
   width: 280px;
