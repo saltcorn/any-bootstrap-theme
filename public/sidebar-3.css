@@ -6,6 +6,10 @@
 
 #sidebar.narrowed {
   width: 104px;
+  overflow-x: hidden;
+}
+#sidebar.narrowed .navbar-nav {
+  width: 280px;
 }
 
 #wrapper #content-wrapper {
