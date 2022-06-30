@@ -316,8 +316,16 @@ const verticalMenu = ({ menu, currentUrl, originalUrl, brand }) => {
       });
     }
   });
+  const toggler =
+    hr({ class: "mx-4 my-0" }) +
+    div(
+      { class: "text-center" },
+      button({ class: "rounded-circle border-0", id: "sidebarToggle" })
+    );
   return (
-    brandLogo + ul({ class: "navbar-nav list-unstyled components" }, items)
+    brandLogo +
+    ul({ class: "navbar-nav list-unstyled components" }, items) +
+    toggler
   );
 };
 
