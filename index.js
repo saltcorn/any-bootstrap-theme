@@ -150,7 +150,11 @@ const wrapIt = (config, bodyAttr, headers, title, body) => {
       : ""
   }>
     ${body}
-    <link rel="stylesheet" href="/plugins/public/any-bootstrap-theme/sidebar-3.css" />
+    <link rel="stylesheet" href="/plugins/public/any-bootstrap-theme${
+      features?.version_plugin_serve_path
+        ? "@" + require("./package.json").version
+        : ""
+    }/sidebar-3.css" />
     ${
       features && features.deep_public_plugin_serve
         ? '<link rel="stylesheet" href="/plugins/public/any-bootstrap-theme/fontawesome/fontawesome.min.css" />'
