@@ -10,6 +10,8 @@
 }
 #sidebar.narrowed .navbar-nav {
   width: 280px;
+  transition: all 0.3s;
+
 }
 
 #wrapper #content-wrapper {
