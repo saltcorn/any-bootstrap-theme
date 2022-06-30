@@ -320,7 +320,11 @@ const verticalMenu = ({ menu, currentUrl, originalUrl, brand }) => {
     hr({ class: "mx-4 my-0" }) +
     div(
       { class: "text-center" },
-      button({ class: "rounded-circle border-0", id: "sidebarToggle" })
+      button({
+        class: "rounded-circle border-0",
+        id: "sidebarToggle",
+        onclick: "$('#sidebar').toggleClass('narrowed')",
+      })
     );
   return (
     brandLogo +

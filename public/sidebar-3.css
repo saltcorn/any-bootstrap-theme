@@ -3,6 +3,11 @@
   margin-left: 0px;
   transition: all 0.3s;
 }
+
+#sidebar.narrowed {
+  width: 104px;
+}
+
 #wrapper #content-wrapper {
   background-color: #f8f9fc;
   width: 100%;
@@ -65,4 +70,13 @@ a[aria-expanded="true"] {
   content: '\f104';
   font-family: 'Font Awesome 5 Free';
   margin-right: 0.1rem;
+}
+
+#sidebar.narrowed #sidebarToggle::after {
+  content: '\f105';
+  font-family: 'Font Awesome 5 Free';
+  margin-left: 0.25rem;
+}
+#sidebar.narrowed .narrowed-hide {
+  display: none;
 }
