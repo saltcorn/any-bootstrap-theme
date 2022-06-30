@@ -150,7 +150,11 @@ const wrapIt = (config, bodyAttr, headers, title, body) => {
       : ""
   }>
     ${body}
-    <link rel="stylesheet" href="/plugins/public/any-bootstrap-theme/sidebar-3.css" />
+    <link rel="stylesheet" href="/plugins/public/any-bootstrap-theme${
+      features?.version_plugin_serve_path
+        ? "@" + require("./package.json").version
+        : ""
+    }/sidebar-3.css" />
     ${
       features && features.deep_public_plugin_serve
         ? '<link rel="stylesheet" href="/plugins/public/any-bootstrap-theme/fontawesome/fontawesome.min.css" />'
@@ -316,8 +320,20 @@ const verticalMenu = ({ menu, currentUrl, originalUrl, brand }) => {
       });
     }
   });
+  const toggler =
+    hr({ class: "mx-4 my-0" }) +
+    div(
+      { class: "text-center" },
+      button({
+        class: "rounded-circle border-0",
+        id: "sidebarToggle",
+        onclick: "$('#sidebar').toggleClass('narrowed')",
+      })
+    );
   return (
-    brandLogo + ul({ class: "navbar-nav list-unstyled components" }, items)
+    brandLogo +
+    ul({ class: "navbar-nav list-unstyled components" }, items) +
+    toggler
   );
 };
 
