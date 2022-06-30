@@ -80,11 +80,3 @@ a[aria-expanded="true"] {
 #sidebar.narrowed .narrowed-hide {
   display: none;
 }
-
-#sidebar .narrowed-show {
-  display: none;
-}
-
-#sidebar.narrowed .narrowed-show {
-  display: block;
-}

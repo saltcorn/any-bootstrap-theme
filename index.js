@@ -194,35 +194,19 @@ const active = (currentUrl, item, originalUrl) =>
     ));
 
 const verticalMenu = ({ menu, currentUrl, originalUrl, brand }) => {
-  const brandLogo =
-    a(
-      { class: "navbar-brand mt-1 ms-3 mb-2 narrowed-hide", href: "/" },
-      brand.logo &&
-        img({
-          src: brand.logo,
-          width: "30",
-          height: "30",
-          class: "me-2 d-inline-block align-top",
-          alt: "Logo",
-          loading: "lazy",
-        }),
-      brand.name
-    ) +
-    div(
-      { class: "text-center mt-2 narrowed-show" },
-      a(
-        { class: "navbar-brand mb-2 me-0", href: "/" },
-        brand.logo &&
-          img({
-            src: brand.logo,
-            width: "30",
-            height: "30",
-            class: "d-inline-block align-top",
-            alt: "Logo",
-            loading: "lazy",
-          })
-      )
-    );
+  const brandLogo = a(
+    { class: "navbar-brand mt-1 ms-3 mb-2", href: "/" },
+    brand.logo &&
+      img({
+        src: brand.logo,
+        width: "30",
+        height: "30",
+        class: "me-2 d-inline-block align-top",
+        alt: "Logo",
+        loading: "lazy",
+      }),
+    brand.name
+  );
   let items = [];
   menu.forEach((m, ix) => {
     if (m.items && m.items.length > 0) {
