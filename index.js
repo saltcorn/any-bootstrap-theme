@@ -370,7 +370,7 @@ const menuWrap = ({
         nav(
           {
             class: [
-              "d-none d-md-flex flex-column align-center",
+              "d-none d-md-flex flex-column align-center d-print-none",
               navbarCol,
               bg,
               txt,
