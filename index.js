@@ -79,7 +79,7 @@ const blockDispatch = (config) => ({
           {
             class: [
               "page-section",
-              `pt-${config.toppad || 0}`,
+              ix === 0 && `pt-${config.toppad || 0}`,
               ix === 0 && config.fixedTop && "mt-5",
               segment.class,
               segment.invertColor && "bg-primary",

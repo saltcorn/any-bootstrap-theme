@@ -1,7 +1,6 @@
 #sidebar {
   width: 280px;
   margin-left: 0px;
-  transition: all 0.3s;
 }
 
 #sidebar.narrowed {
@@ -10,12 +9,10 @@
 }
 #sidebar .navbar-nav {
   width: 100%;
-  transition: all 0.3s;
 
 }
 #sidebar.narrowed .navbar-nav {
   width: 280px;
-  transition: all 0.3s;
 
 }
 
