@@ -37,6 +37,7 @@ const {
   headersInBody,
 } = require("@saltcorn/markup/layout_utils");
 const { features } = require("@saltcorn/data/db/state");
+const isNode = typeof window === "undefined";
 
 const blockDispatch = (config) => ({
   pageHeader: ({ title, blurb }) =>
@@ -123,6 +124,12 @@ const includeBS4css = (config) => {
   if (config.theme === "File") return false;
   if (themes[config.theme]) return !!themes[config.theme].includeBS4css;
 };
+/**
+ * omit '/' in a mobile deployment (needed for ios)
+ * copy from sbadmin2, otherwise we would need to depend on a saltcorn version
+ */
+const safeSlash = () => (isNode ? "/" : "");
+
 const wrapIt = (config, bodyAttr, headers, title, body) => {
   const integrity = get_css_integrity(config);
   return `<!doctype html>
@@ -145,19 +152,23 @@ const wrapIt = (config, bodyAttr, headers, title, body) => {
       : ""
     }>
     ${body}
-    <link rel="stylesheet" href="/plugins/public/any-bootstrap-theme${features?.version_plugin_serve_path
+    <link rel="stylesheet" href="${safeSlash()}plugins/public/any-bootstrap-theme${
+    features?.version_plugin_serve_path
       ? "@" + require("./package.json").version
       : ""
-    }/sidebar-3.css" />
-    ${features && features.deep_public_plugin_serve
-      ? '<link rel="stylesheet" href="/plugins/public/any-bootstrap-theme/fontawesome/fontawesome.min.css" />'
-      : '<script defer src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/js/all.min.js" integrity="sha512-F5QTlBqZlvuBEs9LQPqc1iZv2UMxcVXezbHzomzS6Df4MZMClge/8+gXrKw2fl5ysdk4rWjR0vKS7NNkfymaBQ==" crossorigin="anonymous"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/fontawesome.min.css" integrity="sha512-kJ30H6g4NGhWopgdseRb8wTsyllFUYIx3hiUwmGAkgA9B/JbzUBDQVr2VVlWGde6sdBVOG7oU8AL35ORDuMm8g==" crossorigin="anonymous" />'
+  }/sidebar-3.css" />
+    ${
+      features && features.deep_public_plugin_serve
+        ? `<link rel="stylesheet" href="${safeSlash()}plugins/public/any-bootstrap-theme/fontawesome/fontawesome.min.css" />`
+        : '<script defer src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/js/all.min.js" integrity="sha512-F5QTlBqZlvuBEs9LQPqc1iZv2UMxcVXezbHzomzS6Df4MZMClge/8+gXrKw2fl5ysdk4rWjR0vKS7NNkfymaBQ==" crossorigin="anonymous"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/fontawesome.min.css" integrity="sha512-kJ30H6g4NGhWopgdseRb8wTsyllFUYIx3hiUwmGAkgA9B/JbzUBDQVr2VVlWGde6sdBVOG7oU8AL35ORDuMm8g==" crossorigin="anonymous" />'
     }
-    <script src="/static_assets/${db.connectObj.version_tag
+    <script src="${safeSlash()}static_assets/${
+      db.connectObj.version_tag
     }/jquery-3.6.0.min.js"></script>
-    ${features && features.bootstrap5
-      ? `<script src="/plugins/public/any-bootstrap-theme/bootstrap.bundle.min.js"></script>`
-      : `
+    ${
+      features && features.bootstrap5
+        ? `<script src="${safeSlash()}plugins/public/any-bootstrap-theme/bootstrap.bundle.min.js"></script>`
+        : `
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js" integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV" crossorigin="anonymous"></script>`
     }    ${headersInBody(headers)}
@@ -540,7 +551,9 @@ const get_css_url = (config) => {
     themes[config.theme] &&
     themes[config.theme].source === "Bootswatch"
   )
-    return `/plugins/public/any-bootstrap-theme/bootswatch/${config.theme}/bootstrap.min.css`;
+    return `${safeSlash()}plugins/public/any-bootstrap-theme/bootswatch/${
+      config.theme
+    }/bootstrap.min.css`;
   if (themes[config.theme]) return themes[config.theme].css_url;
   else return def;
 };
