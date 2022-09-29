@@ -329,6 +329,7 @@ const verticalMenu = ({ menu, currentUrl, originalUrl, brand }) => {
       button({
         class: "rounded-circle border-0",
         id: "sidebarToggle",
+        "data-sidebar-toggler": true,
         onclick: "$('#sidebar').toggleClass('narrowed')",
       })
     );
