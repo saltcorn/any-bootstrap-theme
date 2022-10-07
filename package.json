@@ -1,6 +1,6 @@
 {
   "name": "@saltcorn/any-bootstrap-theme",
-  "version": "0.3.13",
+  "version": "0.3.14",
   "description": "Configurable bootstrap layout plugin",
   "main": "index.js",
   "scripts": {
