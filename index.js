@@ -539,7 +539,6 @@ const themes = require("./themes.json");
 
 const get_css_url = (config) => {
   const def = themes.flatly.css_url;
-  console.log(config);
   if (!config || !config.theme) return def;
   if (config.theme === "File") return `/files/serve/${config.css_file}`;
   if (config.theme === "Other") return config.css_url || def;
