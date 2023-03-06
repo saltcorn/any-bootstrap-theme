@@ -66,7 +66,7 @@ const blockDispatch = (config) => ({
         cta
       ),
       backgroundImage &&
-      style(`.jumbotron {
+        style(`.jumbotron {
       background-image: url("${backgroundImage}");
       background-size: cover;
       min-height: 75vh !important;
@@ -77,35 +77,37 @@ const blockDispatch = (config) => ({
     ["hero", "footer"].includes(segment.type)
       ? s
       : section(
-        {
-          class: [
-            "page-section",
-            ix === 0 && `pt-${config.toppad || 0}`,
-            ix === 0 && config.fixedTop && "mt-5",
-            segment.class,
-            segment.invertColor && "bg-primary",
-          ],
-          style: `${segment.bgType === "Color"
-            ? `background-color: ${segment.bgColor};`
-            : ""
+          {
+            class: [
+              "page-section",
+              ix === 0 && `pt-${config.toppad || 0}`,
+              ix === 0 && config.fixedTop && "mt-5",
+              segment.class,
+              segment.invertColor && "bg-primary",
+            ],
+            style: `${
+              segment.bgType === "Color"
+                ? `background-color: ${segment.bgColor};`
+                : ""
             }`,
-        },
-        div(
-          { class: [config.fluid ? "container-fluid" : "container"] },
+          },
           div(
-            { class: "row" },
+            { class: [config.fluid ? "container-fluid" : "container"] },
             div(
-              {
-                class: `col-sm-12 ${segment.textStyle && segment.textStyle !== "h1"
-                  ? segment.textStyle
-                  : ""
+              { class: "row" },
+              div(
+                {
+                  class: `col-sm-12 ${
+                    segment.textStyle && segment.textStyle !== "h1"
+                      ? segment.textStyle
+                      : ""
                   }`,
-              },
-              segment.textStyle && segment.textStyle === "h1" ? h1(s) : s
+                },
+                segment.textStyle && segment.textStyle === "h1" ? h1(s) : s
+              )
             )
           )
-        )
-      ),
+        ),
 });
 
 const renderBody = (title, body, alerts, config, role) =>
@@ -139,33 +141,40 @@ const wrapIt = (config, bodyAttr, headers, title, body) => {
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    ${includeBS4css(config)
-      ? `<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css" integrity="sha384-TX8t27EcRE3e/ihU7zmQxVncDAy5uIKz4rEkgIXeMed4M0jlfIDPvg6uqKI2xXr2" crossorigin="anonymous">`
-      : ""
+    ${
+      includeBS4css(config)
+        ? `<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css" integrity="sha384-TX8t27EcRE3e/ihU7zmQxVncDAy5uIKz4rEkgIXeMed4M0jlfIDPvg6uqKI2xXr2" crossorigin="anonymous">`
+        : ""
     }
-    <link href="${get_css_url(config)}" rel="stylesheet"${integrity ? ` integrity="${integrity}" crossorigin="anonymous"` : ""
-    }>
+    <link href="${get_css_url(config)}" rel="stylesheet"${
+    integrity ? ` integrity="${integrity}" crossorigin="anonymous"` : ""
+  }>
     ${headersInHead(headers)}
     <title>${text(title)}</title>
   </head>
-  <body ${bodyAttr}${config.backgroundColor
+  <body ${bodyAttr}${
+    config.backgroundColor
       ? ` style="background-color: ${config.backgroundColor}"`
       : ""
-    }>
+  }>
     ${body}
-    <link rel="stylesheet" href="${safeSlash()}plugins/public/any-bootstrap-theme${features?.version_plugin_serve_path
+    <link rel="stylesheet" href="${safeSlash()}plugins/public/any-bootstrap-theme${
+    features?.version_plugin_serve_path
       ? "@" + require("./package.json").version
       : ""
-    }/sidebar-3.css" />
-    ${features && features.deep_public_plugin_serve
-      ? `<link rel="stylesheet" href="${safeSlash()}plugins/public/any-bootstrap-theme/fontawesome/fontawesome.min.css" />`
-      : '<script defer src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/js/all.min.js" integrity="sha512-F5QTlBqZlvuBEs9LQPqc1iZv2UMxcVXezbHzomzS6Df4MZMClge/8+gXrKw2fl5ysdk4rWjR0vKS7NNkfymaBQ==" crossorigin="anonymous"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/fontawesome.min.css" integrity="sha512-kJ30H6g4NGhWopgdseRb8wTsyllFUYIx3hiUwmGAkgA9B/JbzUBDQVr2VVlWGde6sdBVOG7oU8AL35ORDuMm8g==" crossorigin="anonymous" />'
+  }/sidebar-3.css" />
+    ${
+      features && features.deep_public_plugin_serve
+        ? `<link rel="stylesheet" href="${safeSlash()}plugins/public/any-bootstrap-theme/fontawesome/fontawesome.min.css" />`
+        : '<script defer src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/js/all.min.js" integrity="sha512-F5QTlBqZlvuBEs9LQPqc1iZv2UMxcVXezbHzomzS6Df4MZMClge/8+gXrKw2fl5ysdk4rWjR0vKS7NNkfymaBQ==" crossorigin="anonymous"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/fontawesome.min.css" integrity="sha512-kJ30H6g4NGhWopgdseRb8wTsyllFUYIx3hiUwmGAkgA9B/JbzUBDQVr2VVlWGde6sdBVOG7oU8AL35ORDuMm8g==" crossorigin="anonymous" />'
     }
-    <script src="${safeSlash()}static_assets/${db.connectObj.version_tag
-    }/jquery-3.6.0.min.js"></script>
-    ${features && features.bootstrap5
-      ? `<script src="${safeSlash()}plugins/public/any-bootstrap-theme/bootstrap.bundle.min.js"></script>`
-      : `
+    <script src="${safeSlash()}static_assets/${
+    db.connectObj.version_tag
+  }/jquery-3.6.0.min.js"></script>
+    ${
+      features && features.bootstrap5
+        ? `<script src="${safeSlash()}plugins/public/any-bootstrap-theme/bootstrap.bundle.min.js"></script>`
+        : `
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js" integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV" crossorigin="anonymous"></script>`
     }    ${headersInBody(headers)}
@@ -196,14 +205,14 @@ const verticalMenu = ({ menu, currentUrl, originalUrl, brand }) => {
   const brandLogo = a(
     { class: "navbar-brand mt-1 ms-3 mb-2", href: "/" },
     brand.logo &&
-    img({
-      src: brand.logo,
-      width: "30",
-      height: "30",
-      class: "me-2 d-inline-block align-top",
-      alt: "Logo",
-      loading: "lazy",
-    }),
+      img({
+        src: brand.logo,
+        width: "30",
+        height: "30",
+        class: "me-2 d-inline-block align-top",
+        alt: "Logo",
+        loading: "lazy",
+      }),
     brand.name
   );
   let items = [];
@@ -246,21 +255,21 @@ const verticalMenu = ({ menu, currentUrl, originalUrl, brand }) => {
                   subitem.type === "Separator"
                     ? hr({ class: "mx-4 my-0" })
                     : li(
-                      {
-                        class: [
-                          "nav-item",
-                          active(currentUrl, subitem, originalUrl) &&
-                          "active",
-                        ],
-                      },
-                      a(
-                        { class: "nav-link sublink", href: subitem.link },
-                        subitem.icon
-                          ? i({ class: `fa-fw me-1 ${subitem.icon}` })
-                          : "",
-                        subitem.label
+                        {
+                          class: [
+                            "nav-item",
+                            active(currentUrl, subitem, originalUrl) &&
+                              "active",
+                          ],
+                        },
+                        a(
+                          { class: "nav-link sublink", href: subitem.link },
+                          subitem.icon
+                            ? i({ class: `fa-fw me-1 ${subitem.icon}` })
+                            : "",
+                          subitem.label
+                        )
                       )
-                    )
                 )
               )
             )
@@ -549,8 +558,9 @@ const get_css_url = (config) => {
     themes[config.theme] &&
     themes[config.theme].source === "Bootswatch"
   )
-    return `${safeSlash()}plugins/public/any-bootstrap-theme/bootswatch/${config.theme
-      }/bootstrap.min.css`;
+    return `${safeSlash()}plugins/public/any-bootstrap-theme/bootswatch/${
+      config.theme
+    }/bootstrap.min.css`;
   if (themes[config.theme]) return themes[config.theme].css_url;
   else return def;
 };
