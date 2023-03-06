@@ -548,7 +548,7 @@ const formModify = (form) => {
 const themes = require("./themes.json");
 
 const get_css_url = (config) => {
-  const def = themes.flatly.css_url;
+  const def = `${safeSlash()}plugins/public/any-bootstrap-theme/bootswatch/flatly/bootstrap.min.css`;
   if (!config || !config.theme) return def;
   if (config.theme === "File") return `/files/serve/${config.css_file}`;
   if (config.theme === "Other") return config.css_url || def;
