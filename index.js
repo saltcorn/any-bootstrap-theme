@@ -81,7 +81,8 @@ const blockDispatch = (config) => ({
             class: [
               "page-section",
               ix === 0 && `pt-${config.toppad || 0}`,
-              ix === 0 && config.fixedTop && "mt-5",
+              ix === 0 && config.fixedTop && isNode && "mt-5",
+              ix === 0 && config.fixedTop && !isNode && "mt-6",
               segment.class,
               segment.invertColor && "bg-primary",
             ],
@@ -370,7 +371,7 @@ const menuWrap = ({
   const role = !req ? 1 : req.isAuthenticated() ? req.user.role_id : 10;
   if (config.menu_style === "No Menu" && role > 1)
     return div({ id: "wrapper" }, div({ id: "page-inner-content" }, body));
-  else if (config.menu_style === "Side Navbar") {
+  else if (config.menu_style === "Side Navbar" && isNode) {
     return (
       navbar(brand, menu, currentUrl, { class: "d-md-none", ...config }) +
       div(
