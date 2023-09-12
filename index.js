@@ -111,10 +111,11 @@ const blockDispatch = (config) => ({
         ),
 });
 
-const renderBody = (title, body, alerts, config, role) =>
+const renderBody = (title, body, alerts, config, role, req) =>
   renderLayout({
     blockDispatch: blockDispatch(config),
     role,
+    req,
     layout:
       typeof body === "string" && config.in_card
         ? { type: "card", title, contents: body }
@@ -407,8 +408,8 @@ const menuWrap = ({
     );
 };
 const layout = (config) => ({
-  renderBody: ({ title, body, alerts, role }) =>
-    renderBody(title, body, alerts, config, role),
+  renderBody: ({ title, body, alerts, role, req }) =>
+    renderBody(title, body, alerts, config, role, req),
   wrap: ({
     title,
     menu,
@@ -433,7 +434,7 @@ const layout = (config) => ({
         config,
         currentUrl,
         originalUrl,
-        body: renderBody(title, body, alerts, config, role),
+        body: renderBody(title, body, alerts, config, role, req),
         req,
       })
     ),
