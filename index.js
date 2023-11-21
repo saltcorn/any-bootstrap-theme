@@ -128,6 +128,12 @@ const includeBS4css = (config) => {
   if (config.theme === "File") return false;
   if (themes[config.theme]) return !!themes[config.theme].includeBS4css;
 };
+const includeBS5css = (config) => {
+  if (!config || !config.theme) return false;
+  if (config.theme === "Other") return false;
+  if (config.theme === "File") return config.include_std_bs5;
+  if (themes[config.theme]) return !!themes[config.theme].includeBS5css;
+};
 /**
  * omit '/' in a mobile deployment (needed for ios)
  * copy from sbadmin2, otherwise we would need to depend on a saltcorn version
@@ -146,6 +152,11 @@ const wrapIt = (config, bodyAttr, headers, title, body) => {
     ${
       includeBS4css(config)
         ? `<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css" integrity="sha384-TX8t27EcRE3e/ihU7zmQxVncDAy5uIKz4rEkgIXeMed4M0jlfIDPvg6uqKI2xXr2" crossorigin="anonymous">`
+        : ""
+    }
+    ${
+      includeBS5css(config)
+        ? `<link rel="stylesheet" href="${safeSlash()}plugins/public/any-bootstrap-theme/bootstrap.min.css">`
         : ""
     }
     <link href="${get_css_url(config)}" rel="stylesheet"${
@@ -639,6 +650,12 @@ const configuration_workflow = () =>
                     name: fl.path_to_serve,
                   })),
                 },
+              },
+              {
+                name: "include_std_bs5",
+                label: "CSS stylesheet file",
+                type: "Bool",
+                showIf: { ".theme": "File" },
               },
               {
                 name: "in_card",
