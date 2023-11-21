@@ -171,14 +171,10 @@ const wrapIt = (config, bodyAttr, headers, title, body) => {
       : ""
   }>
     ${body}
-    <link rel="stylesheet" href="${safeSlash()}plugins/public/any-bootstrap-theme${
-    features?.version_plugin_serve_path
-      ? "@" + require("./package.json").version
-      : ""
-  }/sidebar-3.css" />
+    <link rel="stylesheet" href="${base_public_serve}/sidebar-3.css" />
     ${
       features && features.deep_public_plugin_serve
-        ? `<link rel="stylesheet" href="${safeSlash()}plugins/public/any-bootstrap-theme/fontawesome/fontawesome.min.css" />`
+        ? `<link rel="stylesheet" href="${base_public_serve}/fontawesome/fontawesome.min.css" />`
         : '<script defer src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/js/all.min.js" integrity="sha512-F5QTlBqZlvuBEs9LQPqc1iZv2UMxcVXezbHzomzS6Df4MZMClge/8+gXrKw2fl5ysdk4rWjR0vKS7NNkfymaBQ==" crossorigin="anonymous"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/fontawesome.min.css" integrity="sha512-kJ30H6g4NGhWopgdseRb8wTsyllFUYIx3hiUwmGAkgA9B/JbzUBDQVr2VVlWGde6sdBVOG7oU8AL35ORDuMm8g==" crossorigin="anonymous" />'
     }
     <script src="${safeSlash()}static_assets/${
@@ -186,7 +182,7 @@ const wrapIt = (config, bodyAttr, headers, title, body) => {
   }/jquery-3.6.0.min.js"></script>
     ${
       features && features.bootstrap5
-        ? `<script src="${safeSlash()}plugins/public/any-bootstrap-theme/bootstrap.bundle.min.js"></script>`
+        ? `<script src="${base_public_serve}/bootstrap.bundle.min.js"></script>`
         : `
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js" integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV" crossorigin="anonymous"></script>`

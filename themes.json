@@ -240,5 +240,20 @@
     "source": "ThemeWagon",
     "includeBS5css": false,
     "local_css_file": "themewagon/foodwagon.min.css"
+  },
+  "carserv": {
+    "source": "HTML Codex",
+    "includeBS5css": true,
+    "local_css_file": "themewagon/carserv.css"
+  },
+  "agency": {
+    "source": "StartBootstrap",
+    "includeBS5css": false,
+    "local_css_file": "themewagon/agency.css"
+  },
+  "HighTechIT": {
+    "source": "HTML Codex",
+    "includeBS5css": true,
+    "local_css_file": "themewagon/hightechit.css"
   }
 }
