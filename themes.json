@@ -235,5 +235,10 @@
     "source": "TemplateMo",
     "includeBS5css": true,
     "local_css_file": "themewagon/templatemo-villa-agency.css"
+  },
+  "food-wagon": {
+    "source": "ThemeWagon",
+    "includeBS5css": false,
+    "local_css_file": "themewagon/foodwagon.min.css"
   }
 }
