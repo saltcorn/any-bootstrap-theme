@@ -225,5 +225,15 @@
     "css_url": "https://unpkg.com/top-hat-themes@0.1.0/dist/wandoo/theme.min.css",
     "css_integrity": "sha384-knFmJrpbzGYqIKI3TcX3kcoMB466WTj4vqMSUhfEKnkKx6d8QzPr+x+K9FKBmJS2",
     "includeBS4css": true
+  },
+  "furni": {
+    "source": "Untree.co",
+    "includeBS5css": true,
+    "local_css_file": "themewagon/furni.css"
+  },
+  "villa-agency": {
+    "source": "TemplateMo",
+    "includeBS5css": true,
+    "local_css_file": "themewagon/templatemo-villa-agency.css"
   }
 }

@@ -156,7 +156,7 @@ const wrapIt = (config, bodyAttr, headers, title, body) => {
     }
     ${
       includeBS5css(config)
-        ? `<link rel="stylesheet" href="${safeSlash()}plugins/public/any-bootstrap-theme/bootstrap.min.css">`
+        ? `<link rel="stylesheet" href="${base_public_serve}/bootstrap.min.css">`
         : ""
     }
     <link href="${get_css_url(config)}" rel="stylesheet"${
@@ -560,6 +560,12 @@ const formModify = (form) => {
 
 const themes = require("./themes.json");
 
+const base_public_serve = `${safeSlash()}plugins/public/any-bootstrap-theme${
+  features?.version_plugin_serve_path
+    ? "@" + require("./package.json").version
+    : ""
+}`;
+
 const get_css_url = (config) => {
   const def = `${safeSlash()}plugins/public/any-bootstrap-theme/bootswatch/flatly/bootstrap.min.css`;
   if (!config || !config.theme) return def;
@@ -571,9 +577,9 @@ const get_css_url = (config) => {
     themes[config.theme] &&
     themes[config.theme].source === "Bootswatch"
   )
-    return `${safeSlash()}plugins/public/any-bootstrap-theme/bootswatch/${
-      config.theme
-    }/bootstrap.min.css`;
+    return `${base_public_serve}/bootswatch/${config.theme}/bootstrap.min.css`;
+  if (themes[config.theme]?.local_css_file)
+    return `${base_public_serve}/${themes[config.theme]?.local_css_file}`;
   if (themes[config.theme]) return themes[config.theme].css_url;
   else return def;
 };
@@ -582,6 +588,7 @@ const get_css_integrity = (config) => {
   const def = themes.flatly.get_css_integrity;
   if (!config || !config.theme) return def;
   if (config.theme === "File") return null;
+  if (themes[config.theme]?.local_css_file) return null;
   if (config.theme === "Other") return config.css_integrity || def;
   if (
     features &&
@@ -653,7 +660,7 @@ const configuration_workflow = () =>
               },
               {
                 name: "include_std_bs5",
-                label: "CSS stylesheet file",
+                label: "Needs standard BS5 CSS",
                 type: "Bool",
                 showIf: { ".theme": "File" },
               },
