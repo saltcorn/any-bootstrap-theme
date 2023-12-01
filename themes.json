@@ -229,31 +229,47 @@
   "furni": {
     "source": "Untree.co",
     "includeBS5css": true,
+    "fonts": { "Inter": "Inter, sans-serif" },
     "local_css_file": "themewagon/furni.css"
   },
   "villa-agency": {
     "source": "TemplateMo",
     "includeBS5css": true,
+    "in_header": "<link href=\"https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700;800;900&display=swap\" rel=\"stylesheet\">",
+    "fonts": { "Poppins": "Poppins, sans-serif" },
     "local_css_file": "themewagon/templatemo-villa-agency.css"
   },
   "food-wagon": {
     "source": "ThemeWagon",
     "includeBS5css": false,
+    "in_header": "<link href=\"https://fonts.googleapis.com/css2?family=Source+Sans+Pro:wght@200;300;400;600;700;900&amp;display=swap\" rel=\"stylesheet\">",
+    "fonts": {
+      "Source Sans Pro": "\"Source Sans Pro\",\"Open Sans\",-apple-system,BlinkMacSystemFont,\"Segoe UI\",\"Helvetica Neue\",Arial,sans-serif,\"Apple Color Emoji\",\"Segoe UI Emoji\",\"Segoe UI Symbol\";"
+    },
     "local_css_file": "themewagon/foodwagon.min.css"
   },
   "carserv": {
     "source": "HTML Codex",
     "includeBS5css": true,
-    "local_css_file": "themewagon/carserv.css"
+    "local_css_file": "themewagon/carserv.css",
+    "fonts": { "Barlow": "Barlow, sans-serif", "Ubuntu": "Ubuntu, sans-serif" },
+    "in_header": "<link href=\"https://fonts.googleapis.com/css2?family=Barlow:wght@600;700&family=Ubuntu:wght@400;500&display=swap\" rel=\"stylesheet\">"
   },
   "agency": {
     "source": "StartBootstrap",
     "includeBS5css": false,
+    "in_header": "<link href=\"https://fonts.googleapis.com/css?family=Montserrat:400,700\" rel=\"stylesheet\" type=\"text/css\" /><link href=\"https://fonts.googleapis.com/css?family=Roboto+Slab:400,100,300,700\" rel=\"stylesheet\" type=\"text/css\" />",
+    "fonts": {
+      "Montserrat": "\"Montserrat\", -apple-system, BlinkMacSystemFont, \"Segoe UI\", Roboto, \"Helvetica Neue\", Arial, sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\"",
+      "Roberto Slab": "\"Roboto Slab\", -apple-system, BlinkMacSystemFont, \"Segoe UI\", Roboto, \"Helvetica Neue\", Arial, sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\""
+    },
     "local_css_file": "themewagon/agency.css"
   },
   "HighTechIT": {
     "source": "HTML Codex",
     "includeBS5css": true,
-    "local_css_file": "themewagon/hightechit.css"
+    "local_css_file": "themewagon/hightechit.css",
+    "in_header": "<link href=\"https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Saira:wght@500;600;700&display=swap\" rel=\"stylesheet\">",
+    "fonts": { "Inter": "Inter, sans-serif", "Saira": "Inter, sans-serif" }
   }
 }
