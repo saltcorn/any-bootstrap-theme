@@ -161,7 +161,7 @@ const wrapIt = (config, bodyAttr, headers, title, body) => {
     }
     <link href="${get_css_url(config)}" rel="stylesheet"${
     integrity ? ` integrity="${integrity}" crossorigin="anonymous"` : ""
-  }>${themes[config.theme].in_header || ""}
+  }>${themes[config.theme]?.in_header || ""}
     ${headersInHead(headers)}    
     <title>${text(title)}</title>
   </head>
