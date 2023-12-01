@@ -161,8 +161,8 @@ const wrapIt = (config, bodyAttr, headers, title, body) => {
     }
     <link href="${get_css_url(config)}" rel="stylesheet"${
     integrity ? ` integrity="${integrity}" crossorigin="anonymous"` : ""
-  }>
-    ${headersInHead(headers)}
+  }>${themes[config.theme].in_header || ""}
+    ${headersInHead(headers)}    
     <title>${text(title)}</title>
   </head>
   <body ${bodyAttr}${
@@ -737,5 +737,6 @@ module.exports = {
   sc_plugin_api_version: 1,
   plugin_name: "any-bootstrap-theme",
   layout,
+  fonts: (config) => themes[config.theme]?.fonts || {},
   configuration_workflow,
 };
