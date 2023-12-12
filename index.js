@@ -74,7 +74,7 @@ const blockDispatch = (config) => ({
     ),
   noBackgroundAtTop: () => true,
   wrapTop: (segment, ix, s) =>
-    ["hero", "footer"].includes(segment.type)
+    ["hero", "footer"].includes(segment.type) || segment.noWrapTop
       ? s
       : section(
           {
