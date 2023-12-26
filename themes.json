@@ -250,7 +250,6 @@
   },
   "carserv": {
     "source": "HTML Codex",
-    "includeBS5css": true,
     "local_css_file": "themewagon/carserv.css",
     "fonts": { "Barlow": "Barlow, sans-serif", "Ubuntu": "Ubuntu, sans-serif" },
     "in_header": "<link href=\"https://fonts.googleapis.com/css2?family=Barlow:wght@600;700&family=Ubuntu:wght@400;500&display=swap\" rel=\"stylesheet\">"
