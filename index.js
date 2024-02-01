@@ -429,6 +429,7 @@ const layout = (config) => ({
     role,
     req,
     bodyClass,
+    requestFluidLayout,
   }) =>
     wrapIt(
       config,
@@ -441,7 +442,14 @@ const layout = (config) => ({
         config,
         currentUrl,
         originalUrl,
-        body: renderBody(title, body, alerts, config, role, req),
+        body: renderBody(
+          title,
+          body,
+          alerts,
+          requestFluidLayout ? { ...config, fluid: true } : config,
+          role,
+          req
+        ),
         req,
       })
     ),
