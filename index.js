@@ -94,19 +94,7 @@ const blockDispatch = (config) => ({
           },
           div(
             { class: [config.fluid ? "container-fluid" : "container"] },
-            div(
-              { class: "row" },
-              div(
-                {
-                  class: `col-sm-12 ${
-                    segment.textStyle && segment.textStyle !== "h1"
-                      ? segment.textStyle
-                      : ""
-                  }`,
-                },
-                segment.textStyle && segment.textStyle === "h1" ? h1(s) : s
-              )
-            )
+            segment.textStyle && segment.textStyle === "h1" ? h1(s) : s
           )
         ),
 });
