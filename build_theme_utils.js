@@ -113,8 +113,24 @@ const buildNeeded = (oldCtx, newCtx) => {
   }
 };
 
+const deleteOldFiles = async ({ file_name, theme }) => {
+  const dirs = await fs.readdir(join(__dirname, "public", "bootswatch"));
+  for (const dir of dirs) {
+    const files = await fs.readdir(
+      join(__dirname, "public", "bootswatch", dir)
+    );
+    for (const file of files) {
+      if (
+        file.startsWith("bootstrap.min.") &&
+        ![file_name, "bootstrap.min.css"].includes(file)
+      )
+        await fs.unlink(join(__dirname, "public", "bootswatch", dir, file));
+    }
+  }
+};
 module.exports = {
   buildTheme,
   extractColorDefaults,
   buildNeeded,
+  deleteOldFiles,
 };

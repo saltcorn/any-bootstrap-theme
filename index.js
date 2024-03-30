@@ -41,6 +41,7 @@ const {
   buildTheme,
   extractColorDefaults,
   buildNeeded,
+  deleteOldFiles,
 } = require("./build_theme_utils");
 const { getState } = require("@saltcorn/data/db/state");
 
@@ -622,6 +623,14 @@ const themeSelectOptions = Object.entries(themes).map(([k, v]) => ({
 
 const configuration_workflow = () =>
   new Workflow({
+    onDone: async (context) => {
+      return {
+        context,
+        cleanup: async () => {
+          if (context.sass_build) await deleteOldFiles(context.sass_build);
+        },
+      };
+    },
     onStepSuccess: async (step, ctx) => {
       try {
         const fileName = await buildTheme(ctx);
