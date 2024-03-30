@@ -37,6 +37,13 @@ const {
   headersInBody,
 } = require("@saltcorn/markup/layout_utils");
 const { features } = require("@saltcorn/data/db/state");
+const {
+  buildTheme,
+  extractColorDefaults,
+  buildNeeded,
+} = require("./build_theme_utils");
+const { getState } = require("@saltcorn/data/db/state");
+
 const isNode = typeof window === "undefined";
 
 const blockDispatch = (config) => ({
@@ -131,7 +138,7 @@ const safeSlash = () => (isNode ? "/" : "");
 const wrapIt = (config, bodyAttr, headers, title, body) => {
   const integrity = get_css_integrity(config);
   return `<!doctype html>
-<html lang="en">
+<html lang="en" data-bs-theme="${config.mode || "light"}">
   <head>
     ${!isNode ? `<base href="http://localhost">` : ""}
     <meta charset="utf-8" />
@@ -149,7 +156,9 @@ const wrapIt = (config, bodyAttr, headers, title, body) => {
     }
     <link href="${get_css_url(config)}" rel="stylesheet"${
     integrity ? ` integrity="${integrity}" crossorigin="anonymous"` : ""
-  }>${themes[config.theme]?.in_header || ""}
+  }>
+  ${custom_css_link(config)}
+  ${themes[config.theme]?.in_header || ""}
     ${headersInHead(headers)}    
     <title>${text(title)}</title>
   </head>
@@ -576,6 +585,19 @@ const get_css_url = (config) => {
   else return def;
 };
 
+const custom_css_link = (config) => {
+  if (
+    features &&
+    features.bootstrap5 &&
+    themes[config.theme] &&
+    themes[config.theme].source === "Bootswatch" &&
+    config.sass_build &&
+    config.sass_build.theme === config.theme
+  )
+    return `<link href="${base_public_serve}/bootswatch/${config.theme}/${config.sass_build.file_name}" rel="stylesheet">`;
+  else return "";
+};
+
 const get_css_integrity = (config) => {
   const def = themes.flatly.get_css_integrity;
   if (!config || !config.theme) return def;
@@ -600,6 +622,33 @@ const themeSelectOptions = Object.entries(themes).map(([k, v]) => ({
 
 const configuration_workflow = () =>
   new Workflow({
+    onStepSuccess: async (step, ctx) => {
+      try {
+        const fileName = await buildTheme(ctx);
+        ctx.sass_build = { file_name: fileName, theme: ctx.theme };
+      } catch (error) {
+        const msg = error.message || "Failed to build theme";
+        getState().log(2, `onStepSuccess failed: ${msg}`);
+      }
+    },
+    onStepSave: async (step, ctx, formVals) => {
+      if (buildNeeded(ctx, formVals)) {
+        try {
+          const fileName = await buildTheme(formVals);
+          return {
+            contextChanges: {
+              sass_build: { file_name: fileName, theme: formVals.theme },
+            },
+          };
+        } catch (error) {
+          const msg = error.message || "Failed to build theme";
+          getState().log(2, `onStepSave failed: ${msg}`);
+          return {
+            savingErrors: msg,
+          };
+        }
+      }
+    },
     steps: [
       {
         name: "stylesheet",
@@ -608,7 +657,18 @@ const configuration_workflow = () =>
             mime_super: "text",
             mime_sub: "css",
           });
+          const themeColors = await extractColorDefaults();
           return new Form({
+            additionalHeaders: [
+              {
+                headerTag: `<script>var themeColors = ${JSON.stringify(
+                  themeColors
+                )}</script>`,
+              },
+              {
+                script: `${safeSlash()}plugins/public/any-bootstrap-theme/theme_helpers.js`,
+              },
+            ],
             saveAndContinueOption: true,
             fields: [
               {
@@ -624,6 +684,7 @@ const configuration_workflow = () =>
                     { name: "File", label: "Uploaded file" },
                     { name: "Other", label: "Other - specify URL" },
                   ],
+                  onChange: "themeHelpers.changeTheme(this)",
                 },
               },
               {
@@ -721,6 +782,68 @@ const configuration_workflow = () =>
                 name: "fluid",
                 label: "Fluid full-width container",
                 type: "Bool",
+              },
+              {
+                name: "mode",
+                label: "Mode",
+                type: "String",
+                required: true,
+                default: "light",
+                attributes: {
+                  options: [
+                    { name: "light", label: "Light" },
+                    { name: "dark", label: "Dark" },
+                  ],
+                  onChange: "themeHelpers.changeThemeMode(this)",
+                },
+              },
+              {
+                name: "primary",
+                label: "Primary",
+                type: "Color",
+                default: "#2c3e50",
+              },
+              {
+                name: "secondary",
+                label: "Secondary",
+                type: "Color",
+                default: "#95a5a6",
+              },
+              {
+                name: "success",
+                label: "Success",
+                type: "Color",
+                default: "#18bc9c",
+              },
+              {
+                name: "info",
+                label: "Info",
+                type: "Color",
+                default: "#3498db",
+              },
+              {
+                name: "warning",
+                label: "Warning",
+                type: "Color",
+                default: "#f39c12",
+              },
+              {
+                name: "danger",
+                label: "Danger",
+                type: "Color",
+                default: "#e74c3c",
+              },
+              {
+                name: "light",
+                label: "Light",
+                type: "Color",
+                default: "#ecf0f1",
+              },
+              {
+                name: "dark",
+                label: "Dark",
+                type: "Color",
+                default: "#7b8a8b",
               },
             ],
           });
