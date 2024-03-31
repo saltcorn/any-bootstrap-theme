@@ -2,6 +2,7 @@ const fs = require("fs").promises;
 const { spawn } = require("child_process");
 const { join } = require("path");
 const { getState } = require("@saltcorn/data/db/state");
+const db = require("@saltcorn/data/db");
 
 const bsColors = [
   "primary",
@@ -64,7 +65,7 @@ const buildBootstrapMin = async (ctx) => {
 };
 
 const copyBootstrapMin = async (ctx) => {
-  const fileName = `bootstrap.min.${new Date().valueOf()}.css`;
+  const fileName = `bootstrap.min.${db.getTenantSchema()}.${new Date().valueOf()}.css`;
   await fs.copyFile(
     join(__dirname, "scss", "build", "bootstrap.min.css"),
     join(__dirname, "public", "bootswatch", ctx.theme, fileName)
@@ -115,13 +116,14 @@ const buildNeeded = (oldCtx, newCtx) => {
 
 const deleteOldFiles = async ({ file_name, theme }) => {
   const dirs = await fs.readdir(join(__dirname, "public", "bootswatch"));
+  const tenantSchema = db.getTenantSchema();
   for (const dir of dirs) {
     const files = await fs.readdir(
       join(__dirname, "public", "bootswatch", dir)
     );
     for (const file of files) {
       if (
-        file.startsWith("bootstrap.min.") &&
+        file.startsWith(`bootstrap.min.${tenantSchema}`) &&
         ![file_name, "bootstrap.min.css"].includes(file)
       )
         await fs.unlink(join(__dirname, "public", "bootswatch", dir, file));
