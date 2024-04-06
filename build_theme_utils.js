@@ -65,12 +65,10 @@ const buildBootstrapMin = async (ctx) => {
 };
 
 const copyBootstrapMin = async (ctx) => {
-  const fileName = ctx.sass_file_name;
   await fs.copyFile(
     join(__dirname, "scss", "build", "bootstrap.min.css"),
-    join(__dirname, "public", "bootswatch", ctx.theme, fileName)
+    join(__dirname, "public", "bootswatch", ctx.theme, ctx.sass_file_name)
   );
-  return fileName;
 };
 
 const buildTheme = async (ctx) => {

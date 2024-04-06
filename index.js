@@ -592,7 +592,8 @@ const custom_css_link = (config) => {
     features.bootstrap5 &&
     themes[config.theme] &&
     themes[config.theme].source === "Bootswatch" &&
-    config.sass_file_name
+    config.sass_file_name &&
+    config.sass_file_name.indexOf(config.theme) > 0
   )
     return `<link href="${base_public_serve}/bootswatch/${config.theme}/${config.sass_file_name}" rel="stylesheet">`;
   else return "";
@@ -665,6 +666,7 @@ const configuration_workflow = () =>
               {
                 headerTag: `<script>
 var currentTheme = "${ctx.theme || "flatly"}";
+var tenantSchema = "${db.getTenantSchema()}";
 var themeColors = ${JSON.stringify(themeColors)}</script>`,
               },
               {
@@ -807,48 +809,72 @@ var themeColors = ${JSON.stringify(themeColors)}</script>`,
                 label: "Primary",
                 type: "Color",
                 default: "#2c3e50",
+                attributes: {
+                  onChange: "themeHelpers.bsColorChanged(this)",
+                },
               },
               {
                 name: "secondary",
                 label: "Secondary",
                 type: "Color",
                 default: "#95a5a6",
+                attributes: {
+                  onChange: "themeHelpers.bsColorChanged(this)",
+                },
               },
               {
                 name: "success",
                 label: "Success",
                 type: "Color",
                 default: "#18bc9c",
+                attributes: {
+                  onChange: "themeHelpers.bsColorChanged(this)",
+                },
               },
               {
                 name: "info",
                 label: "Info",
                 type: "Color",
                 default: "#3498db",
+                attributes: {
+                  onChange: "themeHelpers.bsColorChanged(this)",
+                },
               },
               {
                 name: "warning",
                 label: "Warning",
                 type: "Color",
                 default: "#f39c12",
+                attributes: {
+                  onChange: "themeHelpers.bsColorChanged(this)",
+                },
               },
               {
                 name: "danger",
                 label: "Danger",
                 type: "Color",
                 default: "#e74c3c",
+                attributes: {
+                  onChange: "themeHelpers.bsColorChanged(this)",
+                },
               },
               {
                 name: "light",
                 label: "Light",
                 type: "Color",
                 default: "#ecf0f1",
+                attributes: {
+                  onChange: "themeHelpers.bsColorChanged(this)",
+                },
               },
               {
                 name: "dark",
                 label: "Dark",
                 type: "Color",
                 default: "#7b8a8b",
+                attributes: {
+                  onChange: "themeHelpers.bsColorChanged(this)",
+                },
               },
               {
                 name: "sass_file_name",
@@ -856,7 +882,11 @@ var themeColors = ${JSON.stringify(themeColors)}</script>`,
               },
             ],
           });
-          form.values.sass_file_name = `bootstrap.min.${db.getTenantSchema()}.${new Date().valueOf()}.css`;
+          form.values.sass_file_name =
+            ctx.sass_file_name ||
+            `bootstrap.min.${db.getTenantSchema()}.${
+              ctx.theme || "flatly"
+            }.${new Date().valueOf()}.css`;
           return form;
         },
       },

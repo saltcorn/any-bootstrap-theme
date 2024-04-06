@@ -28,6 +28,15 @@ var themeHelpers = (() => {
         currentMode === "dark"
           ? `#${safeColor(colors.darkBg)}`
           : `#${safeColor(colors.lightBg)}`;
+
+      $(
+        "[name='sass_file_name']"
+      )[0].value = `bootstrap.min.${tenantSchema}.${currentTheme}.${new Date().valueOf()}.css`;
+    },
+    bsColorChanged: (e) => {
+      $(
+        "[name='sass_file_name']"
+      )[0].value = `bootstrap.min.${tenantSchema}.${currentTheme}.${new Date().valueOf()}.css`;
     },
   };
 })();
