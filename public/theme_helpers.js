@@ -11,17 +11,13 @@ var themeHelpers = (() => {
   }
   return {
     changeThemeMode: (e) => {
-      const themeSelector = $("[data-fieldname=theme]")[0];
-      if (themeSelector) {
-        const currentTheme = themeSelector.value;
-        const color = themeColors[currentTheme][`${e.value}Bg`];
-        $("[data-fieldname='backgroundColor']")[0].value = `#${safeColor(
-          color
-        )}`;
-      }
+      const color = themeColors[currentTheme][`${e.value}Bg`];
+      const existingInput = $("[name='backgroundColor']")[0];
+      if (existingInput) existingInput.value = `#${safeColor(color)}`;
     },
     changeTheme: (e) => {
-      const colors = themeColors[e.value];
+      currentTheme = e.value;
+      const colors = themeColors[currentTheme];
       for (const key of Object.keys(colors)) {
         const input = $(`[data-fieldname=${key}]`)[0];
         const color = colors[key];

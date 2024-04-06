@@ -592,10 +592,9 @@ const custom_css_link = (config) => {
     features.bootstrap5 &&
     themes[config.theme] &&
     themes[config.theme].source === "Bootswatch" &&
-    config.sass_build &&
-    config.sass_build.theme === config.theme
+    config.sass_file_name
   )
-    return `<link href="${base_public_serve}/bootswatch/${config.theme}/${config.sass_build.file_name}" rel="stylesheet">`;
+    return `<link href="${base_public_serve}/bootswatch/${config.theme}/${config.sass_file_name}" rel="stylesheet">`;
   else return "";
 };
 
@@ -627,14 +626,13 @@ const configuration_workflow = () =>
       return {
         context,
         cleanup: async () => {
-          if (context.sass_build) await deleteOldFiles(context.sass_build);
+          if (context.sass_file_name) await deleteOldFiles(context);
         },
       };
     },
     onStepSuccess: async (step, ctx) => {
       try {
-        const fileName = await buildTheme(ctx);
-        ctx.sass_build = { file_name: fileName, theme: ctx.theme };
+        await buildTheme(ctx);
       } catch (error) {
         const msg = error.message || "Failed to build theme";
         getState().log(2, `onStepSuccess failed: ${msg}`);
@@ -643,12 +641,7 @@ const configuration_workflow = () =>
     onStepSave: async (step, ctx, formVals) => {
       if (buildNeeded(ctx, formVals)) {
         try {
-          const fileName = await buildTheme(formVals);
-          return {
-            contextChanges: {
-              sass_build: { file_name: fileName, theme: formVals.theme },
-            },
-          };
+          await buildTheme(formVals);
         } catch (error) {
           const msg = error.message || "Failed to build theme";
           getState().log(2, `onStepSave failed: ${msg}`);
@@ -661,18 +654,18 @@ const configuration_workflow = () =>
     steps: [
       {
         name: "stylesheet",
-        form: async () => {
+        form: async (ctx) => {
           const cssfiles = await File.find({
             mime_super: "text",
             mime_sub: "css",
           });
           const themeColors = await extractColorDefaults();
-          return new Form({
+          const form = new Form({
             additionalHeaders: [
               {
-                headerTag: `<script>var themeColors = ${JSON.stringify(
-                  themeColors
-                )}</script>`,
+                headerTag: `<script>
+var currentTheme = "${ctx.theme || "flatly"}";
+var themeColors = ${JSON.stringify(themeColors)}</script>`,
               },
               {
                 script: `${safeSlash()}plugins/public/any-bootstrap-theme/theme_helpers.js`,
@@ -752,7 +745,10 @@ const configuration_workflow = () =>
                 attributes: {
                   options: [
                     { name: "navbar-dark bg-dark", label: "Dark" },
-                    { name: "navbar-dark bg-primary", label: "Dark Primary" },
+                    {
+                      name: "navbar-dark bg-primary",
+                      label: "Dark Primary",
+                    },
                     {
                       name: "navbar-dark bg-secondary",
                       label: "Dark Secondary",
@@ -854,16 +850,61 @@ const configuration_workflow = () =>
                 type: "Color",
                 default: "#7b8a8b",
               },
+              {
+                name: "sass_file_name",
+                input_type: "hidden",
+              },
             ],
           });
+          form.values.sass_file_name = `bootstrap.min.${db.getTenantSchema()}.${new Date().valueOf()}.css`;
+          return form;
         },
       },
     ],
   });
 
+const userConfigForm = async (ctx) => {
+  const themeColors = await extractColorDefaults();
+  return new Form({
+    additionalHeaders: [
+      {
+        headerTag: `<script>
+var currentTheme = "${ctx.theme || "flatly"}";
+var themeColors = ${JSON.stringify(themeColors)}</script>`,
+      },
+      {
+        script: `${safeSlash()}plugins/public/any-bootstrap-theme/theme_helpers.js`,
+      },
+    ],
+    fields: [
+      {
+        name: "backgroundColor",
+        label: "Background Color",
+        input_type: "hidden",
+        default: themeColors[ctx.theme || "flatly"][`${ctx.mode || "light"}Bg`],
+      },
+      {
+        name: "mode",
+        label: "Mode",
+        type: "String",
+        required: true,
+        default: ctx.mode || "light",
+        attributes: {
+          options: [
+            { name: "light", label: "Light" },
+            { name: "dark", label: "Dark" },
+          ],
+          onChange: "themeHelpers.changeThemeMode(this)",
+        },
+      },
+    ],
+  });
+};
+
 module.exports = {
   sc_plugin_api_version: 1,
   plugin_name: "any-bootstrap-theme",
+  user_config_form: userConfigForm,
   layout,
   fonts: (config) => themes[config.theme]?.fonts || {},
   configuration_workflow,

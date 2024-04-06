@@ -65,7 +65,7 @@ const buildBootstrapMin = async (ctx) => {
 };
 
 const copyBootstrapMin = async (ctx) => {
-  const fileName = `bootstrap.min.${db.getTenantSchema()}.${new Date().valueOf()}.css`;
+  const fileName = ctx.sass_file_name;
   await fs.copyFile(
     join(__dirname, "scss", "build", "bootstrap.min.css"),
     join(__dirname, "public", "bootswatch", ctx.theme, fileName)
@@ -77,7 +77,7 @@ const buildTheme = async (ctx) => {
   await copyThemeFiles(ctx);
   await applyCustomColors(ctx);
   const code = await buildBootstrapMin(ctx);
-  if (code === 0) return await copyBootstrapMin(ctx);
+  if (code === 0) await copyBootstrapMin(ctx);
   else throw new Error(`Failed to build theme, please check your logs`);
 };
 
@@ -114,17 +114,18 @@ const buildNeeded = (oldCtx, newCtx) => {
   }
 };
 
-const deleteOldFiles = async ({ file_name, theme }) => {
+const deleteOldFiles = async ({ sass_file_name }) => {
   const dirs = await fs.readdir(join(__dirname, "public", "bootswatch"));
   const tenantSchema = db.getTenantSchema();
   for (const dir of dirs) {
     const files = await fs.readdir(
       join(__dirname, "public", "bootswatch", dir)
     );
+    const fileDelPrefix = `bootstrap.min.${tenantSchema}`;
     for (const file of files) {
       if (
-        file.startsWith(`bootstrap.min.${tenantSchema}`) &&
-        ![file_name, "bootstrap.min.css"].includes(file)
+        file.startsWith(fileDelPrefix) &&
+        ![sass_file_name, "bootstrap.min.css"].includes(file)
       )
         await fs.unlink(join(__dirname, "public", "bootswatch", dir, file));
     }
