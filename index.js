@@ -167,7 +167,7 @@ const wrapIt = (config, bodyAttr, headers, title, body) => {
     <title>${text(title)}</title>
   </head>
   <body ${bodyAttr}${
-    config.backgroundColor
+    config.backgroundColor && !config.is_user_config
       ? ` style="background-color: ${config.backgroundColor}"`
       : ""
   }>
@@ -915,23 +915,7 @@ var themeColors = ${JSON.stringify(themeColors)}</script>`,
 const userConfigForm = async (ctx) => {
   const themeColors = await extractColorDefaults();
   return new Form({
-    additionalHeaders: [
-      {
-        headerTag: `<script>
-var currentTheme = "${ctx.theme || "flatly"}";
-var themeColors = ${JSON.stringify(themeColors)}</script>`,
-      },
-      {
-        script: `${safeSlash()}plugins/public/any-bootstrap-theme/theme_helpers.js`,
-      },
-    ],
     fields: [
-      {
-        name: "backgroundColor",
-        label: "Background Color",
-        input_type: "hidden",
-        default: themeColors[ctx.theme || "flatly"][`${ctx.mode || "light"}Bg`],
-      },
       {
         name: "mode",
         label: "Mode",
@@ -943,22 +927,10 @@ var themeColors = ${JSON.stringify(themeColors)}</script>`,
             { name: "light", label: "Light" },
             { name: "dark", label: "Dark" },
           ],
-          onChange: "themeHelpers.changeThemeMode(this)",
         },
       },
     ],
   });
-};
-
-const safeColor = (color) => {
-  if (color.length === 3) {
-    let newColor = "";
-    for (const char of color) {
-      newColor += char + char;
-    }
-    return newColor;
-  }
-  return color;
 };
 
 module.exports = {
@@ -992,11 +964,7 @@ module.exports = {
           ? plugin.configuration.mode
           : "light";
         userLayout.config.mode = currentMode === "dark" ? "light" : "dark";
-        const currentTheme = plugin.configuration?.theme || "flatly";
-        const colors = await extractColorDefaults();
-        userLayout.config.backgroundColor = safeColor(
-          colors[currentTheme][`${userLayout.config.mode}Bg`]
-        );
+        userLayout.config.is_user_config = true;
         attrs.layout = userLayout;
         await dbUser.update({ _attributes: attrs });
         getState().processSend({
