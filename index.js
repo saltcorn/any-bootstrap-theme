@@ -913,24 +913,25 @@ var themeColors = ${JSON.stringify(themeColors)}</script>`,
   });
 
 const userConfigForm = async (ctx) => {
-  const themeColors = await extractColorDefaults();
-  return new Form({
-    fields: [
-      {
-        name: "mode",
-        label: "Mode",
-        type: "String",
-        required: true,
-        default: ctx.mode || "light",
-        attributes: {
-          options: [
-            { name: "light", label: "Light" },
-            { name: "dark", label: "Dark" },
-          ],
+  if (bs5BootswatchThemes.indexOf(ctx?.theme || "flatly") >= 0)
+    return new Form({
+      fields: [
+        {
+          name: "mode",
+          label: "Mode",
+          type: "String",
+          required: true,
+          default: ctx.mode || "light",
+          attributes: {
+            options: [
+              { name: "light", label: "Light" },
+              { name: "dark", label: "Dark" },
+            ],
+          },
         },
-      },
-    ],
-  });
+      ],
+    });
+  else return null;
 };
 
 module.exports = {
