@@ -624,6 +624,10 @@ const themeSelectOptions = Object.entries(themes).map(([k, v]) => ({
   name: k,
 }));
 
+const bs5BootswatchThemes = Object.entries(themes)
+  .filter(([k, v]) => !v.includeBS4css && v.source === "Bootswatch")
+  .map(([k, v]) => k);
+
 const configuration_workflow = () =>
   new Workflow({
     onDone: async (context) => {
@@ -636,14 +640,17 @@ const configuration_workflow = () =>
     },
     onStepSuccess: async (step, ctx) => {
       try {
-        await buildTheme(ctx);
+        if (bs5BootswatchThemes.indexOf(ctx.theme) >= 0) await buildTheme(ctx);
       } catch (error) {
         const msg = error.message || "Failed to build theme";
         getState().log(2, `onStepSuccess failed: ${msg}`);
       }
     },
     onStepSave: async (step, ctx, formVals) => {
-      if (buildNeeded(ctx, formVals)) {
+      if (
+        bs5BootswatchThemes.indexOf(formVals.theme) >= 0 &&
+        buildNeeded(ctx, formVals)
+      ) {
         try {
           await buildTheme(formVals);
         } catch (error) {
@@ -797,6 +804,7 @@ var themeColors = ${JSON.stringify(themeColors)}</script>`,
                 name: "mode",
                 label: "Mode",
                 type: "String",
+                showIf: { theme: bs5BootswatchThemes },
                 required: true,
                 default: "light",
                 attributes: {
@@ -811,6 +819,7 @@ var themeColors = ${JSON.stringify(themeColors)}</script>`,
                 name: "primary",
                 label: "Primary",
                 type: "Color",
+                showIf: { theme: bs5BootswatchThemes },
                 default: "#2c3e50",
                 attributes: {
                   onChange: "themeHelpers.bsColorChanged(this)",
@@ -820,6 +829,7 @@ var themeColors = ${JSON.stringify(themeColors)}</script>`,
                 name: "secondary",
                 label: "Secondary",
                 type: "Color",
+                showIf: { theme: bs5BootswatchThemes },
                 default: "#95a5a6",
                 attributes: {
                   onChange: "themeHelpers.bsColorChanged(this)",
@@ -829,6 +839,7 @@ var themeColors = ${JSON.stringify(themeColors)}</script>`,
                 name: "success",
                 label: "Success",
                 type: "Color",
+                showIf: { theme: bs5BootswatchThemes },
                 default: "#18bc9c",
                 attributes: {
                   onChange: "themeHelpers.bsColorChanged(this)",
@@ -838,6 +849,7 @@ var themeColors = ${JSON.stringify(themeColors)}</script>`,
                 name: "info",
                 label: "Info",
                 type: "Color",
+                showIf: { theme: bs5BootswatchThemes },
                 default: "#3498db",
                 attributes: {
                   onChange: "themeHelpers.bsColorChanged(this)",
@@ -847,6 +859,7 @@ var themeColors = ${JSON.stringify(themeColors)}</script>`,
                 name: "warning",
                 label: "Warning",
                 type: "Color",
+                showIf: { theme: bs5BootswatchThemes },
                 default: "#f39c12",
                 attributes: {
                   onChange: "themeHelpers.bsColorChanged(this)",
@@ -856,6 +869,7 @@ var themeColors = ${JSON.stringify(themeColors)}</script>`,
                 name: "danger",
                 label: "Danger",
                 type: "Color",
+                showIf: { theme: bs5BootswatchThemes },
                 default: "#e74c3c",
                 attributes: {
                   onChange: "themeHelpers.bsColorChanged(this)",
@@ -865,6 +879,7 @@ var themeColors = ${JSON.stringify(themeColors)}</script>`,
                 name: "light",
                 label: "Light",
                 type: "Color",
+                showIf: { theme: bs5BootswatchThemes },
                 default: "#ecf0f1",
                 attributes: {
                   onChange: "themeHelpers.bsColorChanged(this)",
@@ -874,6 +889,7 @@ var themeColors = ${JSON.stringify(themeColors)}</script>`,
                 name: "dark",
                 label: "Dark",
                 type: "Color",
+                showIf: { theme: bs5BootswatchThemes },
                 default: "#7b8a8b",
                 attributes: {
                   onChange: "themeHelpers.bsColorChanged(this)",

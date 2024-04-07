@@ -18,6 +18,7 @@ var themeHelpers = (() => {
     changeTheme: (e) => {
       currentTheme = e.value;
       const colors = themeColors[currentTheme];
+      if (!colors) $("[data-fieldname='backgroundColor']")[0].value = "#ffffff";
       for (const key of Object.keys(colors)) {
         const input = $(`[data-fieldname=${key}]`)[0];
         const color = colors[key];
