@@ -30,6 +30,8 @@ const Form = require("@saltcorn/data/models/form");
 const View = require("@saltcorn/data/models/view");
 const File = require("@saltcorn/data/models/file");
 const Workflow = require("@saltcorn/data/models/workflow");
+const Plugin = require("@saltcorn/data/models/plugin");
+const User = require("@saltcorn/data/models/user");
 const { renderForm, link } = require("@saltcorn/markup");
 const {
   alert,
@@ -43,6 +45,7 @@ const {
   buildNeeded,
   deleteOldFiles,
 } = require("./build_theme_utils");
+const { sleep } = require("@saltcorn/data/utils");
 const { getState } = require("@saltcorn/data/db/state");
 
 const isNode = typeof window === "undefined";
@@ -931,6 +934,17 @@ var themeColors = ${JSON.stringify(themeColors)}</script>`,
   });
 };
 
+const safeColor = (color) => {
+  if (color.length === 3) {
+    let newColor = "";
+    for (const char of color) {
+      newColor += char + char;
+    }
+    return newColor;
+  }
+  return color;
+};
+
 module.exports = {
   sc_plugin_api_version: 1,
   plugin_name: "any-bootstrap-theme",
@@ -938,4 +952,48 @@ module.exports = {
   layout,
   fonts: (config) => themes[config.theme]?.fonts || {},
   configuration_workflow,
+  actions: () => ({
+    toggle_dark_mode: {
+      description: "Switch between dark and light mode",
+      configFields: [],
+      run: async ({ user, req }) => {
+        let plugin = await Plugin.findOne({ name: "any-bootstrap-theme" });
+        if (!plugin) {
+          plugin = await Plugin.findOne({
+            name: "@saltcorn/any-bootstrap-theme",
+          });
+        }
+        const dbUser = await User.findOne({ id: user.id });
+        const attrs = dbUser._attributes || {};
+        const userLayout = attrs.layout || {
+          config: {},
+          plugin: plugin.name,
+        };
+
+        const currentMode = userLayout.config.mode
+          ? userLayout.config.mode
+          : plugin.configuration?.mode
+          ? plugin.configuration.mode
+          : "light";
+        userLayout.config.mode = currentMode === "dark" ? "light" : "dark";
+        const currentTheme = plugin.configuration?.theme || "flatly";
+        const colors = await extractColorDefaults();
+        userLayout.config.backgroundColor = safeColor(
+          colors[currentTheme][`${userLayout.config.mode}Bg`]
+        );
+        attrs.layout = userLayout;
+        await dbUser.update({ _attributes: attrs });
+        getState().processSend({
+          refresh_plugin_cfg: plugin.name,
+          tenant: db.getTenantSchema(),
+        });
+        getState().userLayouts[user.email] = layout({
+          ...(plugin.configuration ? plugin.configuration : {}),
+          ...userLayout.config,
+        });
+        await sleep(500); // Allow other workers to reload this plugin
+        return { reload_page: true };
+      },
+    },
+  }),
 };
