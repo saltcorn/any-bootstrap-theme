@@ -4,11 +4,13 @@
   "description": "Configurable bootstrap layout plugin",
   "main": "index.js",
   "scripts": {
-    "test": "jest"
+    "test": "jest",
+    "build_theme": "sass --style=compressed scss/build/my_theme.scss scss/build/bootstrap.min.css"
   },
   "dependencies": {
     "@saltcorn/markup": "^0.1.2",
-    "@saltcorn/data": "^0.1.2"
+    "@saltcorn/data": "^0.1.2",
+    "sass": "^1.72.0"
   },
   "author": "Tom Nielsen",
   "license": "MIT",

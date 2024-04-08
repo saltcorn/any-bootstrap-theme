@@ -30,6 +30,8 @@ const Form = require("@saltcorn/data/models/form");
 const View = require("@saltcorn/data/models/view");
 const File = require("@saltcorn/data/models/file");
 const Workflow = require("@saltcorn/data/models/workflow");
+const Plugin = require("@saltcorn/data/models/plugin");
+const User = require("@saltcorn/data/models/user");
 const { renderForm, link } = require("@saltcorn/markup");
 const {
   alert,
@@ -37,6 +39,15 @@ const {
   headersInBody,
 } = require("@saltcorn/markup/layout_utils");
 const { features } = require("@saltcorn/data/db/state");
+const {
+  buildTheme,
+  extractColorDefaults,
+  buildNeeded,
+  deleteOldFiles,
+} = require("./build_theme_utils");
+const { sleep } = require("@saltcorn/data/utils");
+const { getState } = require("@saltcorn/data/db/state");
+
 const isNode = typeof window === "undefined";
 
 const blockDispatch = (config) => ({
@@ -131,7 +142,7 @@ const safeSlash = () => (isNode ? "/" : "");
 const wrapIt = (config, bodyAttr, headers, title, body) => {
   const integrity = get_css_integrity(config);
   return `<!doctype html>
-<html lang="en">
+<html lang="en" data-bs-theme="${config.mode || "light"}">
   <head>
     ${!isNode ? `<base href="http://localhost">` : ""}
     <meta charset="utf-8" />
@@ -149,12 +160,14 @@ const wrapIt = (config, bodyAttr, headers, title, body) => {
     }
     <link href="${get_css_url(config)}" rel="stylesheet"${
     integrity ? ` integrity="${integrity}" crossorigin="anonymous"` : ""
-  }>${themes[config.theme]?.in_header || ""}
+  }>
+  ${custom_css_link(config)}
+  ${themes[config.theme]?.in_header || ""}
     ${headersInHead(headers)}    
     <title>${text(title)}</title>
   </head>
   <body ${bodyAttr}${
-    config.backgroundColor
+    config.backgroundColor && !config.is_user_config
       ? ` style="background-color: ${config.backgroundColor}"`
       : ""
   }>
@@ -576,6 +589,19 @@ const get_css_url = (config) => {
   else return def;
 };
 
+const custom_css_link = (config) => {
+  if (
+    features &&
+    features.bootstrap5 &&
+    themes[config.theme] &&
+    themes[config.theme].source === "Bootswatch" &&
+    config.sass_file_name &&
+    config.sass_file_name.indexOf(config.theme) > 0
+  )
+    return `<link href="${base_public_serve}/bootswatch/${config.theme}/${config.sass_file_name}" rel="stylesheet">`;
+  else return "";
+};
+
 const get_css_integrity = (config) => {
   const def = themes.flatly.get_css_integrity;
   if (!config || !config.theme) return def;
@@ -598,17 +624,65 @@ const themeSelectOptions = Object.entries(themes).map(([k, v]) => ({
   name: k,
 }));
 
+const bs5BootswatchThemes = Object.entries(themes)
+  .filter(([k, v]) => !v.includeBS4css && v.source === "Bootswatch")
+  .map(([k, v]) => k);
+
 const configuration_workflow = () =>
   new Workflow({
+    onDone: async (context) => {
+      return {
+        context,
+        cleanup: async () => {
+          if (context.sass_file_name) await deleteOldFiles(context);
+        },
+      };
+    },
+    onStepSuccess: async (step, ctx) => {
+      try {
+        if (bs5BootswatchThemes.indexOf(ctx.theme) >= 0) await buildTheme(ctx);
+      } catch (error) {
+        const msg = error.message || "Failed to build theme";
+        getState().log(2, `onStepSuccess failed: ${msg}`);
+      }
+    },
+    onStepSave: async (step, ctx, formVals) => {
+      if (
+        bs5BootswatchThemes.indexOf(formVals.theme) >= 0 &&
+        buildNeeded(ctx, formVals)
+      ) {
+        try {
+          await buildTheme(formVals);
+        } catch (error) {
+          const msg = error.message || "Failed to build theme";
+          getState().log(2, `onStepSave failed: ${msg}`);
+          return {
+            savingErrors: msg,
+          };
+        }
+      }
+    },
     steps: [
       {
         name: "stylesheet",
-        form: async () => {
+        form: async (ctx) => {
           const cssfiles = await File.find({
             mime_super: "text",
             mime_sub: "css",
           });
-          return new Form({
+          const themeColors = await extractColorDefaults();
+          const form = new Form({
+            additionalHeaders: [
+              {
+                headerTag: `<script>
+var currentTheme = "${ctx.theme || "flatly"}";
+var tenantSchema = "${db.getTenantSchema()}";
+var themeColors = ${JSON.stringify(themeColors)}</script>`,
+              },
+              {
+                script: `${safeSlash()}plugins/public/any-bootstrap-theme/theme_helpers.js`,
+              },
+            ],
             saveAndContinueOption: true,
             fields: [
               {
@@ -624,6 +698,7 @@ const configuration_workflow = () =>
                     { name: "File", label: "Uploaded file" },
                     { name: "Other", label: "Other - specify URL" },
                   ],
+                  onChange: "themeHelpers.changeTheme(this)",
                 },
               },
               {
@@ -682,7 +757,10 @@ const configuration_workflow = () =>
                 attributes: {
                   options: [
                     { name: "navbar-dark bg-dark", label: "Dark" },
-                    { name: "navbar-dark bg-primary", label: "Dark Primary" },
+                    {
+                      name: "navbar-dark bg-primary",
+                      label: "Dark Primary",
+                    },
                     {
                       name: "navbar-dark bg-secondary",
                       label: "Dark Secondary",
@@ -722,17 +800,185 @@ const configuration_workflow = () =>
                 label: "Fluid full-width container",
                 type: "Bool",
               },
+              {
+                name: "mode",
+                label: "Mode",
+                type: "String",
+                showIf: { theme: bs5BootswatchThemes },
+                required: true,
+                default: "light",
+                attributes: {
+                  options: [
+                    { name: "light", label: "Light" },
+                    { name: "dark", label: "Dark" },
+                  ],
+                  onChange: "themeHelpers.changeThemeMode(this)",
+                },
+              },
+              {
+                name: "primary",
+                label: "Primary",
+                type: "Color",
+                showIf: { theme: bs5BootswatchThemes },
+                default: "#2c3e50",
+                attributes: {
+                  onChange: "themeHelpers.bsColorChanged(this)",
+                },
+              },
+              {
+                name: "secondary",
+                label: "Secondary",
+                type: "Color",
+                showIf: { theme: bs5BootswatchThemes },
+                default: "#95a5a6",
+                attributes: {
+                  onChange: "themeHelpers.bsColorChanged(this)",
+                },
+              },
+              {
+                name: "success",
+                label: "Success",
+                type: "Color",
+                showIf: { theme: bs5BootswatchThemes },
+                default: "#18bc9c",
+                attributes: {
+                  onChange: "themeHelpers.bsColorChanged(this)",
+                },
+              },
+              {
+                name: "info",
+                label: "Info",
+                type: "Color",
+                showIf: { theme: bs5BootswatchThemes },
+                default: "#3498db",
+                attributes: {
+                  onChange: "themeHelpers.bsColorChanged(this)",
+                },
+              },
+              {
+                name: "warning",
+                label: "Warning",
+                type: "Color",
+                showIf: { theme: bs5BootswatchThemes },
+                default: "#f39c12",
+                attributes: {
+                  onChange: "themeHelpers.bsColorChanged(this)",
+                },
+              },
+              {
+                name: "danger",
+                label: "Danger",
+                type: "Color",
+                showIf: { theme: bs5BootswatchThemes },
+                default: "#e74c3c",
+                attributes: {
+                  onChange: "themeHelpers.bsColorChanged(this)",
+                },
+              },
+              {
+                name: "light",
+                label: "Light",
+                type: "Color",
+                showIf: { theme: bs5BootswatchThemes },
+                default: "#ecf0f1",
+                attributes: {
+                  onChange: "themeHelpers.bsColorChanged(this)",
+                },
+              },
+              {
+                name: "dark",
+                label: "Dark",
+                type: "Color",
+                showIf: { theme: bs5BootswatchThemes },
+                default: "#7b8a8b",
+                attributes: {
+                  onChange: "themeHelpers.bsColorChanged(this)",
+                },
+              },
+              {
+                name: "sass_file_name",
+                input_type: "hidden",
+              },
             ],
           });
+          form.values.sass_file_name =
+            ctx.sass_file_name ||
+            `bootstrap.min.${db.getTenantSchema()}.${
+              ctx.theme || "flatly"
+            }.${new Date().valueOf()}.css`;
+          return form;
         },
       },
     ],
   });
 
+const userConfigForm = async (ctx) => {
+  if (bs5BootswatchThemes.indexOf(ctx?.theme || "flatly") >= 0)
+    return new Form({
+      fields: [
+        {
+          name: "mode",
+          label: "Mode",
+          type: "String",
+          required: true,
+          default: ctx.mode || "light",
+          attributes: {
+            options: [
+              { name: "light", label: "Light" },
+              { name: "dark", label: "Dark" },
+            ],
+          },
+        },
+      ],
+    });
+  else return null;
+};
+
 module.exports = {
   sc_plugin_api_version: 1,
   plugin_name: "any-bootstrap-theme",
+  user_config_form: userConfigForm,
   layout,
   fonts: (config) => themes[config.theme]?.fonts || {},
   configuration_workflow,
+  actions: () => ({
+    toggle_dark_mode: {
+      description: "Switch between dark and light mode",
+      configFields: [],
+      run: async ({ user, req }) => {
+        let plugin = await Plugin.findOne({ name: "any-bootstrap-theme" });
+        if (!plugin) {
+          plugin = await Plugin.findOne({
+            name: "@saltcorn/any-bootstrap-theme",
+          });
+        }
+        const dbUser = await User.findOne({ id: user.id });
+        const attrs = dbUser._attributes || {};
+        const userLayout = attrs.layout || {
+          config: {},
+          plugin: plugin.name,
+        };
+
+        const currentMode = userLayout.config.mode
+          ? userLayout.config.mode
+          : plugin.configuration?.mode
+          ? plugin.configuration.mode
+          : "light";
+        userLayout.config.mode = currentMode === "dark" ? "light" : "dark";
+        userLayout.config.is_user_config = true;
+        attrs.layout = userLayout;
+        await dbUser.update({ _attributes: attrs });
+        getState().processSend({
+          refresh_plugin_cfg: plugin.name,
+          tenant: db.getTenantSchema(),
+        });
+        getState().userLayouts[user.email] = layout({
+          ...(plugin.configuration ? plugin.configuration : {}),
+          ...userLayout.config,
+        });
+        await sleep(500); // Allow other workers to reload this plugin
+        return { reload_page: true };
+      },
+    },
+  }),
 };
