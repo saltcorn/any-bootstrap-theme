@@ -941,6 +941,7 @@ module.exports = {
   layout,
   fonts: (config) => themes[config.theme]?.fonts || {},
   configuration_workflow,
+  exposed_configs: ["mode"],
   actions: () => ({
     toggle_dark_mode: {
       description: "Switch between dark and light mode",
