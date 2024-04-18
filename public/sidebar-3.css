@@ -9,11 +9,9 @@
 }
 #sidebar .navbar-nav {
   width: 100%;
-
 }
 #sidebar.narrowed .navbar-nav {
   width: 280px;
-
 }
 
 #wrapper #content-wrapper {
@@ -36,7 +34,7 @@
   display: block;
 }
 
-#sidebar ul li a.sublink {
+#sidebar ul li .sublink {
   padding: 10px 30px;
   display: block;
 }
@@ -75,14 +73,14 @@ a[aria-expanded="true"] {
 
 #sidebar #sidebarToggle::after {
   font-weight: 900;
-  content: '\f104';
-  font-family: 'Font Awesome 5 Free';
+  content: "\f104";
+  font-family: "Font Awesome 5 Free";
   margin-right: 0.1rem;
 }
 
 #sidebar.narrowed #sidebarToggle::after {
-  content: '\f105';
-  font-family: 'Font Awesome 5 Free';
+  content: "\f105";
+  font-family: "Font Awesome 5 Free";
   margin-left: 0.25rem;
 }
 #sidebar.narrowed .narrowed-hide {

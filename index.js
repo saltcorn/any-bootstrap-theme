@@ -225,6 +225,45 @@ const verticalMenu = ({ menu, currentUrl, originalUrl, brand }) => {
       }),
     brand.name
   );
+  const vertNavSubItemsIterator = (subitem) =>
+    subitem.type === "Separator"
+      ? hr({ class: "mx-4 my-0" })
+      : subitem?.subitems
+      ? li(
+          {
+            class: ["nav-item"],
+          },
+          div(
+            { class: "dropdown-item btn-group dropend" },
+            a(
+              {
+                type: "button",
+                class: "nav-link sublink dropdown-item dropdown-toggle",
+                "data-bs-toggle": "dropdown",
+                "aria-expanded": "false",
+              },
+              subitem.label
+            ),
+            ul(
+              { class: "dropdown-menu" },
+              subitem?.subitems.map((si1) => li(vertNavSubItemsIterator(si1)))
+            )
+          )
+        )
+      : li(
+          {
+            class: [
+              "nav-item",
+              active(currentUrl, subitem, originalUrl) && "active",
+            ],
+          },
+          a(
+            { class: "nav-link sublink", href: subitem.link },
+            subitem.icon ? i({ class: `fa-fw me-1 ${subitem.icon}` }) : "",
+            subitem.label
+          )
+        );
+
   let items = [];
   menu.forEach((m, ix) => {
     if (m.items && m.items.length > 0) {
@@ -261,26 +300,7 @@ const verticalMenu = ({ menu, currentUrl, originalUrl, brand }) => {
                   ],
                   id: `menuCollapse${ix}_${ix1}`,
                 },
-                item.subitems.map((subitem) =>
-                  subitem.type === "Separator"
-                    ? hr({ class: "mx-4 my-0" })
-                    : li(
-                        {
-                          class: [
-                            "nav-item",
-                            active(currentUrl, subitem, originalUrl) &&
-                              "active",
-                          ],
-                        },
-                        a(
-                          { class: "nav-link sublink", href: subitem.link },
-                          subitem.icon
-                            ? i({ class: `fa-fw me-1 ${subitem.icon}` })
-                            : "",
-                          subitem.label
-                        )
-                      )
-                )
+                item.subitems.map(vertNavSubItemsIterator)
               )
             )
           );
