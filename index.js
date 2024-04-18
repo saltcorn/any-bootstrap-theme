@@ -110,6 +110,21 @@ const blockDispatch = (config) => ({
         ),
 });
 
+const buildHints = (config = {}) => {
+  if (config.mode === "dark")
+    return {
+      cardBackgroundColor: config.cardBackgroundColorDark,
+      cardHeaderBackgroundColor: config.cardHeaderBackgroundColorDark,
+      cardFooterBackgroundColor: config.cardFooterBackgroundColorDark,
+    };
+  else
+    return {
+      cardBackgroundColor: config.cardBackgroundColor,
+      cardHeaderBackgroundColor: config.cardHeaderBackgroundColor,
+      cardFooterBackgroundColor: config.cardFooterBackgroundColor,
+    };
+};
+
 const renderBody = (title, body, alerts, config, role, req) =>
   renderLayout({
     blockDispatch: blockDispatch(config),
@@ -120,6 +135,7 @@ const renderBody = (title, body, alerts, config, role, req) =>
         ? { type: "card", title, contents: body }
         : body,
     alerts,
+    hints: buildHints(config),
   });
 const includeBS4css = (config) => {
   if (!config || !config.theme) return false;
@@ -132,6 +148,17 @@ const includeBS5css = (config) => {
   if (config.theme === "Other") return false;
   if (config.theme === "File") return config.include_std_bs5;
   if (themes[config.theme]) return !!themes[config.theme].includeBS5css;
+};
+const buildBgColor = (config = {}) => {
+  return bs5BootswatchThemes.indexOf(config?.theme || "flatly") >= 0
+    ? config.mode === "light" && config.backgroundColor
+      ? ` style="background-color: ${config.backgroundColor}"`
+      : config.backgroundColorDark
+      ? ` style="background-color: ${config.backgroundColorDark}"`
+      : ""
+    : config.backgroundColor
+    ? ` style="background-color: ${config.backgroundColor}"`
+    : "";
 };
 /**
  * omit '/' in a mobile deployment (needed for ios)
@@ -166,11 +193,7 @@ const wrapIt = (config, bodyAttr, headers, title, body) => {
     ${headersInHead(headers)}    
     <title>${text(title)}</title>
   </head>
-  <body ${bodyAttr}${
-    config.backgroundColor && !config.is_user_config
-      ? ` style="background-color: ${config.backgroundColor}"`
-      : ""
-  }>
+  <body ${bodyAttr}${buildBgColor(config)}>
     ${body}
     <link rel="stylesheet" href="${base_public_serve}/sidebar-3.css" />
     ${
@@ -416,6 +439,7 @@ const menuWrap = ({
     );
 };
 const layout = (config) => ({
+  hints: buildHints(config),
   renderBody: ({ title, body, alerts, role, req }) =>
     renderBody(title, body, alerts, config, role, req),
   wrap: ({
@@ -790,12 +814,6 @@ var themeColors = ${JSON.stringify(themeColors)}</script>`,
                 },
               },
               {
-                name: "backgroundColor",
-                label: "Background Color",
-                type: "Color",
-                default: "#ffffff",
-              },
-              {
                 name: "fluid",
                 label: "Fluid full-width container",
                 type: "Bool",
@@ -812,8 +830,62 @@ var themeColors = ${JSON.stringify(themeColors)}</script>`,
                     { name: "light", label: "Light" },
                     { name: "dark", label: "Dark" },
                   ],
-                  onChange: "themeHelpers.changeThemeMode(this)",
                 },
+              },
+              {
+                name: "backgroundColor",
+                label: "Background Color",
+                type: "Color",
+                default: "#ffffff",
+              },
+              {
+                name: "backgroundColorDark",
+                label: "Dark mode",
+                sublabel: "background color in dark mode",
+                type: "Color",
+                showIf: { theme: bs5BootswatchThemes },
+                default: "#212529",
+              },
+              {
+                name: "cardBackgroundColor",
+                label: "Card Background",
+                type: "Color",
+                default: "#ffffff",
+              },
+              {
+                name: "cardBackgroundColorDark",
+                label: "Dark mode",
+                sublabel: "card background in dark mode",
+                type: "Color",
+                showIf: { theme: bs5BootswatchThemes },
+                default: "#212529",
+              },
+              {
+                name: "cardHeaderBackgroundColor",
+                label: "Card Header Background",
+                type: "Color",
+                default: "#ffffff",
+              },
+              {
+                name: "cardHeaderBackgroundColorDark",
+                label: "Dark mode",
+                sublabel: "card-header background in dark mode",
+                type: "Color",
+                showIf: { theme: bs5BootswatchThemes },
+                default: "#212529",
+              },
+              {
+                name: "cardFooterBackgroundColor",
+                label: "Card Footer Background",
+                type: "Color",
+                default: "#ffffff",
+              },
+              {
+                name: "cardFooterBackgroundColorDark",
+                sublabel: "card-footer background in dark mode",
+                label: "Dark mode",
+                type: "Color",
+                default: "#212529",
               },
               {
                 name: "primary",
