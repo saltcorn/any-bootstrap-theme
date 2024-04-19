@@ -113,15 +113,11 @@ const blockDispatch = (config) => ({
 const buildHints = (config = {}) => {
   if (config.mode === "dark")
     return {
-      cardBackgroundColor: config.cardBackgroundColorDark,
-      cardHeaderBackgroundColor: config.cardHeaderBackgroundColorDark,
-      cardFooterBackgroundColor: config.cardFooterBackgroundColorDark,
+      cardTitleClass: "m-0 fw-bold d-inline",
     };
   else
     return {
-      cardBackgroundColor: config.cardBackgroundColor,
-      cardHeaderBackgroundColor: config.cardHeaderBackgroundColor,
-      cardFooterBackgroundColor: config.cardFooterBackgroundColor,
+      cardTitleClass: "m-0 fw-bold d-inline",
     };
 };
 
@@ -834,58 +830,77 @@ var themeColors = ${JSON.stringify(themeColors)}</script>`,
               },
               {
                 name: "backgroundColor",
-                label: "Background Color",
+                label: "Background Color </br>(Light mode)",
                 type: "Color",
                 default: "#ffffff",
               },
               {
                 name: "backgroundColorDark",
                 label: "Dark",
-                sublabel: "background color in dark mode",
+                sublabel: "background color in Dark mode",
                 type: "Color",
                 showIf: { theme: bs5BootswatchThemes },
                 default: "#212529",
               },
               {
                 name: "cardBackgroundColor",
-                label: "Card Background",
+                label: "Card Background </br>(Light mode)",
                 type: "Color",
                 default: "#ffffff",
+                attributes: {
+                  onChange: "themeHelpers.bsColorChanged(this)",
+                },
               },
               {
                 name: "cardBackgroundColorDark",
                 label: "Dark",
-                sublabel: "card background in dark mode",
+                sublabel: "card background in Dark mode",
                 type: "Color",
                 showIf: { theme: bs5BootswatchThemes },
                 default: "#212529",
+                attributes: {
+                  onChange: "themeHelpers.bsColorChanged(this)",
+                },
               },
               {
-                name: "cardHeaderBackgroundColor",
-                label: "Card Header Background",
+                name: "cardHeaderText",
+                label: "Card Header text </br>(Light mode)",
                 type: "Color",
-                default: "#ffffff",
+                default: "#2c3e50",
+                attributes: {
+                  onChange: "themeHelpers.bsColorChanged(this)",
+                },
               },
               {
-                name: "cardHeaderBackgroundColorDark",
+                name: "cardHeaderTextDark",
                 label: "Dark",
-                sublabel: "card-header background in dark mode",
+                sublabel: "Card Header text in Dark mode",
                 type: "Color",
                 showIf: { theme: bs5BootswatchThemes },
-                default: "#212529",
+                default: "#2c3e50",
+                attributes: {
+                  onChange: "themeHelpers.bsColorChanged(this)",
+                },
               },
               {
-                name: "cardFooterBackgroundColor",
-                label: "Card Footer Background",
+                name: "cardFooterText",
+                label: "Card Footer text </br>(Light mode)",
                 type: "Color",
-                default: "#ffffff",
+                default: "#2c3e50",
+                attributes: {
+                  onChange: "themeHelpers.bsColorChanged(this)",
+                },
               },
               {
-                name: "cardFooterBackgroundColorDark",
-                sublabel: "card-footer background in dark mode",
+                name: "cardFooterTextDark",
                 label: "Dark",
+                sublabel: "Card Footer text in Dark mode",
                 type: "Color",
-                default: "#212529",
+                showIf: { theme: bs5BootswatchThemes },
+                default: "#2c3e50",
+                attributes: {
+                  onChange: "themeHelpers.bsColorChanged(this)",
+                },
               },
               {
                 name: "primary",

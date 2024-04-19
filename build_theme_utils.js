@@ -15,6 +15,15 @@ const bsColors = [
   "dark",
 ];
 
+const darkLightVars = [
+  "cardBackgroundColor",
+  "cardBackgroundColorDark",
+  "cardHeaderText",
+  "cardHeaderTextDark",
+  "cardFooterText",
+  "cardFooterTextDark",
+];
+
 const copyThemeFiles = async ({ theme }) => {
   await fs.copyFile(
     join(__dirname, "public", "bootswatch", theme, "_variables.scss"),
@@ -37,6 +46,41 @@ const applyCustomColors = async (ctx) => {
   }
   await fs.writeFile(
     join(__dirname, "scss", "build", "_variables.scss"),
+    content
+  );
+};
+
+const writeDarkLightFile = async (ctx) => {
+  const content = `
+@include color-mode(dark) {
+  .card {
+    background-color: ${ctx.cardBackgroundColorDark || "#212529"};
+  }
+
+  .card-header {
+    color: ${ctx.cardHeaderTextDark || "#2c3e50"};
+  }
+
+  .card-footer {
+    color: ${ctx.cardFooterTextDark || "#2c3e50"};
+  }
+}
+
+@include color-mode(light) {
+  .card {
+    background-color: ${ctx.cardBackgroundColor || "#FFFFFF"};
+  }
+
+  .card-header {
+    color: ${ctx.cardHeaderText || "#2c3e50"};
+  }
+
+  .card-footer {
+    color: ${ctx.cardFooterText || "#2c3e50"};
+  }
+}`;
+  await fs.writeFile(
+    join(__dirname, "scss", "build", "my_dark_light_vars.scss"),
     content
   );
 };
@@ -74,6 +118,7 @@ const copyBootstrapMin = async (ctx) => {
 const buildTheme = async (ctx) => {
   await copyThemeFiles(ctx);
   await applyCustomColors(ctx);
+  await writeDarkLightFile(ctx);
   const code = await buildBootstrapMin(ctx);
   if (code === 0) await copyBootstrapMin(ctx);
   else throw new Error(`Failed to build theme, please check your logs`);
@@ -107,7 +152,7 @@ const extractColorDefaults = async () => {
 };
 
 const buildNeeded = (oldCtx, newCtx) => {
-  for (const bsColor of bsColors) {
+  for (const bsColor of [...bsColors, ...darkLightVars]) {
     if (oldCtx[bsColor] !== newCtx[bsColor]) return true;
   }
 };

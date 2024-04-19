@@ -14,12 +14,7 @@ var themeHelpers = (() => {
       currentTheme = e.value;
       const colors = themeColors[currentTheme];
       if (!colors)
-        for (const fName of [
-          "backgroundColor",
-          "cardBackgroundColor",
-          "cardHeaderBackgroundColor",
-          "cardFooterBackgroundColor",
-        ])
+        for (const fName of ["backgroundColor", "cardBackgroundColor"])
           $(`[data-fieldname='${fName}']`)[0].value = "#ffffff";
       else {
         for (const key of Object.keys(colors)) {
@@ -30,24 +25,26 @@ var themeHelpers = (() => {
         for (const fName of [
           "backgroundColorDark",
           "cardBackgroundColorDark",
-          "cardHeaderBackgroundColorDark",
-          "cardFooterBackgroundColorDark",
         ]) {
           $("[data-fieldname='" + fName + "']")[0].value = `#${safeColor(
             colors.darkBg
           )}`;
         }
-        for (const fName of [
-          "backgroundColor",
-          "cardBackgroundColor",
-          "cardHeaderBackgroundColor",
-          "cardFooterBackgroundColor",
-        ]) {
+        for (const fName of ["backgroundColor", "cardBackgroundColor"]) {
           $("[data-fieldname='" + fName + "']")[0].value = `#${safeColor(
             colors.lightBg
           )}`;
         }
-
+        for (const fName of [
+          "cardHeaderText",
+          "cardFooterText",
+          "cardHeaderTextDark",
+          "cardFooterTextDark",
+        ]) {
+          $("[data-fieldname='" + fName + "']")[0].value = `#${safeColor(
+            colors.primary
+          )}`;
+        }
         $(
           "[name='sass_file_name']"
         )[0].value = `bootstrap.min.${tenantSchema}.${currentTheme}.${new Date().valueOf()}.css`;
