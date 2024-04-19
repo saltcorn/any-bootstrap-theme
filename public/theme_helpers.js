@@ -11,7 +11,7 @@ var themeHelpers = (() => {
   }
   return {
     changeTheme: (e) => {
-      currentTheme = e.value;
+      currentTheme = e.value === "bootstrap" ? "lux" : e.value;
       const colors = themeColors[currentTheme];
       if (!colors)
         for (const fName of ["backgroundColor", "cardBackgroundColor"])

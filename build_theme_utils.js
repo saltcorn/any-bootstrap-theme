@@ -25,12 +25,13 @@ const darkLightVars = [
 ];
 
 const copyThemeFiles = async ({ theme }) => {
+  const themeDir = theme === "bootstrap" ? "lux" : theme;
   await fs.copyFile(
-    join(__dirname, "public", "bootswatch", theme, "_variables.scss"),
+    join(__dirname, "public", "bootswatch", themeDir, "_variables.scss"),
     join(__dirname, "scss", "build", "_variables.scss")
   );
   await fs.copyFile(
-    join(__dirname, "public", "bootswatch", theme, "_bootswatch.scss"),
+    join(__dirname, "public", "bootswatch", themeDir, "_bootswatch.scss"),
     join(__dirname, "scss", "build", "_bootswatch.scss")
   );
 };
@@ -58,11 +59,11 @@ const writeDarkLightFile = async (ctx) => {
   }
 
   .card-header {
-    color: ${ctx.cardHeaderTextDark || "#2c3e50"};
+    color: ${ctx.cardHeaderTextDark || ctx.primary || "#2c3e50"};
   }
 
   .card-footer {
-    color: ${ctx.cardFooterTextDark || "#2c3e50"};
+    color: ${ctx.cardFooterTextDark || ctx.primary || "#2c3e50"};
   }
 }
 
@@ -72,11 +73,11 @@ const writeDarkLightFile = async (ctx) => {
   }
 
   .card-header {
-    color: ${ctx.cardHeaderText || "#2c3e50"};
+    color: ${ctx.cardHeaderText || ctx.primary || "#2c3e50"};
   }
 
   .card-footer {
-    color: ${ctx.cardFooterText || "#2c3e50"};
+    color: ${ctx.cardFooterText || ctx.primary || "#2c3e50"};
   }
 }`;
   await fs.writeFile(
@@ -109,9 +110,10 @@ const buildBootstrapMin = async (ctx) => {
 };
 
 const copyBootstrapMin = async (ctx) => {
+  const themeDir = ctx.theme === "bootstrap" ? "lux" : ctx.theme;
   await fs.copyFile(
     join(__dirname, "scss", "build", "bootstrap.min.css"),
-    join(__dirname, "public", "bootswatch", ctx.theme, ctx.sass_file_name)
+    join(__dirname, "public", "bootswatch", themeDir, ctx.sass_file_name)
   );
 };
 

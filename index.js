@@ -616,9 +616,13 @@ const custom_css_link = (config) => {
     themes[config.theme] &&
     themes[config.theme].source === "Bootswatch" &&
     config.sass_file_name &&
-    config.sass_file_name.indexOf(config.theme) > 0
+    config.sass_file_name.indexOf(
+      config.theme === "bootstrap" ? "lux" : config.theme
+    ) > 0
   )
-    return `<link href="${base_public_serve}/bootswatch/${config.theme}/${config.sass_file_name}" rel="stylesheet">`;
+    return `<link href="${base_public_serve}/bootswatch/${
+      config.theme === "bootstrap" ? "lux" : config.theme
+    }/${config.sass_file_name}" rel="stylesheet">`;
   else return "";
 };
 
@@ -695,7 +699,9 @@ const configuration_workflow = () =>
             additionalHeaders: [
               {
                 headerTag: `<script>
-var currentTheme = "${ctx.theme || "flatly"}";
+var currentTheme = "${
+                  (ctx.theme === "bootstrap" ? "lux" : ctx.theme) || "flatly"
+                }";
 var tenantSchema = "${db.getTenantSchema()}";
 var themeColors = ${JSON.stringify(themeColors)}</script>`,
               },
@@ -846,6 +852,7 @@ var themeColors = ${JSON.stringify(themeColors)}</script>`,
                 name: "cardBackgroundColor",
                 label: "Card Background </br>(Light mode)",
                 type: "Color",
+                showIf: { theme: bs5BootswatchThemes },
                 default: "#ffffff",
                 attributes: {
                   onChange: "themeHelpers.bsColorChanged(this)",
@@ -866,6 +873,7 @@ var themeColors = ${JSON.stringify(themeColors)}</script>`,
                 name: "cardHeaderText",
                 label: "Card Header text </br>(Light mode)",
                 type: "Color",
+                showIf: { theme: bs5BootswatchThemes },
                 default: "#2c3e50",
                 attributes: {
                   onChange: "themeHelpers.bsColorChanged(this)",
@@ -886,6 +894,7 @@ var themeColors = ${JSON.stringify(themeColors)}</script>`,
                 name: "cardFooterText",
                 label: "Card Footer text </br>(Light mode)",
                 type: "Color",
+                showIf: { theme: bs5BootswatchThemes },
                 default: "#2c3e50",
                 attributes: {
                   onChange: "themeHelpers.bsColorChanged(this)",
