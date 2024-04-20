@@ -10,29 +10,45 @@ var themeHelpers = (() => {
     return color;
   }
   return {
-    changeThemeMode: (e) => {
-      const color = themeColors[currentTheme][`${e.value}Bg`];
-      const existingInput = $("[name='backgroundColor']")[0];
-      if (existingInput) existingInput.value = `#${safeColor(color)}`;
-    },
     changeTheme: (e) => {
-      currentTheme = e.value;
+      currentTheme = e.value === "bootstrap" ? "lux" : e.value;
       const colors = themeColors[currentTheme];
-      if (!colors) $("[data-fieldname='backgroundColor']")[0].value = "#ffffff";
-      for (const key of Object.keys(colors)) {
-        const input = $(`[data-fieldname=${key}]`)[0];
-        const color = colors[key];
-        if (input) input.value = `#${safeColor(color)}`;
+      if (!colors)
+        for (const fName of ["backgroundColor", "cardBackgroundColor"])
+          $(`[data-fieldname='${fName}']`)[0].value = "#ffffff";
+      else {
+        for (const key of Object.keys(colors)) {
+          const input = $(`[data-fieldname=${key}]`)[0];
+          const color = colors[key];
+          if (input) input.value = `#${safeColor(color)}`;
+        }
+        for (const fName of [
+          "backgroundColorDark",
+          "cardBackgroundColorDark",
+        ]) {
+          $("[data-fieldname='" + fName + "']")[0].value = `#${safeColor(
+            colors.darkBg
+          )}`;
+        }
+        for (const fName of ["backgroundColor", "cardBackgroundColor"]) {
+          $("[data-fieldname='" + fName + "']")[0].value = `#${safeColor(
+            colors.lightBg
+          )}`;
+        }
+        for (const fName of [
+          "cardHeaderText",
+          "cardFooterText",
+          "cardHeaderTextDark",
+          "cardFooterTextDark",
+        ]) {
+          $("[data-fieldname='" + fName + "']")[0].value = `#${safeColor(
+            colors.primary
+          )}`;
+        }
+        $(
+          "[name='sass_file_name']"
+        )[0].value = `bootstrap.min.${tenantSchema}.${currentTheme}.${new Date().valueOf()}.css`;
       }
-      const currentMode = $("[data-fieldname=mode]")[0].value;
-      $("[data-fieldname='backgroundColor']")[0].value =
-        currentMode === "dark"
-          ? `#${safeColor(colors.darkBg)}`
-          : `#${safeColor(colors.lightBg)}`;
-
-      $(
-        "[name='sass_file_name']"
-      )[0].value = `bootstrap.min.${tenantSchema}.${currentTheme}.${new Date().valueOf()}.css`;
     },
     bsColorChanged: (e) => {
       $(

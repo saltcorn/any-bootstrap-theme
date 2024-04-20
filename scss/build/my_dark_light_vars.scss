@@ -1,0 +1,27 @@
+@include color-mode(dark) {
+  .card {
+    background-color: #1111FF;
+  }
+
+  .card-header {
+    color: #FF11FF;
+  }
+
+  .card-footer {
+    color: #FF11FF;
+  }
+}
+
+@include color-mode(light) {
+  .card {
+    background-color: #FF11FF;
+  }
+
+  .card-header {
+    color: #1111FF;
+  }
+
+  .card-footer {
+    color: #1111FF;
+  }
+}

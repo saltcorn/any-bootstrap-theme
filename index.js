@@ -110,6 +110,17 @@ const blockDispatch = (config) => ({
         ),
 });
 
+const buildHints = (config = {}) => {
+  if (config.mode === "dark")
+    return {
+      cardTitleClass: "m-0 fw-bold d-inline",
+    };
+  else
+    return {
+      cardTitleClass: "m-0 fw-bold d-inline",
+    };
+};
+
 const renderBody = (title, body, alerts, config, role, req) =>
   renderLayout({
     blockDispatch: blockDispatch(config),
@@ -120,6 +131,7 @@ const renderBody = (title, body, alerts, config, role, req) =>
         ? { type: "card", title, contents: body }
         : body,
     alerts,
+    hints: buildHints(config),
   });
 const includeBS4css = (config) => {
   if (!config || !config.theme) return false;
@@ -132,6 +144,17 @@ const includeBS5css = (config) => {
   if (config.theme === "Other") return false;
   if (config.theme === "File") return config.include_std_bs5;
   if (themes[config.theme]) return !!themes[config.theme].includeBS5css;
+};
+const buildBgColor = (config = {}) => {
+  return bs5BootswatchThemes.indexOf(config?.theme || "flatly") >= 0
+    ? config.mode === "light" && config.backgroundColor
+      ? ` style="background-color: ${config.backgroundColor}"`
+      : config.backgroundColorDark
+      ? ` style="background-color: ${config.backgroundColorDark}"`
+      : ""
+    : config.backgroundColor
+    ? ` style="background-color: ${config.backgroundColor}"`
+    : "";
 };
 /**
  * omit '/' in a mobile deployment (needed for ios)
@@ -166,11 +189,7 @@ const wrapIt = (config, bodyAttr, headers, title, body) => {
     ${headersInHead(headers)}    
     <title>${text(title)}</title>
   </head>
-  <body ${bodyAttr}${
-    config.backgroundColor && !config.is_user_config
-      ? ` style="background-color: ${config.backgroundColor}"`
-      : ""
-  }>
+  <body ${bodyAttr}${buildBgColor(config)}>
     ${body}
     <link rel="stylesheet" href="${base_public_serve}/sidebar-3.css" />
     ${
@@ -436,6 +455,7 @@ const menuWrap = ({
     );
 };
 const layout = (config) => ({
+  hints: buildHints(config),
   renderBody: ({ title, body, alerts, role, req }) =>
     renderBody(title, body, alerts, config, role, req),
   wrap: ({
@@ -616,9 +636,13 @@ const custom_css_link = (config) => {
     themes[config.theme] &&
     themes[config.theme].source === "Bootswatch" &&
     config.sass_file_name &&
-    config.sass_file_name.indexOf(config.theme) > 0
+    config.sass_file_name.indexOf(
+      config.theme === "bootstrap" ? "lux" : config.theme
+    ) > 0
   )
-    return `<link href="${base_public_serve}/bootswatch/${config.theme}/${config.sass_file_name}" rel="stylesheet">`;
+    return `<link href="${base_public_serve}/bootswatch/${
+      config.theme === "bootstrap" ? "lux" : config.theme
+    }/${config.sass_file_name}" rel="stylesheet">`;
   else return "";
 };
 
@@ -695,7 +719,9 @@ const configuration_workflow = () =>
             additionalHeaders: [
               {
                 headerTag: `<script>
-var currentTheme = "${ctx.theme || "flatly"}";
+var currentTheme = "${
+                  (ctx.theme === "bootstrap" ? "lux" : ctx.theme) || "flatly"
+                }";
 var tenantSchema = "${db.getTenantSchema()}";
 var themeColors = ${JSON.stringify(themeColors)}</script>`,
               },
@@ -810,12 +836,6 @@ var themeColors = ${JSON.stringify(themeColors)}</script>`,
                 },
               },
               {
-                name: "backgroundColor",
-                label: "Background Color",
-                type: "Color",
-                default: "#ffffff",
-              },
-              {
                 name: "fluid",
                 label: "Fluid full-width container",
                 type: "Bool",
@@ -832,7 +852,83 @@ var themeColors = ${JSON.stringify(themeColors)}</script>`,
                     { name: "light", label: "Light" },
                     { name: "dark", label: "Dark" },
                   ],
-                  onChange: "themeHelpers.changeThemeMode(this)",
+                },
+              },
+              {
+                name: "backgroundColor",
+                label: "Background Color </br>(Light mode)",
+                type: "Color",
+                default: "#ffffff",
+              },
+              {
+                name: "backgroundColorDark",
+                label: "Dark",
+                sublabel: "background color in Dark mode",
+                type: "Color",
+                showIf: { theme: bs5BootswatchThemes },
+                default: "#212529",
+              },
+              {
+                name: "cardBackgroundColor",
+                label: "Card Background </br>(Light mode)",
+                type: "Color",
+                showIf: { theme: bs5BootswatchThemes },
+                default: "#ffffff",
+                attributes: {
+                  onChange: "themeHelpers.bsColorChanged(this)",
+                },
+              },
+              {
+                name: "cardBackgroundColorDark",
+                label: "Dark",
+                sublabel: "card background in Dark mode",
+                type: "Color",
+                showIf: { theme: bs5BootswatchThemes },
+                default: "#212529",
+                attributes: {
+                  onChange: "themeHelpers.bsColorChanged(this)",
+                },
+              },
+              {
+                name: "cardHeaderText",
+                label: "Card Header text </br>(Light mode)",
+                type: "Color",
+                showIf: { theme: bs5BootswatchThemes },
+                default: "#2c3e50",
+                attributes: {
+                  onChange: "themeHelpers.bsColorChanged(this)",
+                },
+              },
+              {
+                name: "cardHeaderTextDark",
+                label: "Dark",
+                sublabel: "Card Header text in Dark mode",
+                type: "Color",
+                showIf: { theme: bs5BootswatchThemes },
+                default: "#2c3e50",
+                attributes: {
+                  onChange: "themeHelpers.bsColorChanged(this)",
+                },
+              },
+              {
+                name: "cardFooterText",
+                label: "Card Footer text </br>(Light mode)",
+                type: "Color",
+                showIf: { theme: bs5BootswatchThemes },
+                default: "#2c3e50",
+                attributes: {
+                  onChange: "themeHelpers.bsColorChanged(this)",
+                },
+              },
+              {
+                name: "cardFooterTextDark",
+                label: "Dark",
+                sublabel: "Card Footer text in Dark mode",
+                type: "Color",
+                showIf: { theme: bs5BootswatchThemes },
+                default: "#2c3e50",
+                attributes: {
+                  onChange: "themeHelpers.bsColorChanged(this)",
                 },
               },
               {
@@ -961,6 +1057,7 @@ module.exports = {
   layout,
   fonts: (config) => themes[config.theme]?.fonts || {},
   configuration_workflow,
+  exposed_configs: ["mode"],
   actions: () => ({
     toggle_dark_mode: {
       description: "Switch between dark and light mode",

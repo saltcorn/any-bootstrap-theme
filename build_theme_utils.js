@@ -15,13 +15,23 @@ const bsColors = [
   "dark",
 ];
 
+const darkLightVars = [
+  "cardBackgroundColor",
+  "cardBackgroundColorDark",
+  "cardHeaderText",
+  "cardHeaderTextDark",
+  "cardFooterText",
+  "cardFooterTextDark",
+];
+
 const copyThemeFiles = async ({ theme }) => {
+  const themeDir = theme === "bootstrap" ? "lux" : theme;
   await fs.copyFile(
-    join(__dirname, "public", "bootswatch", theme, "_variables.scss"),
+    join(__dirname, "public", "bootswatch", themeDir, "_variables.scss"),
     join(__dirname, "scss", "build", "_variables.scss")
   );
   await fs.copyFile(
-    join(__dirname, "public", "bootswatch", theme, "_bootswatch.scss"),
+    join(__dirname, "public", "bootswatch", themeDir, "_bootswatch.scss"),
     join(__dirname, "scss", "build", "_bootswatch.scss")
   );
 };
@@ -37,6 +47,41 @@ const applyCustomColors = async (ctx) => {
   }
   await fs.writeFile(
     join(__dirname, "scss", "build", "_variables.scss"),
+    content
+  );
+};
+
+const writeDarkLightFile = async (ctx) => {
+  const content = `
+@include color-mode(dark) {
+  .card {
+    background-color: ${ctx.cardBackgroundColorDark || "#212529"};
+  }
+
+  .card-header {
+    color: ${ctx.cardHeaderTextDark || ctx.primary || "#2c3e50"};
+  }
+
+  .card-footer {
+    color: ${ctx.cardFooterTextDark || ctx.primary || "#2c3e50"};
+  }
+}
+
+@include color-mode(light) {
+  .card {
+    background-color: ${ctx.cardBackgroundColor || "#FFFFFF"};
+  }
+
+  .card-header {
+    color: ${ctx.cardHeaderText || ctx.primary || "#2c3e50"};
+  }
+
+  .card-footer {
+    color: ${ctx.cardFooterText || ctx.primary || "#2c3e50"};
+  }
+}`;
+  await fs.writeFile(
+    join(__dirname, "scss", "build", "my_dark_light_vars.scss"),
     content
   );
 };
@@ -65,15 +110,17 @@ const buildBootstrapMin = async (ctx) => {
 };
 
 const copyBootstrapMin = async (ctx) => {
+  const themeDir = ctx.theme === "bootstrap" ? "lux" : ctx.theme;
   await fs.copyFile(
     join(__dirname, "scss", "build", "bootstrap.min.css"),
-    join(__dirname, "public", "bootswatch", ctx.theme, ctx.sass_file_name)
+    join(__dirname, "public", "bootswatch", themeDir, ctx.sass_file_name)
   );
 };
 
 const buildTheme = async (ctx) => {
   await copyThemeFiles(ctx);
   await applyCustomColors(ctx);
+  await writeDarkLightFile(ctx);
   const code = await buildBootstrapMin(ctx);
   if (code === 0) await copyBootstrapMin(ctx);
   else throw new Error(`Failed to build theme, please check your logs`);
@@ -107,7 +154,7 @@ const extractColorDefaults = async () => {
 };
 
 const buildNeeded = (oldCtx, newCtx) => {
-  for (const bsColor of bsColors) {
+  for (const bsColor of [...bsColors, ...darkLightVars]) {
     if (oldCtx[bsColor] !== newCtx[bsColor]) return true;
   }
 };
