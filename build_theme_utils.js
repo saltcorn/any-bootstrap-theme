@@ -36,14 +36,18 @@ const copyThemeFiles = async ({ theme }) => {
   );
 };
 
-const applyCustomColors = async (ctx) => {
+const applyCustomColors = async (ctx, isDark) => {
   let content = await fs.readFile(
     join(__dirname, "scss", "build", "_variables.scss"),
     "utf8"
   );
   for (const bsColor of bsColors) {
     const regExp = new RegExp(`^\\$${bsColor}:.*;`, "gm");
-    content = content.replace(regExp, `$${bsColor}: ${ctx[bsColor]} !default;`);
+    const colorVal =
+      isDark && !["light", "dark"].includes(bsColor)
+        ? ctx[`${bsColor}Dark`]
+        : ctx[bsColor];
+    content = content.replace(regExp, `$${bsColor}: ${colorVal} !default;`);
   }
   await fs.writeFile(
     join(__dirname, "scss", "build", "_variables.scss"),
@@ -58,11 +62,11 @@ const writeDarkLightFile = async (ctx) => {
     background-color: ${ctx.cardBackgroundColorDark || "#212529"};
   }
 
-  .card-header {
+  .card-header, .card-header * {
     color: ${ctx.cardHeaderTextDark || ctx.primary || "#2c3e50"};
   }
 
-  .card-footer {
+  .card-footer, .card-footer * {
     color: ${ctx.cardFooterTextDark || ctx.primary || "#2c3e50"};
   }
 }
@@ -72,11 +76,11 @@ const writeDarkLightFile = async (ctx) => {
     background-color: ${ctx.cardBackgroundColor || "#FFFFFF"};
   }
 
-  .card-header {
+  .card-header, .card-header * {
     color: ${ctx.cardHeaderText || ctx.primary || "#2c3e50"};
   }
 
-  .card-footer {
+  .card-footer, .card-footer * {
     color: ${ctx.cardFooterText || ctx.primary || "#2c3e50"};
   }
 }`;
@@ -86,7 +90,7 @@ const writeDarkLightFile = async (ctx) => {
   );
 };
 
-const buildBootstrapMin = async (ctx) => {
+const buildBootstrapMin = async () => {
   getState().log(5, "Building bootstrap.min.css");
   const child = spawn("npm", ["run", "build_theme"], {
     cwd: __dirname,
@@ -109,21 +113,31 @@ const buildBootstrapMin = async (ctx) => {
   });
 };
 
-const copyBootstrapMin = async (ctx) => {
+const copyBootstrapMin = async (ctx, isDark) => {
   const themeDir = ctx.theme === "bootstrap" ? "lux" : ctx.theme;
   await fs.copyFile(
     join(__dirname, "scss", "build", "bootstrap.min.css"),
-    join(__dirname, "public", "bootswatch", themeDir, ctx.sass_file_name)
+    join(
+      __dirname,
+      "public",
+      "bootswatch",
+      themeDir,
+      !isDark ? ctx.sass_file_name : ctx.sass_file_name_dark
+    )
   );
 };
 
 const buildTheme = async (ctx) => {
-  await copyThemeFiles(ctx);
-  await applyCustomColors(ctx);
-  await writeDarkLightFile(ctx);
-  const code = await buildBootstrapMin(ctx);
-  if (code === 0) await copyBootstrapMin(ctx);
-  else throw new Error(`Failed to build theme, please check your logs`);
+  const builder = async (isDark) => {
+    await copyThemeFiles(ctx);
+    await applyCustomColors(ctx, isDark);
+    await writeDarkLightFile(ctx);
+    const code = await buildBootstrapMin();
+    if (code === 0) await copyBootstrapMin(ctx, isDark);
+    else throw new Error(`Failed to build theme, please check your logs`);
+  };
+  await builder(false);
+  await builder(true);
 };
 
 const extractColorDefaults = async () => {
@@ -155,11 +169,15 @@ const extractColorDefaults = async () => {
 
 const buildNeeded = (oldCtx, newCtx) => {
   for (const bsColor of [...bsColors, ...darkLightVars]) {
-    if (oldCtx[bsColor] !== newCtx[bsColor]) return true;
+    if (
+      oldCtx[bsColor] !== newCtx[bsColor] ||
+      oldCtx[`${bsColor}Dark`] !== newCtx[`${bsColor}Dark`]
+    )
+      return true;
   }
 };
 
-const deleteOldFiles = async ({ sass_file_name }) => {
+const deleteOldFiles = async ({ sass_file_name, sass_file_name_dark }) => {
   const dirs = await fs.readdir(join(__dirname, "public", "bootswatch"));
   const tenantSchema = db.getTenantSchema();
   for (const dir of dirs) {
@@ -170,7 +188,9 @@ const deleteOldFiles = async ({ sass_file_name }) => {
     for (const file of files) {
       if (
         file.startsWith(fileDelPrefix) &&
-        ![sass_file_name, "bootstrap.min.css"].includes(file)
+        ![sass_file_name, sass_file_name_dark, "bootstrap.min.css"].includes(
+          file
+        )
       )
         await fs.unlink(join(__dirname, "public", "bootswatch", dir, file));
     }

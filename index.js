@@ -642,7 +642,11 @@ const custom_css_link = (config) => {
   )
     return `<link href="${base_public_serve}/bootswatch/${
       config.theme === "bootstrap" ? "lux" : config.theme
-    }/${config.sass_file_name}" rel="stylesheet">`;
+    }/${
+      config.mode !== "dark"
+        ? config.sass_file_name
+        : config.sass_file_name_dark
+    }" rel="stylesheet">`;
   else return "";
 };
 
@@ -933,7 +937,18 @@ var themeColors = ${JSON.stringify(themeColors)}</script>`,
               },
               {
                 name: "primary",
-                label: "Primary",
+                label: "Primary color </br>(Light mode)",
+                type: "Color",
+                showIf: { theme: bs5BootswatchThemes },
+                default: "#2c3e50",
+                attributes: {
+                  onChange: "themeHelpers.bsColorChanged(this)",
+                },
+              },
+              {
+                name: "primaryDark",
+                label: "Dark",
+                sublabel: "Primary color in Dark mode",
                 type: "Color",
                 showIf: { theme: bs5BootswatchThemes },
                 default: "#2c3e50",
@@ -943,7 +958,18 @@ var themeColors = ${JSON.stringify(themeColors)}</script>`,
               },
               {
                 name: "secondary",
-                label: "Secondary",
+                label: "Secondary </br>(Light mode)",
+                type: "Color",
+                showIf: { theme: bs5BootswatchThemes },
+                default: "#95a5a6",
+                attributes: {
+                  onChange: "themeHelpers.bsColorChanged(this)",
+                },
+              },
+              {
+                name: "secondaryDark",
+                label: "Dark",
+                sublabel: "Secondary color in Dark mode",
                 type: "Color",
                 showIf: { theme: bs5BootswatchThemes },
                 default: "#95a5a6",
@@ -953,7 +979,18 @@ var themeColors = ${JSON.stringify(themeColors)}</script>`,
               },
               {
                 name: "success",
-                label: "Success",
+                label: "Success </br>(Light mode)",
+                type: "Color",
+                showIf: { theme: bs5BootswatchThemes },
+                default: "#18bc9c",
+                attributes: {
+                  onChange: "themeHelpers.bsColorChanged(this)",
+                },
+              },
+              {
+                name: "successDark",
+                label: "Dark",
+                sublabel: "Success color in Dark mode",
                 type: "Color",
                 showIf: { theme: bs5BootswatchThemes },
                 default: "#18bc9c",
@@ -963,7 +1000,18 @@ var themeColors = ${JSON.stringify(themeColors)}</script>`,
               },
               {
                 name: "info",
-                label: "Info",
+                label: "Info </br>(Light mode)",
+                type: "Color",
+                showIf: { theme: bs5BootswatchThemes },
+                default: "#3498db",
+                attributes: {
+                  onChange: "themeHelpers.bsColorChanged(this)",
+                },
+              },
+              {
+                name: "infoDark",
+                label: "Dark",
+                sublabel: "Info color in Dark mode",
                 type: "Color",
                 showIf: { theme: bs5BootswatchThemes },
                 default: "#3498db",
@@ -973,7 +1021,18 @@ var themeColors = ${JSON.stringify(themeColors)}</script>`,
               },
               {
                 name: "warning",
-                label: "Warning",
+                label: "Warning </br>(Light mode)",
+                type: "Color",
+                showIf: { theme: bs5BootswatchThemes },
+                default: "#f39c12",
+                attributes: {
+                  onChange: "themeHelpers.bsColorChanged(this)",
+                },
+              },
+              {
+                name: "warningDark",
+                label: "Dark",
+                sublabel: "Warning color in Dark mode",
                 type: "Color",
                 showIf: { theme: bs5BootswatchThemes },
                 default: "#f39c12",
@@ -983,7 +1042,18 @@ var themeColors = ${JSON.stringify(themeColors)}</script>`,
               },
               {
                 name: "danger",
-                label: "Danger",
+                label: "Danger </br>(Light mode)",
+                type: "Color",
+                showIf: { theme: bs5BootswatchThemes },
+                default: "#e74c3c",
+                attributes: {
+                  onChange: "themeHelpers.bsColorChanged(this)",
+                },
+              },
+              {
+                name: "dangerDark",
+                label: "Dark",
+                sublabel: "Danger color in Dark mode",
                 type: "Color",
                 showIf: { theme: bs5BootswatchThemes },
                 default: "#e74c3c",
@@ -1015,13 +1085,23 @@ var themeColors = ${JSON.stringify(themeColors)}</script>`,
                 name: "sass_file_name",
                 input_type: "hidden",
               },
+              {
+                name: "sass_file_name_dark",
+                input_type: "hidden",
+              },
             ],
           });
+          const now = new Date().valueOf();
           form.values.sass_file_name =
             ctx.sass_file_name ||
             `bootstrap.min.${db.getTenantSchema()}.${
               ctx.theme || "flatly"
-            }.${new Date().valueOf()}.css`;
+            }.${now}.css`;
+          form.values.sass_file_name_dark =
+            ctx.sass_file_name_dark ||
+            `bootstrap.min.${db.getTenantSchema()}.${
+              ctx.theme || "flatly"
+            }.${now}.dark.css`;
           return form;
         },
       },

@@ -21,6 +21,9 @@ var themeHelpers = (() => {
           const input = $(`[data-fieldname=${key}]`)[0];
           const color = colors[key];
           if (input) input.value = `#${safeColor(color)}`;
+
+          const darkInput = $(`[data-fieldname=${key}Dark]`)[0];
+          if (darkInput) darkInput.value = `#${safeColor(color)}`;
         }
         for (const fName of [
           "backgroundColorDark",
@@ -45,15 +48,23 @@ var themeHelpers = (() => {
             colors.primary
           )}`;
         }
+        const now = new Date().valueOf();
         $(
           "[name='sass_file_name']"
-        )[0].value = `bootstrap.min.${tenantSchema}.${currentTheme}.${new Date().valueOf()}.css`;
+        )[0].value = `bootstrap.min.${tenantSchema}.${currentTheme}.${now}.css`;
+        $(
+          "[name='sass_file_name_dark']"
+        )[0].value = `bootstrap.min.${tenantSchema}.${currentTheme}.${now}.dark.css`;
       }
     },
     bsColorChanged: (e) => {
+      const now = new Date().valueOf();
       $(
         "[name='sass_file_name']"
-      )[0].value = `bootstrap.min.${tenantSchema}.${currentTheme}.${new Date().valueOf()}.css`;
+      )[0].value = `bootstrap.min.${tenantSchema}.${currentTheme}.${now}.css`;
+      $(
+        "[name='sass_file_name_dark']"
+      )[0].value = `bootstrap.min.${tenantSchema}.${currentTheme}.${now}.dark.css`;
     },
   };
 })();
