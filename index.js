@@ -48,6 +48,9 @@ const {
 const { sleep } = require("@saltcorn/data/utils");
 const { getState } = require("@saltcorn/data/db/state");
 
+const { join } = require("path");
+const { pathExists } = require("fs-extra");
+
 const isNode = typeof window === "undefined";
 
 const blockDispatch = (config) => ({
@@ -1138,6 +1141,26 @@ module.exports = {
   fonts: (config) => themes[config.theme]?.fonts || {},
   configuration_workflow,
   exposed_configs: ["mode"],
+  onLoad: async (configuration) => {
+    try {
+      if (
+        bs5BootswatchThemes.indexOf(configuration.theme) >= 0 &&
+        !(await pathExists(
+          join(
+            __dirname,
+            "public",
+            "bootswatch",
+            configuration.theme === "bootstrap" ? "lux" : configuration.theme,
+            configuration.sass_file_name
+          )
+        ))
+      )
+        await buildTheme(configuration);
+    } catch (error) {
+      const msg = error.message || "Failed to build theme";
+      getState().log(2, `any-bootstrap-theme onLoad failed: ${msg}`);
+    }
+  },
   actions: () => ({
     toggle_dark_mode: {
       description: "Switch between dark and light mode",
