@@ -63,11 +63,16 @@ const writeDarkLightFile = async (ctx) => {
   }
 
   .card-header, .card-header *, .modal-title, .modal-title * {
-    color: ${ctx.cardHeaderTextDark || ctx.primary || "#2c3e50"};
+    color: ${ctx.cardHeaderTextDark || ctx.primaryDark || "#2c3e50"} !important;
   }
 
   .card-footer, .card-footer * {
-    color: ${ctx.cardFooterTextDark || ctx.primary || "#2c3e50"};
+    color: ${ctx.cardFooterTextDark || ctx.primaryDark || "#2c3e50"} !important;
+  }
+
+  h1, h2, h3, h4, h5, h6, 
+  :is(h1, h2, h3, h4, h5, h6) * {
+    color: ${ctx.primaryDark || "#2c3e50"};
   }
 }
 
@@ -77,11 +82,16 @@ const writeDarkLightFile = async (ctx) => {
   }
 
   .card-header, .card-header *, .modal-title, .modal-title * {
-    color: ${ctx.cardHeaderText || ctx.primary || "#2c3e50"};
+    color: ${ctx.cardHeaderText || ctx.primary || "#2c3e50"} !important;
   }
 
   .card-footer, .card-footer * {
-    color: ${ctx.cardFooterText || ctx.primary || "#2c3e50"};
+    color: ${ctx.cardFooterText || ctx.primary || "#2c3e50"} !important;
+  }
+
+  h1, h2, h3, h4, h5, h6, 
+  :is(h1, h2, h3, h4, h5, h6) * {
+    color: ${ctx.primary || "#2c3e50"};
   }
 }`;
   await fs.writeFile(
