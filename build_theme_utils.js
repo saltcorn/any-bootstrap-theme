@@ -66,7 +66,7 @@ const writeDarkLightFile = async (ctx) => {
     color: ${ctx.cardHeaderTextDark || ctx.primaryDark || "#2c3e50"} !important;
   }
 
-  .card-footer, .card-footer * {
+  .card-footer, .card-footer *:not(.btn) {
     color: ${ctx.cardFooterTextDark || ctx.primaryDark || "#2c3e50"} !important;
   }
 
@@ -85,7 +85,7 @@ const writeDarkLightFile = async (ctx) => {
     color: ${ctx.cardHeaderText || ctx.primary || "#2c3e50"} !important;
   }
 
-  .card-footer, .card-footer * {
+  .card-footer, .card-footer *:not(.btn) {
     color: ${ctx.cardFooterText || ctx.primary || "#2c3e50"} !important;
   }
 
