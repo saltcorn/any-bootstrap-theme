@@ -938,6 +938,27 @@ var themeColors = ${JSON.stringify(themeColors)}</script>`,
                 },
               },
               {
+                name: "linkColor",
+                label: "Link color </br>(Light mode)",
+                type: "Color",
+                showIf: { theme: bs5BootswatchThemes },
+                default: "#007bff",
+                attributes: {
+                  onChange: "themeHelpers.bsColorChanged(this)",
+                },
+              },
+              {
+                name: "linkColorDark",
+                label: "Dark",
+                sublabel: "Link color in Dark mode",
+                type: "Color",
+                showIf: { theme: bs5BootswatchThemes },
+                default: "#007bff",
+                attributes: {
+                  onChange: "themeHelpers.bsColorChanged(this)",
+                },
+              },
+              {
                 name: "primary",
                 label: "Primary color </br>(Light mode)",
                 type: "Color",
