@@ -78,7 +78,7 @@ const writeDarkLightFile = async (ctx) => {
   }
 
   a {
-    color: ${ctx.linkColorDark || ctx.primaryDark || "#2c3e50"};
+    color: ${ctx.linkColorDark || ctx.primaryDark || "#2c3e50"} !important;
   }
 }
 
@@ -101,7 +101,7 @@ const writeDarkLightFile = async (ctx) => {
   }
 
   a {
-    color: ${ctx.linkColor || ctx.primary || "#2c3e50"};
+    color: ${ctx.linkColor || ctx.primary || "#2c3e50"} !important;
   }
 }`;
   await fs.writeFile(
