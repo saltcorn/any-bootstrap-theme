@@ -1196,9 +1196,8 @@ module.exports = {
         const attrs = dbUser._attributes || {};
         const userLayout = attrs.layout || {
           config: {},
-          plugin: plugin.name,
         };
-
+        userLayout.plugin = plugin.name;
         const currentMode = userLayout.config.mode
           ? userLayout.config.mode
           : plugin.configuration?.mode
