@@ -22,6 +22,8 @@ const darkLightVars = [
   "cardHeaderTextDark",
   "cardFooterText",
   "cardFooterTextDark",
+  "linkColor",
+  "linkColorDark",
 ];
 
 const copyThemeFiles = async ({ theme }) => {
@@ -74,6 +76,10 @@ const writeDarkLightFile = async (ctx) => {
   :is(h1, h2, h3, h4, h5, h6) * {
     color: ${ctx.primaryDark || "#2c3e50"};
   }
+
+  a {
+    color: ${ctx.linkColorDark || ctx.primaryDark || "#2c3e50"} !important;
+  }
 }
 
 @include color-mode(light) {
@@ -92,6 +98,10 @@ const writeDarkLightFile = async (ctx) => {
   h1, h2, h3, h4, h5, h6, 
   :is(h1, h2, h3, h4, h5, h6) * {
     color: ${ctx.primary || "#2c3e50"};
+  }
+
+  a {
+    color: ${ctx.linkColor || ctx.primary || "#2c3e50"} !important;
   }
 }`;
   await fs.writeFile(
@@ -171,6 +181,14 @@ const extractColorDefaults = async () => {
     if (lightAndDarkBg.length === 2) {
       colors.lightBg = lightAndDarkBg[0][1];
       colors.darkBg = lightAndDarkBg[1][1];
+    }
+    // bs-link-color
+    const linkLightAndDark = Array.from(
+      content.matchAll(new RegExp("--bs-link-color: #(.*);", "gm"))
+    );
+    if (linkLightAndDark.length === 2) {
+      colors.linkColor = linkLightAndDark[0][1];
+      colors.linkColorDark = linkLightAndDark[1][1];
     }
     result[dir] = colors;
   }

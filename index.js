@@ -938,6 +938,27 @@ var themeColors = ${JSON.stringify(themeColors)}</script>`,
                 },
               },
               {
+                name: "linkColor",
+                label: "Link color </br>(Light mode)",
+                type: "Color",
+                showIf: { theme: bs5BootswatchThemes },
+                default: "#007bff",
+                attributes: {
+                  onChange: "themeHelpers.bsColorChanged(this)",
+                },
+              },
+              {
+                name: "linkColorDark",
+                label: "Dark",
+                sublabel: "Link color in Dark mode",
+                type: "Color",
+                showIf: { theme: bs5BootswatchThemes },
+                default: "#007bff",
+                attributes: {
+                  onChange: "themeHelpers.bsColorChanged(this)",
+                },
+              },
+              {
                 name: "primary",
                 label: "Primary color </br>(Light mode)",
                 type: "Color",
@@ -1175,9 +1196,8 @@ module.exports = {
         const attrs = dbUser._attributes || {};
         const userLayout = attrs.layout || {
           config: {},
-          plugin: plugin.name,
         };
-
+        userLayout.plugin = plugin.name;
         const currentMode = userLayout.config.mode
           ? userLayout.config.mode
           : plugin.configuration?.mode
