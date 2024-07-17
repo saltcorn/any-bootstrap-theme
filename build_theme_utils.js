@@ -68,7 +68,7 @@ const writeDarkLightFile = async (ctx) => {
     color: ${ctx.cardHeaderTextDark || ctx.primaryDark || "#2c3e50"} !important;
   }
 
-  .card-footer, .card-footer *:not(.btn, .btn *) {
+  .card-footer, .card-footer *:not(.btn, .btn *, a, a *, .btn-link, .btn-link *) {
     color: ${ctx.cardFooterTextDark || ctx.primaryDark || "#2c3e50"} !important;
   }
 
@@ -77,7 +77,8 @@ const writeDarkLightFile = async (ctx) => {
     color: ${ctx.primaryDark || "#2c3e50"};
   }
 
-  a {
+  a:not(.btn, .btn *, .nav, .nav *:not(.breadcrumb *, .plugin-section *), nav, nav *:not(.breadcrumb *, .plugin-section *)),
+  .btn-link:not(.nav, .nav *, nav, nav *) {
     color: ${ctx.linkColorDark || ctx.primaryDark || "#2c3e50"} !important;
   }
 }
@@ -91,7 +92,7 @@ const writeDarkLightFile = async (ctx) => {
     color: ${ctx.cardHeaderText || ctx.primary || "#2c3e50"} !important;
   }
 
-  .card-footer, .card-footer *:not(.btn, .btn *) {
+  .card-footer, .card-footer *:not(.btn, .btn *, a, a * .btn-link, .btn-link *) {
     color: ${ctx.cardFooterText || ctx.primary || "#2c3e50"} !important;
   }
 
@@ -100,7 +101,8 @@ const writeDarkLightFile = async (ctx) => {
     color: ${ctx.primary || "#2c3e50"};
   }
 
-  a {
+  a:not(.btn, .btn *, .nav, .nav *:not(.breadcrumb *, .plugin-section *), nav, nav *:not(.breadcrumb *, .plugin-section *)),
+  .btn-link:not(.nav, .nav *, nav, nav *) {
     color: ${ctx.linkColor || ctx.primary || "#2c3e50"} !important;
   }
 }`;
