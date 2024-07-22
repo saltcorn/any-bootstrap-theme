@@ -734,6 +734,13 @@ var themeColors = ${JSON.stringify(themeColors)}</script>`,
               {
                 script: `${safeSlash()}plugins/public/any-bootstrap-theme/theme_helpers.js`,
               },
+              {
+                headerTag: `<style>
+                #inputcardFooterBg, #inputcardFooterBgDark, #inputcardHeaderBg, #inputcardHeaderBgDark {
+                  opacity: 0.3 !important;
+                }
+                </style>`,
+              },
             ],
             saveAndContinueOption: true,
             fields: [
@@ -917,6 +924,27 @@ var themeColors = ${JSON.stringify(themeColors)}</script>`,
                 },
               },
               {
+                name: "cardHeaderBg",
+                label: "Card Header background color </br>(Light mode)",
+                type: "Color",
+                showIf: { theme: bs5BootswatchThemes },
+                default: "#2c3e50",
+                attributes: {
+                  onChange: "themeHelpers.bsColorChanged(this)",
+                },
+              },
+              {
+                name: "cardHeaderBgDark",
+                label: "Dark",
+                sublabel: "Card Header background color in Dark mode",
+                type: "Color",
+                showIf: { theme: bs5BootswatchThemes },
+                default: "#2c3e50",
+                attributes: {
+                  onChange: "themeHelpers.bsColorChanged(this)",
+                },
+              },
+              {
                 name: "cardFooterText",
                 label: "Card Footer text </br>(Light mode)",
                 type: "Color",
@@ -930,6 +958,27 @@ var themeColors = ${JSON.stringify(themeColors)}</script>`,
                 name: "cardFooterTextDark",
                 label: "Dark",
                 sublabel: "Card Footer text in Dark mode",
+                type: "Color",
+                showIf: { theme: bs5BootswatchThemes },
+                default: "#2c3e50",
+                attributes: {
+                  onChange: "themeHelpers.bsColorChanged(this)",
+                },
+              },
+              {
+                name: "cardFooterBg",
+                label: "Card Footer background color </br>(Light mode)",
+                type: "Color",
+                showIf: { theme: bs5BootswatchThemes },
+                default: "#2c3e50",
+                attributes: {
+                  onChange: "themeHelpers.bsColorChanged(this)",
+                },
+              },
+              {
+                name: "cardFooterBgDark",
+                label: "Dark",
+                sublabel: "Card Footer background color in Dark mode",
                 type: "Color",
                 showIf: { theme: bs5BootswatchThemes },
                 default: "#2c3e50",

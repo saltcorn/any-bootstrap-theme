@@ -18,6 +18,10 @@ const bsColors = [
 const darkLightVars = [
   "cardBackgroundColor",
   "cardBackgroundColorDark",
+  "cardHeaderBg",
+  "cardHeaderBgDark",
+  "<cardFooterBg",
+  "cardFooterBgDark",
   "cardHeaderText",
   "cardHeaderTextDark",
   "cardFooterText",
@@ -68,8 +72,16 @@ const writeDarkLightFile = async (ctx) => {
     color: ${ctx.cardHeaderTextDark || ctx.primaryDark || "#2c3e50"} !important;
   }
 
+  .card-header {
+    background-color: ${ctx.cardHeaderBgDark || "#212529"}4D ;
+  }
+
   .card-footer, .card-footer *:not(.btn, .btn *, a, a *, .btn-link, .btn-link *) {
     color: ${ctx.cardFooterTextDark || ctx.primaryDark || "#2c3e50"} !important;
+  }
+
+  .card-footer {
+    background-color: ${ctx.cardFooterBgDark || "#212529"}4D;
   }
 
   h1, h2, h3, h4, h5, h6, 
@@ -92,8 +104,16 @@ const writeDarkLightFile = async (ctx) => {
     color: ${ctx.cardHeaderText || ctx.primary || "#2c3e50"} !important;
   }
 
+  .card-header {
+    background-color: ${ctx.cardHeaderBg || "#FFFFFF"}4D;
+  }
+
   .card-footer, .card-footer *:not(.btn, .btn *, a, a * .btn-link, .btn-link *) {
     color: ${ctx.cardFooterText || ctx.primary || "#2c3e50"} !important;
+  }
+
+  .card-footer {
+    background-color: ${ctx.cardFooterBg || "#FFFFFF"}4D;
   }
 
   h1, h2, h3, h4, h5, h6, 
@@ -191,6 +211,16 @@ const extractColorDefaults = async () => {
     if (linkLightAndDark.length === 2) {
       colors.linkColor = linkLightAndDark[0][1];
       colors.linkColorDark = linkLightAndDark[1][1];
+    }
+    // header footer bg
+    const headerFooterBg = Array.from(
+      content.matchAll(new RegExp("--bs-body-bg: #(.*);", "gm"))
+    );
+    if (headerFooterBg.length === 2) {
+      colors.cardHeaderBg = headerFooterBg[0][1];
+      colors.cardHeaderBgDark = headerFooterBg[1][1];
+      colors.cardFooterBg = headerFooterBg[0][1];
+      colors.cardFooterBgDark = headerFooterBg[1][1];
     }
     result[dir] = colors;
   }
