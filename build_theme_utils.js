@@ -64,7 +64,7 @@ const applyCustomColors = async (ctx, isDark) => {
 const writeDarkLightFile = async (ctx) => {
   const content = `
 @include color-mode(dark) {
-  .card :not(.card-header,  .card-header *, .card-footer, .card-footer *) {
+  .card-body {
     background-color: ${ctx.cardBackgroundColorDark || "#212529"};
   }
 
@@ -73,7 +73,7 @@ const writeDarkLightFile = async (ctx) => {
   }
 
   .card-header {
-    background-color: ${ctx.cardHeaderBgDark || "#212529"}4D ;
+    background-color: ${ctx.cardHeaderBgDark || "#212529"}4D;
   }
 
   .card-footer, .card-footer *:not(.btn, .btn *, a, a *, .btn-link, .btn-link *) {
@@ -96,7 +96,7 @@ const writeDarkLightFile = async (ctx) => {
 }
 
 @include color-mode(light) {
-  .card :not(.card-header,  .card-header *, .card-footer, .card-footer *) {
+  .card-body {
     background-color: ${ctx.cardBackgroundColor || "#FFFFFF"};
   }
 
