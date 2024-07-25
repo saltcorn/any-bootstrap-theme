@@ -18,6 +18,7 @@
   background-color: #f8f9fc;
   width: 100%;
   overflow-x: clip;
+  width: calc(100% - 280px);
 }
 
 #wrapper #content-wrapper #content {
@@ -85,4 +86,10 @@ a[aria-expanded="true"] {
 }
 #sidebar.narrowed .narrowed-hide {
   display: none;
+}
+
+@media (max-width: 768px) {
+  #wrapper #content-wrapper {
+    width: 100%;
+  }
 }
