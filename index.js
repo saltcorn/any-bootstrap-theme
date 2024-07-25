@@ -387,7 +387,7 @@ const verticalMenu = ({ menu, currentUrl, originalUrl, brand }) => {
         class: "rounded-circle border-0",
         id: "sidebarToggle",
         "data-sidebar-toggler": true,
-        onclick: "$('#sidebar').toggleClass('narrowed')",
+        onclick: "$('#wrapper').toggleClass('narrowed')",
       })
     );
   return (
