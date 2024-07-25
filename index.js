@@ -186,6 +186,7 @@ const wrapIt = (config, bodyAttr, headers, title, body) => {
     <link href="${get_css_url(config)}" rel="stylesheet"${
     integrity ? ` integrity="${integrity}" crossorigin="anonymous"` : ""
   }>
+  <link rel="stylesheet" href="${base_public_serve}/sidebar-3.css" />
   ${custom_css_link(config)}
   ${themes[config.theme]?.in_header || ""}
     ${headersInHead(headers)}    
@@ -193,7 +194,6 @@ const wrapIt = (config, bodyAttr, headers, title, body) => {
   </head>
   <body ${bodyAttr}${buildBgColor(config)}>
     ${body}
-    <link rel="stylesheet" href="${base_public_serve}/sidebar-3.css" />
     ${
       features && features.deep_public_plugin_serve
         ? `<link rel="stylesheet" href="${base_public_serve}/fontawesome/fontawesome.min.css" />`
