@@ -106,7 +106,6 @@ a[aria-expanded="true"] {
   transform: translateY(8px);
 }
 .table.table-card-rows tr {
-  box-shadow: var(--bs-box-shadow);
   border-radius: var(--bs-border-radius);
 }
 .table-hover.table-card-rows > tbody > tr:hover > * {
@@ -116,9 +115,8 @@ a[aria-expanded="true"] {
 .table.table-card-rows thead th {
   border-block: 1px solid var(--bs-border-color-translucent) !important;
   padding: 18px 15px;
-  font-size: 14px;
   font-weight: 600;
-  background-color: var(--bs-card-bg);
+  background-color: var(--bs-secondary-bg-subtle);
 }
 .table.table-card-rows thead th:first-child {
   border-left: 1px solid var(--bs-border-color-translucent) !important;
@@ -133,7 +131,6 @@ a[aria-expanded="true"] {
   position: relative;
   z-index: 11;
   padding: 15px 15px;
-  font-size: 14px;
   background-color: var(--bs-card-bg);
 }
 .table.table-card-rows tbody td:first-child {
