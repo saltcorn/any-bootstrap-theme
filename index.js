@@ -945,6 +945,31 @@ var themeColors = ${JSON.stringify(themeColors)}</script>`,
                 },
               },
               {
+                name: "cardHeaderBgAlpha",
+                label: "Card Header background alpha </br>(Light mode)",
+                type: "Float",
+                default: 0.03,
+                attributes: {
+                  onChange: "themeHelpers.bsColorChanged(this)",
+                  decimal_places: 2,
+                  min: 0,
+                  max: 1,
+                },
+              },
+              {
+                name: "cardHeaderBgAlphaDark",
+                label: "Dark",
+                type: "Float",
+                default: 0.03,
+                attributes: {
+                  onChange: "themeHelpers.bsColorChanged(this)",
+                  decimal_places: 2,
+                  min: 0,
+                  max: 1,
+                },
+              },
+
+              {
                 name: "cardFooterText",
                 label: "Card Footer text </br>(Light mode)",
                 type: "Color",
@@ -984,6 +1009,30 @@ var themeColors = ${JSON.stringify(themeColors)}</script>`,
                 default: "#2c3e50",
                 attributes: {
                   onChange: "themeHelpers.bsColorChanged(this)",
+                },
+              },
+              {
+                name: "cardFooterBgAlpha",
+                label: "Card Footer background alpha </br>(Light mode)",
+                type: "Float",
+                default: 0.03,
+                attributes: {
+                  onChange: "themeHelpers.bsColorChanged(this)",
+                  decimal_places: 2,
+                  min: 0,
+                  max: 1,
+                },
+              },
+              {
+                name: "cardFooterBgAlphaDark",
+                label: "Dark",
+                type: "Float",
+                default: 0.03,
+                attributes: {
+                  onChange: "themeHelpers.bsColorChanged(this)",
+                  decimal_places: 2,
+                  min: 0,
+                  max: 1,
                 },
               },
               {
