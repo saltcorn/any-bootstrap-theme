@@ -739,6 +739,15 @@ var themeColors = ${JSON.stringify(themeColors)}</script>`,
                 #inputcardFooterBg, #inputcardFooterBgDark, #inputcardHeaderBg, #inputcardHeaderBgDark {
                   opacity: 0.3 !important;
                 }
+                /* hide arrows, or we need a debounce only on the float inputs */
+                :is(#inputcardHeaderBgAlpha, #inputcardHeaderBgAlphaDark, #inputcardFooterBgAlpha, #inputcardFooterBgAlphaDark)::-webkit-outer-spin-button,
+                :is(#inputcardHeaderBgAlpha, #inputcardHeaderBgAlphaDark, #inputcardFooterBgAlpha, #inputcardFooterBgAlphaDark)::-webkit-inner-spin-button {
+                    -webkit-appearance: none;
+                    margin: 0;
+                }
+                :is(#inputcardHeaderBgAlpha, #inputcardHeaderBgAlphaDark, #inputcardFooterBgAlpha, #inputcardFooterBgAlphaDark) {
+                    -moz-appearance: textfield;
+                }
                 </style>`,
               },
             ],
