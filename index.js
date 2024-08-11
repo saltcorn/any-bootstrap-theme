@@ -739,6 +739,15 @@ var themeColors = ${JSON.stringify(themeColors)}</script>`,
                 #inputcardFooterBg, #inputcardFooterBgDark, #inputcardHeaderBg, #inputcardHeaderBgDark {
                   opacity: 0.3 !important;
                 }
+                /* hide arrows, or we need a debounce only on the float inputs */
+                :is(#inputcardHeaderBgAlpha, #inputcardHeaderBgAlphaDark, #inputcardFooterBgAlpha, #inputcardFooterBgAlphaDark)::-webkit-outer-spin-button,
+                :is(#inputcardHeaderBgAlpha, #inputcardHeaderBgAlphaDark, #inputcardFooterBgAlpha, #inputcardFooterBgAlphaDark)::-webkit-inner-spin-button {
+                    -webkit-appearance: none;
+                    margin: 0;
+                }
+                :is(#inputcardHeaderBgAlpha, #inputcardHeaderBgAlphaDark, #inputcardFooterBgAlpha, #inputcardFooterBgAlphaDark) {
+                    -moz-appearance: textfield;
+                }
                 </style>`,
               },
             ],
@@ -945,6 +954,31 @@ var themeColors = ${JSON.stringify(themeColors)}</script>`,
                 },
               },
               {
+                name: "cardHeaderBgAlpha",
+                label: "Card Header background alpha </br>(Light mode)",
+                type: "Float",
+                default: 0.03,
+                attributes: {
+                  onChange: "themeHelpers.bsColorChanged(this)",
+                  decimal_places: 2,
+                  min: 0,
+                  max: 1,
+                },
+              },
+              {
+                name: "cardHeaderBgAlphaDark",
+                label: "Dark",
+                type: "Float",
+                default: 0.03,
+                attributes: {
+                  onChange: "themeHelpers.bsColorChanged(this)",
+                  decimal_places: 2,
+                  min: 0,
+                  max: 1,
+                },
+              },
+
+              {
                 name: "cardFooterText",
                 label: "Card Footer text </br>(Light mode)",
                 type: "Color",
@@ -984,6 +1018,30 @@ var themeColors = ${JSON.stringify(themeColors)}</script>`,
                 default: "#2c3e50",
                 attributes: {
                   onChange: "themeHelpers.bsColorChanged(this)",
+                },
+              },
+              {
+                name: "cardFooterBgAlpha",
+                label: "Card Footer background alpha </br>(Light mode)",
+                type: "Float",
+                default: 0.03,
+                attributes: {
+                  onChange: "themeHelpers.bsColorChanged(this)",
+                  decimal_places: 2,
+                  min: 0,
+                  max: 1,
+                },
+              },
+              {
+                name: "cardFooterBgAlphaDark",
+                label: "Dark",
+                type: "Float",
+                default: 0.03,
+                attributes: {
+                  onChange: "themeHelpers.bsColorChanged(this)",
+                  decimal_places: 2,
+                  min: 0,
+                  max: 1,
                 },
               },
               {
