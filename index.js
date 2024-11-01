@@ -1287,6 +1287,7 @@ module.exports = {
     } catch (error) {
       const msg = error.message || "Failed to build theme";
       getState().log(2, `any-bootstrap-theme onLoad failed: ${msg}`);
+      if (getState().logLevel > 5) console.error(error);
     }
   },
   actions: () => ({
