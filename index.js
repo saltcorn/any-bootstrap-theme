@@ -1269,7 +1269,8 @@ module.exports = {
   configuration_workflow,
   exposed_configs: ["mode"],
   onLoad: async (configuration) => {
-    if (!configuration) return;
+    if (!configuration || !configuration.sass_file_name || !configuration.theme)
+      return;
     try {
       if (
         bs5BootswatchThemes.indexOf(configuration.theme) >= 0 &&
