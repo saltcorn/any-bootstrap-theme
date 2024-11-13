@@ -769,7 +769,6 @@ var themeColors = ${JSON.stringify(themeColors)}</script>`,
                     { name: "Other", label: "Other - specify URL" },
                   ],
                   onChange: "themeHelpers.changeTheme(this)",
-                  noOnChangeInBlur: true,
                 },
               },
               {
