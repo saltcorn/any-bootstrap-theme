@@ -195,8 +195,26 @@ const buildTheme = async (ctx) => {
     if (code === 0) await copyBootstrapMin(ctx, isDark);
     else throw new Error(`Failed to build theme, please check your logs`);
   };
-  await builder(false);
-  await builder(true);
+  const lockFile = join(
+    __dirname,
+    "public",
+    "bootswatch",
+    ctx.theme === "bootstrap" ? "lux" : ctx.theme,
+    `lock_${ctx.sass_file_name}`
+  );
+  try {
+    await fs.access(lockFile);
+    getState().log(5, `Lock file exists for ${ctx.sass_file_name}`);
+    return;
+  } catch (e) {
+    await fs.writeFile(lockFile, "");
+  }
+  try {
+    await builder(false);
+    await builder(true);
+  } finally {
+    await fs.rm(lockFile);
+  }
 };
 
 const extractColorDefaults = async () => {
