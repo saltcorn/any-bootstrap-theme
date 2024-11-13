@@ -697,9 +697,11 @@ const configuration_workflow = () =>
       }
     },
     onStepSave: async (step, ctx, formVals) => {
+      const state = getState();
+      const oldCfg = state?.plugin_cfgs["any-bootstrap-theme"] || {};
       if (
         bs5BootswatchThemes.indexOf(formVals.theme) >= 0 &&
-        buildNeeded(ctx, formVals)
+        buildNeeded(oldCfg, formVals)
       ) {
         try {
           await buildTheme(formVals);
