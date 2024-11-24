@@ -706,9 +706,11 @@ const configuration_workflow = () =>
       }
     },
     onStepSave: async (step, ctx, formVals) => {
+      const state = getState();
+      const oldCfg = state?.plugin_cfgs["any-bootstrap-theme"] || {};
       if (
         bs5BootswatchThemes.indexOf(formVals.theme) >= 0 &&
-        buildNeeded(ctx, formVals)
+        buildNeeded(oldCfg, formVals)
       ) {
         try {
           await buildTheme(formVals);
@@ -747,6 +749,15 @@ var themeColors = ${JSON.stringify(themeColors)}</script>`,
                 headerTag: `<style>
                 #inputcardFooterBg, #inputcardFooterBgDark, #inputcardHeaderBg, #inputcardHeaderBgDark {
                   opacity: 0.3 !important;
+                }
+                /* hide arrows, or we need a debounce only on the float inputs */
+                :is(#inputcardHeaderBgAlpha, #inputcardHeaderBgAlphaDark, #inputcardFooterBgAlpha, #inputcardFooterBgAlphaDark)::-webkit-outer-spin-button,
+                :is(#inputcardHeaderBgAlpha, #inputcardHeaderBgAlphaDark, #inputcardFooterBgAlpha, #inputcardFooterBgAlphaDark)::-webkit-inner-spin-button {
+                    -webkit-appearance: none;
+                    margin: 0;
+                }
+                :is(#inputcardHeaderBgAlpha, #inputcardHeaderBgAlphaDark, #inputcardFooterBgAlpha, #inputcardFooterBgAlphaDark) {
+                    -moz-appearance: textfield;
                 }
                 </style>`,
               },
@@ -954,6 +965,31 @@ var themeColors = ${JSON.stringify(themeColors)}</script>`,
                 },
               },
               {
+                name: "cardHeaderBgAlpha",
+                label: "Card Header background alpha </br>(Light mode)",
+                type: "Float",
+                default: 0.03,
+                attributes: {
+                  onChange: "themeHelpers.bsColorChanged(this)",
+                  decimal_places: 2,
+                  min: 0,
+                  max: 1,
+                },
+              },
+              {
+                name: "cardHeaderBgAlphaDark",
+                label: "Dark",
+                type: "Float",
+                default: 0.03,
+                attributes: {
+                  onChange: "themeHelpers.bsColorChanged(this)",
+                  decimal_places: 2,
+                  min: 0,
+                  max: 1,
+                },
+              },
+
+              {
                 name: "cardFooterText",
                 label: "Card Footer text </br>(Light mode)",
                 type: "Color",
@@ -993,6 +1029,30 @@ var themeColors = ${JSON.stringify(themeColors)}</script>`,
                 default: "#2c3e50",
                 attributes: {
                   onChange: "themeHelpers.bsColorChanged(this)",
+                },
+              },
+              {
+                name: "cardFooterBgAlpha",
+                label: "Card Footer background alpha </br>(Light mode)",
+                type: "Float",
+                default: 0.03,
+                attributes: {
+                  onChange: "themeHelpers.bsColorChanged(this)",
+                  decimal_places: 2,
+                  min: 0,
+                  max: 1,
+                },
+              },
+              {
+                name: "cardFooterBgAlphaDark",
+                label: "Dark",
+                type: "Float",
+                default: 0.03,
+                attributes: {
+                  onChange: "themeHelpers.bsColorChanged(this)",
+                  decimal_places: 2,
+                  min: 0,
+                  max: 1,
                 },
               },
               {
@@ -1220,6 +1280,8 @@ module.exports = {
   configuration_workflow,
   exposed_configs: ["mode"],
   onLoad: async (configuration) => {
+    if (!configuration || !configuration.sass_file_name || !configuration.theme)
+      return;
     try {
       if (
         bs5BootswatchThemes.indexOf(configuration.theme) >= 0 &&
@@ -1237,6 +1299,7 @@ module.exports = {
     } catch (error) {
       const msg = error.message || "Failed to build theme";
       getState().log(2, `any-bootstrap-theme onLoad failed: ${msg}`);
+      if (getState().logLevel > 5) console.error(error);
     }
   },
   actions: () => ({
@@ -1278,4 +1341,5 @@ module.exports = {
       },
     },
   }),
+  ready_for_mobile: true,
 };

@@ -19,9 +19,13 @@ const darkLightVars = [
   "cardBackgroundColor",
   "cardBackgroundColorDark",
   "cardHeaderBg",
+  "cardHeaderBgAlpha",
   "cardHeaderBgDark",
-  "<cardFooterBg",
+  "cardHeaderBgAlphaDark",
+  "cardFooterBg",
+  "cardFooterBgAlpha",
   "cardFooterBgDark",
+  "cardFooterBgAlphaDark",
   "cardHeaderText",
   "cardHeaderTextDark",
   "cardFooterText",
@@ -61,6 +65,11 @@ const applyCustomColors = async (ctx, isDark) => {
   );
 };
 
+const calcAlphaFromDecimal = (decimal) => {
+  const alpha = Math.round(decimal * 255);
+  return alpha.toString(16).padStart(2, "0");
+};
+
 const writeDarkLightFile = async (ctx) => {
   const content = `
 @include color-mode(dark) {
@@ -73,7 +82,9 @@ const writeDarkLightFile = async (ctx) => {
   }
 
   .card-header {
-    background-color: ${ctx.cardHeaderBgDark || "#212529"}4D;
+    background-color: ${
+      ctx.cardHeaderBgDark || "#212529"
+    }${calcAlphaFromDecimal(ctx.cardHeaderBgAlphaDark || 0.03)};
   }
 
   .card-footer, .card-footer *:not(.btn, .btn *, a, a *, .btn-link, .btn-link *) {
@@ -81,7 +92,9 @@ const writeDarkLightFile = async (ctx) => {
   }
 
   .card-footer {
-    background-color: ${ctx.cardFooterBgDark || "#212529"}4D;
+    background-color: ${
+      ctx.cardFooterBgDark || "#212529"
+    }${calcAlphaFromDecimal(ctx.cardFooterBgAlphaDark || 0.03)};
   }
 
   h1, h2, h3, h4, h5, h6, 
@@ -105,7 +118,9 @@ const writeDarkLightFile = async (ctx) => {
   }
 
   .card-header {
-    background-color: ${ctx.cardHeaderBg || "#FFFFFF"}4D;
+    background-color: ${ctx.cardHeaderBg || "#FFFFFF"}${calcAlphaFromDecimal(
+    ctx.cardHeaderBgAlpha || 0.03
+  )};
   }
 
   .card-footer, .card-footer *:not(.btn, .btn *, a, a * .btn-link, .btn-link *) {
@@ -113,7 +128,9 @@ const writeDarkLightFile = async (ctx) => {
   }
 
   .card-footer {
-    background-color: ${ctx.cardFooterBg || "#FFFFFF"}4D;
+    background-color: ${ctx.cardFooterBg || "#FFFFFF"}${calcAlphaFromDecimal(
+    ctx.cardFooterBgAlpha || 0.03
+  )};
   }
 
   h1, h2, h3, h4, h5, h6, 
@@ -178,8 +195,26 @@ const buildTheme = async (ctx) => {
     if (code === 0) await copyBootstrapMin(ctx, isDark);
     else throw new Error(`Failed to build theme, please check your logs`);
   };
-  await builder(false);
-  await builder(true);
+  const lockFile = join(
+    __dirname,
+    "public",
+    "bootswatch",
+    ctx.theme === "bootstrap" ? "lux" : ctx.theme,
+    `lock_${ctx.sass_file_name}`
+  );
+  try {
+    await fs.access(lockFile);
+    getState().log(5, `Lock file exists for ${ctx.sass_file_name}`);
+    return;
+  } catch (e) {
+    await fs.writeFile(lockFile, "");
+  }
+  try {
+    await builder(false);
+    await builder(true);
+  } finally {
+    await fs.rm(lockFile);
+  }
 };
 
 const extractColorDefaults = async () => {
