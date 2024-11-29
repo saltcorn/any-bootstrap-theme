@@ -418,7 +418,7 @@ const menuWrap = ({
   const mobileNav = mobileBottomNavBar
     ? mobileBottomNavBar(currentUrl, menu, bg, txt)
     : "";
-  const role = !req ? 1 : req.isAuthenticated() ? req.user.role_id : 10;
+  const role = !req ? 1 : req.user ? req.user.role_id : 100;
   if ((config.menu_style === "No Menu" && role > 1) || (!menu && !brand))
     return div({ id: "wrapper" }, div({ id: "page-inner-content" }, body));
   else if (config.menu_style === "Side Navbar" && isNode) {
