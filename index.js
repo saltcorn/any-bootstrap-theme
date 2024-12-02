@@ -47,15 +47,20 @@ const {
 } = require("./build_theme_utils");
 const { sleep } = require("@saltcorn/data/utils");
 const { getState } = require("@saltcorn/data/db/state");
-const {
-  isEngineSatisfied,
-} = require("@saltcorn/plugins-loader/stable_versioning");
 
 const { join } = require("path");
 const { pathExists } = require("fs-extra");
 
 const isNode = typeof window === "undefined";
-const isCapacitor = isEngineSatisfied(">=1.0.0");
+let hasCapacitor = false;
+try {
+  hasCapacitor =
+    require("@saltcorn/plugins-loader/stable_versioning").isEngineSatisfied(
+      ">=1.0.0"
+    );
+} catch {
+  getState().log(5, "stable_versioning not available, assuming no Capacitor");
+}
 
 const blockDispatch = (config) => ({
   pageHeader: ({ title, blurb }) =>
@@ -165,12 +170,11 @@ const buildBgColor = (config = {}) => {
 };
 /**
  * omit '/' in a mobile deployment (needed for ios)
- * copy from sbadmin2, otherwise we would need to depend on a saltcorn version
  */
 const safeSlash = () => (isNode ? "/" : "");
 
 const linkPrefix = () =>
-  isNode ? "/plugins" : isCapacitor ? "sc_plugins" : "plugins";
+  isNode ? "/plugins" : hasCapacitor ? "sc_plugins" : "plugins";
 
 const wrapIt = (config, bodyAttr, headers, title, body) => {
   const integrity = get_css_integrity(config);
