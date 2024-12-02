@@ -189,7 +189,7 @@ const wrapIt = (config, bodyAttr, headers, title, body) => {
   <link rel="stylesheet" href="${base_public_serve}/sidebar-3.css" />
   ${custom_css_link(config)}
   ${themes[config.theme]?.in_header || ""}
-    ${headersInHead(headers)}    
+    ${headersInHead(headers, config?.mode === "dark")}    
     <title>${text(title)}</title>
   </head>
   <body ${bodyAttr}${buildBgColor(config)}>
