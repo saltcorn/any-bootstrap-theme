@@ -52,6 +52,15 @@ const { join } = require("path");
 const { pathExists } = require("fs-extra");
 
 const isNode = typeof window === "undefined";
+let hasCapacitor = false;
+try {
+  hasCapacitor =
+    require("@saltcorn/plugins-loader/stable_versioning").isEngineSatisfied(
+      ">=1.1.0-beta.11"
+    );
+} catch {
+  getState().log(5, "stable_versioning not available, assuming no Capacitor");
+}
 
 const blockDispatch = (config) => ({
   pageHeader: ({ title, blurb }) =>
@@ -161,9 +170,11 @@ const buildBgColor = (config = {}) => {
 };
 /**
  * omit '/' in a mobile deployment (needed for ios)
- * copy from sbadmin2, otherwise we would need to depend on a saltcorn version
  */
 const safeSlash = () => (isNode ? "/" : "");
+
+const linkPrefix = () =>
+  isNode ? "/plugins" : hasCapacitor ? "sc_plugins" : "plugins";
 
 const wrapIt = (config, bodyAttr, headers, title, body) => {
   const integrity = get_css_integrity(config);
@@ -607,14 +618,16 @@ const formModify = (form) => {
 
 const themes = require("./themes.json");
 
-const base_public_serve = `${safeSlash()}plugins/public/any-bootstrap-theme${
+const base_public_serve = `${linkPrefix()}/public/any-bootstrap-theme${
   features?.version_plugin_serve_path
     ? "@" + require("./package.json").version
     : ""
 }`;
 
 const get_css_url = (config) => {
-  const def = `${safeSlash()}plugins/public/any-bootstrap-theme/bootswatch/flatly/bootstrap.min.css`;
+  const def = isNode
+    ? "/plugins/public/any-bootstrap-theme/bootswatch/flatly/bootstrap.min.css"
+    : `${base_public_serve}/bootswatch/flatly/bootstrap.min.css`;
   if (!config || !config.theme) return def;
   if (config.theme === "File") return `/files/serve/${config.css_file}`;
   if (config.theme === "Other") return config.css_url || def;
@@ -734,7 +747,7 @@ var tenantSchema = "${db.getTenantSchema()}";
 var themeColors = ${JSON.stringify(themeColors)}</script>`,
               },
               {
-                script: `${safeSlash()}plugins/public/any-bootstrap-theme/theme_helpers.js`,
+                script: `${linkPrefix()}/public/any-bootstrap-theme/theme_helpers.js`,
               },
               {
                 headerTag: `<style>
