@@ -21,6 +21,7 @@ const {
   navbar,
   navbarSolidOnScroll,
   mobileBottomNavBar,
+  activeChecker,
 } = require("@saltcorn/markup/layout_utils");
 const renderLayout = require("@saltcorn/markup/layout");
 const db = require("@saltcorn/data/db");
@@ -61,6 +62,11 @@ try {
 } catch {
   getState().log(5, "stable_versioning not available, assuming no Capacitor");
 }
+
+// when the function from base is not yet available
+const _activeChecker = activeChecker
+  ? activeChecker
+  : (link, currentUrl) => new RegExp(`^${link}(\\/|\\?|#|$)`).test(currentUrl);
 
 const blockDispatch = (config) => ({
   pageHeader: ({ title, blurb }) =>
@@ -227,20 +233,22 @@ const wrapIt = (config, bodyAttr, headers, title, body) => {
 
 const active = (currentUrl, item, originalUrl) =>
   (item.link &&
-    (currentUrl.startsWith(item.link) ||
-      (originalUrl && originalUrl.startsWith(item.link)))) ||
+    (_activeChecker(item.link, currentUrl) ||
+      (originalUrl && _activeChecker(item.link, originalUrl)))) ||
   (item.altlinks &&
     item.altlinks.some(
       (l) =>
-        currentUrl.startsWith(l) || (originalUrl && originalUrl.startsWith(l))
+        _activeChecker(l, currentUrl) ||
+        (originalUrl && _activeChecker(l, originalUrl))
     )) ||
   (item.subitems &&
     item.subitems.some(
       (si) =>
         si.link &&
-        (currentUrl.startsWith(si.link) ||
-          (originalUrl && originalUrl.startsWith(si.link)) ||
-          (si.altlinks && si.altlinks.some((l) => currentUrl.startsWith(l))))
+        (_activeChecker(si.link, currentUrl) ||
+          (originalUrl && _activeChecker(si.link, originalUrl)) ||
+          (si.altlinks &&
+            si.altlinks.some((l) => _activeChecker(l, currentUrl))))
     ));
 
 const verticalMenu = ({ menu, currentUrl, originalUrl, brand }) => {
