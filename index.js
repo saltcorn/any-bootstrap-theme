@@ -525,6 +525,7 @@ const layout = (config) => ({
     csrfToken,
     authLinks,
     bodyClass,
+    req,
   }) =>
     wrapIt(
       config,
@@ -539,7 +540,7 @@ const layout = (config) => ({
       ${title}
     </h3>
     ${renderForm(formModify(form), csrfToken)}
-    ${renderAuthLinks(authLinks)}
+    ${renderAuthLinks(authLinks, req)}
     ${afterForm}
     <style>
     html,
@@ -596,13 +597,15 @@ body {
   `
     ),
 });
-const renderAuthLinks = (authLinks) => {
+const renderAuthLinks = (authLinks, req) => {
   var links = [];
+  const __ = req?.__ || ((s) => s);
   if (authLinks.login)
-    links.push(link(authLinks.login, "Already have an account? Login!"));
-  if (authLinks.forgot) links.push(link(authLinks.forgot, "Forgot password?"));
+    links.push(link(authLinks.login, __("Already have an account? Login!")));
+  if (authLinks.forgot)
+    links.push(link(authLinks.forgot, __("Forgot password?")));
   if (authLinks.signup)
-    links.push(link(authLinks.signup, "Create an account!"));
+    links.push(link(authLinks.signup, __("Create an account!")));
   const meth_links = (authLinks.methods || [])
     .map(({ url, icon, label }) =>
       a(
