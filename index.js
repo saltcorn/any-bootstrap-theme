@@ -298,7 +298,11 @@ const verticalMenu = ({ menu, currentUrl, originalUrl, brand }) => {
             ],
           },
           a(
-            { class: "nav-link sublink", href: subitem.link },
+            {
+              class: "nav-link sublink",
+              href: subitem.link,
+              target: subitem.target_blank ? "_blank" : undefined,
+            },
             subitem.icon ? i({ class: `fa-fw me-1 ${subitem.icon}` }) : "",
             subitem.label
           )
@@ -354,7 +358,11 @@ const verticalMenu = ({ menu, currentUrl, originalUrl, brand }) => {
                 ],
               },
               a(
-                { class: "nav-link", href: item.link },
+                {
+                  class: "nav-link",
+                  href: item.link,
+                  target: item.target_blank ? "_blank" : undefined,
+                },
                 item.icon ? i({ class: `fa-fw me-1 ${item.icon}` }) : "",
                 item.label
               )
