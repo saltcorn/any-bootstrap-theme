@@ -1373,12 +1373,9 @@ module.exports = {
               },
             };
         }
-        setTimeout(() => {
-          getState().processSend({
-            refresh_plugin_cfg: plugin.name,
-            tenant: db.getTenantSchema(),
-          });
-        }, 100);
+        await db.commitAndBeginNewTransaction?.();
+        await getState().refreshUserLayouts?.();
+        await dbUser.relogin(req);
         return { reload_page: true };
       },
     },
