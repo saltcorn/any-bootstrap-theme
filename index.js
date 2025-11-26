@@ -1373,7 +1373,7 @@ module.exports = {
               },
             };
         }
-        await db.commitAndBeginNewTransaction?.();
+        //await db.commitAndBeginNewTransaction?.();
         await getState().refreshUserLayouts?.();
         await dbUser.relogin(req);
         return { reload_page: true };
