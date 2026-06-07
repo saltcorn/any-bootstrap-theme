@@ -10,7 +10,8 @@
   "dependencies": {
     "@saltcorn/markup": "^0.1.2",
     "@saltcorn/data": "^0.1.2",
-    "sass": "^1.72.0"
+    "sass": "^1.72.0",
+    "fs-extra": "11.3.5"
   },
   "author": "Tom Nielsen",
   "license": "MIT",
