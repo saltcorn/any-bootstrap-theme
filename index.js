@@ -450,7 +450,12 @@ const menuWrap = ({
     return div({ id: "wrapper" }, div({ id: "page-inner-content" }, body));
   else if (config.menu_style === "Side Navbar" && isNode) {
     return (
-      navbar(brand, menu, currentUrl, { class: "d-md-none", ...config }) +
+      navbar(brand, menu, currentUrl, {
+        class: "d-md-none",
+        ...config,
+        // the side navbar takes over at md, so this is always collapsed
+        navbar_expand: "never",
+      }) +
       div(
         { id: "wrapper", class: "d-flex with-sidebar" },
 
@@ -850,6 +855,36 @@ var themeColors = ${JSON.stringify(themeColors)}</script>`,
                   options: ["Top Navbar", "Side Navbar", "No Menu"],
                 },
               },
+              ...(features && features.navbar_set_expand
+                ? [
+                    {
+                      name: "navbar_expand",
+                      label: "Navbar expand breakpoint",
+                      sublabel:
+                        "Screen width at or above which the menu items are " +
+                        "shown individually. Below this, they collapse into " +
+                        "a hamburger menu.",
+                      type: "String",
+                      required: true,
+                      default: "md",
+                      showIf: { menu_style: "Top Navbar" },
+                      attributes: {
+                        options: [
+                          { name: "sm", label: "Small (≥576px)" },
+                          { name: "md", label: "Medium (≥768px)" },
+                          { name: "lg", label: "Large (≥992px)" },
+                          { name: "xl", label: "Extra large (≥1200px)" },
+                          {
+                            name: "xxl",
+                            label: "Extra extra large (≥1400px)",
+                          },
+                          { name: "always", label: "Never collapse" },
+                          { name: "never", label: "Always hamburger menu" },
+                        ],
+                      },
+                    },
+                  ]
+                : []),
               {
                 name: "colorscheme",
                 label: "Navbar color scheme",
