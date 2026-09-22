@@ -4,8 +4,7 @@
   "description": "Configurable bootstrap layout plugin",
   "main": "index.js",
   "scripts": {
-    "test": "jest",
-    "build_theme": "sass --style=compressed scss/build/my_theme.scss scss/build/bootstrap.min.css"
+    "test": "cd tests && node --test"
   },
   "dependencies": {
     "@saltcorn/markup": "^0.1.2",
@@ -15,12 +14,6 @@
   },
   "author": "Tom Nielsen",
   "license": "MIT",
-  "devDependencies": {
-    "jest": "^25.1.0"
-  },
-  "jest": {
-    "testEnvironment": "node"
-  },
   "eslintConfig": {
     "extends": "eslint:recommended",
     "parserOptions": {

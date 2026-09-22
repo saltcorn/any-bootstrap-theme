@@ -1,5 +1,5 @@
 const fs = require("fs").promises;
-const { spawn } = require("child_process");
+const sass = require("sass");
 const { join } = require("path");
 const { getState } = require("@saltcorn/data/db/state");
 const db = require("@saltcorn/data/db");
@@ -151,25 +151,19 @@ const writeDarkLightFile = async (ctx) => {
 
 const buildBootstrapMin = async () => {
   getState().log(5, "Building bootstrap.min.css");
-  const child = spawn("npm", ["run", "build_theme"], {
-    cwd: __dirname,
-  });
-  return new Promise((resolve, reject) => {
-    child.stdout.on("data", (data) => {
-      getState().log(5, data.toString());
+  const inputFile = join(__dirname, "scss", "build", "my_theme.scss");
+  const outputFile = join(__dirname, "scss", "build", "bootstrap.min.css");
+  try {
+    const result = await sass.compileAsync(inputFile, {
+      style: "compressed",
+      // route warnings through Saltcorn's logger instead of straight to the console
+      logger: { warn: (message) => getState().log(2, message) },
     });
-    child.stderr?.on("data", (data) => {
-      getState().log(2, data.toString());
-    });
-    child.on("exit", function (code, signal) {
-      getState().log(5, `child process exited with code ${code}`);
-      resolve(code);
-    });
-    child.on("error", (msg) => {
-      getState().log(2, `child process failed: ${msg.code}`);
-      reject(msg.code);
-    });
-  });
+    await fs.writeFile(outputFile, result.css);
+  } catch (e) {
+    getState().log(2, `Failed to build theme: ${e.message}`);
+    throw e;
+  }
 };
 
 const copyBootstrapMin = async (ctx, isDark) => {
@@ -191,9 +185,8 @@ const buildTheme = async (ctx) => {
     await copyThemeFiles(ctx);
     await applyCustomColors(ctx, isDark);
     await writeDarkLightFile(ctx);
-    const code = await buildBootstrapMin();
-    if (code === 0) await copyBootstrapMin(ctx, isDark);
-    else throw new Error(`Failed to build theme, please check your logs`);
+    await buildBootstrapMin();
+    await copyBootstrapMin(ctx, isDark);
   };
   const lockFile = join(
     __dirname,
