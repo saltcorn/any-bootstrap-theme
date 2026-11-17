@@ -4,7 +4,7 @@
 * Author URI: https://untree.co/
 * License: https://creativecommons.org/licenses/by/3.0/
 */
-@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap");
+@import url("../fonts/furni.css");
 body {
   overflow-x: hidden;
   position: relative; }

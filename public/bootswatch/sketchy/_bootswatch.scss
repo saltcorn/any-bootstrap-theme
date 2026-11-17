@@ -4,7 +4,7 @@
 
 // Variables
 
-$web-font-path: "https://fonts.googleapis.com/css?family=Neucha|Cabin+Sketch&display=swap" !default;
+$web-font-path: "../../fonts/sketchy.css" !default;
 @if $web-font-path {
   @import url("#{$web-font-path}");
 }
